@@ -34,9 +34,9 @@ function NavigationButtons() {
       >
         Go to data fetcher
       </Button>
-      <Button variant="contained" onClick={() => handleNavigate("/tabletest")}>
+      {/* <Button variant="contained" onClick={() => handleNavigate("/tabletest")}>
         Go to table testing
-      </Button>
+      </Button> */}
     </Box>
   );
 }
@@ -48,32 +48,10 @@ function FirstApp() {
         <Routes>
           <Route path="/" element={<NavigationButtons />} />
           <Route path="/orig" element={<SamplePage />} />
-          <Route path="/datafetcher" element={<StudentsDisplay />} />
+          {/* <Route path="/datafetcher" element={<StudentsDisplay />} /> */}
+          <Route path="/datafetcher" element={<SightingDisplay />} />
+
           {/* <Route path="/datafetcher" element={<DataFetcher />} /> */}
-          <Route
-            path="/tabletest"
-            element={
-              <StudentTable
-                thePages={[
-                  {
-                    myID: 101,
-                    FirstName: "Steven",
-                    LastName: "Okang",
-                    Email: "steveokang@gmail.com",
-                    Major: "Computer Science",
-                  },
-                  {
-                    myID: 102,
-                    FirstName: "Kwame",
-                    LastName: "Kingston",
-                    Email: "kwamekingston@gmail.com",
-                    Major: "Electrical Engineering",
-                  },
-                ]}
-                // theQuantities={[1, 7]}
-              />
-            }
-          />
 
           {/* <Route path="/test" element={<MyTableTest />} /> */}
           {/* <Route path="/orig" element={ <CustomTable/>} /> */}

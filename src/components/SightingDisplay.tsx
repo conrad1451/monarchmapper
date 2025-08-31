@@ -1,8 +1,11 @@
 // SightingDisplay.tsx
 
 import React from "react";
-import { useStudents } from "../hooks/useStudents";
-import StudentTable from "./StudentTable";
+// import { useStudents } from "../hooks/useStudents";
+
+import { useStudents } from "../hooks/useSightings";
+// import StudentTable from "./StudentTable";
+import SightingTable from "./SightingTable";
 
 import { Box, Button, Typography } from "@mui/material"; // Import necessary MUI components
 import type { RowPage } from "../utils/dataTypes"; // Import both
@@ -107,7 +110,8 @@ const SightingDisplay: React.FC = () => {
         <EmptyDatabase theRefetchOfStudents={refetchStudents} />
       ) : (
         // Render StudentTable with the prepared data (either transformed real data or sample data)
-        <StudentTable thePages={dataForTable} />
+        // <StudentTable thePages={dataForTable} />
+        <EmptyDatabase theRefetchOfStudents={refetchStudents} />
       )}
     </Box>
   );
