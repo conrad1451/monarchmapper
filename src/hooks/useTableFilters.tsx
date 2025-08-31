@@ -55,14 +55,14 @@ import type { RowPage } from "../utils/dataTypes";
  * @param filterText - The text to search for in the Name property.
  * @returns Filtered array of RowPage objects.
  */
-function filterByPageName(
+function filterByCounty(
   data: RowPage[],
   enabled: boolean,
   filterText: string
 ): RowPage[] {
   if (enabled && filterText.trim() !== "") {
     return data.filter((row) =>
-      row.FirstName.toLowerCase().includes(filterText.toLowerCase())
+      row.county.toLowerCase().includes(filterText.toLowerCase())
     );
   }
   return data;
@@ -117,7 +117,7 @@ export const useTableFilters = (initialData: RowPage[]) => {
     let currentFilteredData = initialData;
 
     // Apply page name filter
-    currentFilteredData = filterByPageName(
+    currentFilteredData = filterByCounty(
       currentFilteredData,
       pageFilterEnabled,
       pageFilterText

@@ -299,7 +299,7 @@ interface TableBodyRowsProps {
   loading: boolean;
   successMessage: string | null;
   errorMessage: string | null;
-  onNewStudentSubmit: (event: React.FormEvent) => Promise<void>;
+  // onNewStudentSubmit: (event: React.FormEvent) => Promise<void>;
 }
 
 const TableBodyRows = (props: TableBodyRowsProps) => {
@@ -311,9 +311,9 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
             props.visibleColumns[colName] ? (
               <TableCell key={colName}>
                 {/* {colName === "myID" && row.myID} */}
-                {colName === "FirstName" && row.FirstName}
-                {colName === "LastName" && row.LastName}
-                {colName === "Email" && row.Email}
+                {colName === "cityOrTown" && row.cityOrTown}
+                {colName === "county" && row.county}
+                {colName === "gbifID" && row.gbifID}
                 {colName === "Major" && (row.Major || "N/A")}{" "}
               </TableCell>
             ) : null
@@ -329,75 +329,6 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
           </TableCell>
         </TableRow>
       ))}
-      {/* New Row for adding a student */}
-      <TableRow>
-        {props.theColumnKeys.map((colName) =>
-          props.visibleColumns[colName] ? (
-            <TableCell key={colName}>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                {/* // CHQ: Gemini AI changed empty div to TextField for each field */}
-                <Typography variant="subtitle2" sx={{ mr: 1 }}>
-                  {colName === "FirstName" ? (
-                    <TextField
-                      type="text"
-                      value={props.myFirstName}
-                      onChange={(e) => props.setMyFirstName(e.target.value)}
-                      placeholder="First Name"
-                      size="small"
-                      variant="outlined"
-                    />
-                  ) : colName === "LastName" ? (
-                    <TextField
-                      type="text"
-                      value={props.myLastName}
-                      onChange={(e) => props.setMyLastName(e.target.value)}
-                      placeholder="Last Name"
-                      size="small"
-                      variant="outlined"
-                    />
-                  ) : colName === "Email" ? (
-                    <TextField
-                      type="email"
-                      value={props.myEmail}
-                      onChange={(e) => props.setMyEmail(e.target.value)}
-                      placeholder="Email"
-                      size="small"
-                      variant="outlined"
-                    />
-                  ) : colName === "Major" ? (
-                    <TextField
-                      type="text"
-                      value={props.myMajor}
-                      onChange={(e) => props.setMyMajor(e.target.value)}
-                      placeholder="Major"
-                      size="small"
-                      variant="outlined"
-                    />
-                  ) : (
-                    // ) : colName === "myID" ? (
-                    //   <>{props.myId}</>
-                    ""
-                  )}
-                </Typography>
-              </Box>
-            </TableCell>
-          ) : null
-        )}
-        {/* Cell for the WebForm in the new student row */}
-        <TableCell>
-          <div>
-            {props.loading && <p>Loading...</p>}
-            {props.successMessage && (
-              <p style={{ color: "green" }}>{props.successMessage}</p>
-            )}
-            {props.errorMessage && (
-              <p style={{ color: "red" }}>{props.errorMessage}</p>
-            )}
-            <WebForm onSubmit={props.onNewStudentSubmit} />{" "}
-            {/* Pass the submit handler */}
-          </div>
-        </TableCell>
-      </TableRow>
       {/* Footer row (Count of Students) */}
       <TableRow>
         {props.theColumnKeys.map((colName) =>
@@ -760,7 +691,8 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
     setSuccessMessage(null);
 
     try {
-      const BASE_URL = import.meta.env.VITE_API_GCP_VM_DATABASE;
+      const BASE_URL =
+        import.meta.env.VITE_API_GCP_VM_DATABASE + "/api/monarchs";
 
       const sessionToken = "sampleTokenIguess"; // Use a real session token here
 
@@ -773,7 +705,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
         major: myMajor,
       };
 
-      const response = await fetch(`${BASE_URL}`, {
+      const response = await fetch(`${BASE_URL}/api/monarchs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -795,16 +727,16 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
       setSuccessMessage("Data sent to database successfully!");
 
       // Optimistically add the new student to the table
-      setRawTableData((prevData) => [
-        ...prevData,
-        {
-          myID: newMyID,
-          FirstName: myFirstName,
-          LastName: myLastName,
-          Email: myEmail,
-          Major: myMajor,
-        } as RowPage, // Cast to RowPage
-      ]);
+      // setRawTableData((prevData) => [
+      //   ...prevData,
+      //   {
+      //     myID: newMyID,
+      //     FirstName: myFirstName,
+      //     LastName: myLastName,
+      //     Email: myEmail,
+      //     Major: myMajor,
+      //   } as RowPage, // Cast to RowPage
+      // ]);
 
       // Clear the form fields after successful submission
       setMyFirstName("");
@@ -830,18 +762,18 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
     useState<RowPage | null>(null);
 
   // State for the confirmation modal
-  const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] =
-    useState(false);
-  const [isUpdateConfirmationModalOpen, setIsUpdateConfirmationModalOpen] =
-    useState(false);
-  const [studentToDelete, setStudentToDelete] = useState<RowPage | null>(null);
-  const [studentToUpdate, setStudentToUpdate] = useState<RowPage | null>(null);
+  // const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] =
+  //   useState(false);
+  // const [isUpdateConfirmationModalOpen, setIsUpdateConfirmationModalOpen] =
+  //   useState(false);
+  // const [studentToDelete, setStudentToDelete] = useState<RowPage | null>(null);
+  // const [studentToUpdate, setStudentToUpdate] = useState<RowPage | null>(null);
 
-  // States for the update modal's input fields
-  const [updateFirstName, setUpdateFirstName] = useState("");
-  const [updateLastName, setUpdateLastName] = useState("");
-  const [updateEmail, setUpdateEmail] = useState("");
-  const [updateMajor, setUpdateMajor] = useState("");
+  // // States for the update modal's input fields
+  // const [updateFirstName, setUpdateFirstName] = useState("");
+  // const [updateLastName, setUpdateLastName] = useState("");
+  // const [updateEmail, setUpdateEmail] = useState("");
+  // const [updateMajor, setUpdateMajor] = useState("");
 
   // Handler to open the action modal
   const handleOpenActionModal = (student: RowPage) => {
@@ -850,202 +782,10 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   };
 
   // Handler to close the action modal
-  const handleCloseActionModal = () => {
-    setIsActionModalOpen(false);
-    setSelectedStudentForActions(null); // Clear selected student on close
-  };
-
-  // Placeholder for Edit action
-  const handleEditStudent = (student: RowPage) => {
-    console.log("Edit student:", student);
-    setStudentToUpdate(student);
-
-    // CHQ: Gemini AI added the following state updates below
-    // Populate the update modal's input fields with current student data
-    setUpdateFirstName(student.FirstName);
-    setUpdateLastName(student.LastName);
-    setUpdateEmail(student.Email);
-    setUpdateMajor(student.Major || ""); // Handle null major
-    setIsUpdateConfirmationModalOpen(true);
-    handleCloseActionModal();
-  };
-
-  // Handler to initiate delete (opens confirmation modal)
-  const handleDeleteStudent = (student: RowPage) => {
-    setStudentToDelete(student);
-    setIsDeletionConfirmationModalOpen(true);
-    handleCloseActionModal();
-  };
-
-  // Handler to confirm delete and make API call
-  const confirmDeleteStudent = async () => {
-    if (!studentToDelete) {
-      console.warn("No student selected for deletion.");
-      setIsDeletionConfirmationModalOpen(false);
-      return;
-    }
-
-    setLoading(true);
-    setErrorMessage(null);
-    setSuccessMessage(null);
-
-    try {
-      const BASE_URL = import.meta.env.VITE_API_GCP_VM_DATABASE;
-      const sessionToken = "sampleTokenIguess"; // Use a real session token here
-
-      const response = await fetch(`${BASE_URL}/${studentToDelete.myID}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${sessionToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        if (response.status >= 400 && response.status < 600) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Server error");
-        }
-        throw new Error("Failed to delete student");
-      }
-
-      console.log(
-        `Student with ID ${studentToDelete.myID} deleted successfully.`
-      );
-      setSuccessMessage("Student deleted successfully!");
-      // Remove the student from the local state
-      setRawTableData((prevData) =>
-        prevData.filter((student) => student.myID !== studentToDelete.myID)
-      );
-    } catch (error: any) {
-      console.error("Error deleting student:", error);
-      setErrorMessage(
-        error.message || "Failed to delete student. Please try again."
-      );
-    } finally {
-      setLoading(false);
-      setIsDeletionConfirmationModalOpen(false);
-      setStudentToDelete(null); // Clear selected student
-    }
-  };
-
-  // Handler to confirm update and make API call
-  const confirmUpdateStudent = async (formData: ConfirmUpdateProps) => {
-    // Accept formData as parameter
-    if (!studentToUpdate) {
-      console.warn("No student selected for update.");
-      setIsUpdateConfirmationModalOpen(false);
-      return;
-    }
-
-    // Build the payload for the PATCH request dynamically
-    const updatePayload: {
-      first_name?: string;
-      last_name?: string;
-      email?: string;
-      major?: string | null;
-    } = {};
-
-    // Only include properties if they have changed from the original studentToUpdate values
-    // and are not empty strings (unless empty string explicitly means null/clear)
-    if (
-      formData.first_name.trim() !== "" &&
-      formData.first_name !== studentToUpdate.FirstName
-    ) {
-      updatePayload.first_name = formData.first_name;
-    }
-    if (
-      formData.last_name.trim() !== "" &&
-      formData.last_name !== studentToUpdate.LastName
-    ) {
-      updatePayload.last_name = formData.last_name;
-    }
-    if (
-      formData.email.trim() !== "" &&
-      formData.email !== studentToUpdate.Email
-    ) {
-      updatePayload.email = formData.email;
-    }
-    // Handle major: if empty string, set to null, otherwise use value if changed
-    if (formData.major !== (studentToUpdate.Major || "")) {
-      // Compare with empty string if major is null
-      updatePayload.major =
-        formData.major.trim() === "" ? null : formData.major;
-    }
-
-    // If no fields were provided for update, you might want to return early
-    if (Object.keys(updatePayload).length === 0) {
-      setErrorMessage("No fields provided for update or no changes detected.");
-      setIsUpdateConfirmationModalOpen(false);
-      setUpdateFirstName("");
-      setUpdateLastName("");
-      setUpdateEmail("");
-      setUpdateMajor(""); // Clear form
-      return;
-    }
-
-    setLoading(true);
-    setErrorMessage(null);
-    setSuccessMessage(null);
-
-    try {
-      const BASE_API_URL = import.meta.env.VITE_API_GCP_VM_DATABASE;
-      const sessionToken = "sampleTokenIguess";
-
-      const response = await fetch(`${BASE_API_URL}/${studentToUpdate.myID}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionToken}`,
-        },
-        body: JSON.stringify(updatePayload),
-      });
-
-      if (!response.ok) {
-        if (response.status >= 400 && response.status < 600) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Server error during update");
-        }
-        throw new Error("Failed to update student");
-      }
-
-      const result: ApiResponse = await response.json();
-      console.log("Student updated successfully:", result);
-      setSuccessMessage("Student updated successfully!");
-
-      // Update the student in the local state after successful update
-      setRawTableData((prevData) =>
-        prevData.map((student) =>
-          student.myID === studentToUpdate.myID
-            ? {
-                ...student,
-                ...updatePayload, // Merge updated fields
-                FirstName: updatePayload.first_name || student.FirstName, // Ensure FirstName, LastName etc. are updated on RowPage
-                LastName: updatePayload.last_name || student.LastName,
-                Email: updatePayload.email || student.Email,
-                Major: (updatePayload.major === undefined
-                  ? String(student.Major)
-                  : updatePayload.major) as string,
-              }
-            : student
-        )
-      );
-
-      // Clear the update form fields
-      setUpdateFirstName("");
-      setUpdateLastName("");
-      setUpdateEmail("");
-      setUpdateMajor("");
-    } catch (error: any) {
-      console.error("Error updating student:", error);
-      setErrorMessage(
-        error.message || "Failed to update student. Please try again."
-      );
-    } finally {
-      setLoading(false);
-      setIsUpdateConfirmationModalOpen(false);
-      setStudentToUpdate(null); // Clear selected student
-    }
-  };
+  // const handleCloseActionModal = () => {
+  //   setIsActionModalOpen(false);
+  //   setSelectedStudentForActions(null); // Clear selected student on close
+  // };
 
   return (
     <Box sx={{ width: "100%", overflowX: "auto" }}>
@@ -1116,7 +856,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
                 loading={loading}
                 successMessage={successMessage}
                 errorMessage={errorMessage}
-                onNewStudentSubmit={handleNewStudentSubmit}
+                // onNewStudentSubmit={handleNewStudentSubmit}
               />
             </Table>
           </TableContainer>
@@ -1124,16 +864,16 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
       </Paper>
 
       {/* Action Modal (Edit/Delete) */}
-      <StudentActionModal
+      {/* <StudentActionModal
         open={isActionModalOpen}
         onClose={handleCloseActionModal}
         student={selectedStudentForActions}
         onEdit={handleEditStudent}
         onDelete={handleDeleteStudent}
-      />
+      /> */}
 
       {/* Update Confirmation Modal */}
-      <UpdateConfirmationModal
+      {/* <UpdateConfirmationModal
         open={isUpdateConfirmationModalOpen}
         onClose={() => {
           setIsUpdateConfirmationModalOpen(false);
@@ -1158,10 +898,10 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
         loading={loading}
         successMessage={successMessage}
         errorMessage={errorMessage}
-      />
+      /> */}
 
       {/* Deletion Confirmation Modal */}
-      <DeletionConfirmationModal
+      {/* <DeletionConfirmationModal
         open={isDeletionConfirmationModalOpen}
         onClose={() => {
           setIsDeletionConfirmationModalOpen(false);
@@ -1174,7 +914,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
         loading={loading}
         successMessage={successMessage}
         errorMessage={errorMessage}
-      />
+      /> */}
     </Box>
   );
 };

@@ -1,17 +1,22 @@
 // dataTypes.ts
 export interface RowPage {
   myID: number;
-  FirstName: string;
-  LastName: string;
-  Email: string;
-  Major: string;
-  // Major: string | null;
-
-  // CreatedTime: Date;
-  // EditedTime: Date;
+  cityOrTown: string;
+  countryCode: string;
+  county: string;
+  dateOnly: Date;
+  day: number;
+  dayOfWeek: number;
+  decimalLatitude: number;
+  decimalLongitude: number;
+  eventDate: Date;
+  stateProvince: string;
+  week_of_year: number;
+  year: number;
+  gbifID: string;
 }
 
-// export interface StudentRecord {
+// export interface MonarchButterflyRecord {
 //   id: number;
 //   FirstName: string;
 //   LastName: string;
@@ -20,14 +25,21 @@ export interface RowPage {
 //   // EnrollmentDate: string;
 // }
 
-export interface StudentRecord {
+export interface MonarchButterflyRecord {
   id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  major: string;
-  // major: string | null;
-  enrollment_date?: string;
+  cityOrTown: string;
+  countryCode: string;
+  county: string;
+  date_only: Date;
+  day: number;
+  day_of_week: number;
+  decimalLatitude: number;
+  decimalLongitude: number;
+  eventDate: Date;
+  stateProvince: string;
+  week_of_year: number;
+  year: number;
+  gbifID: string;
 }
 
 export interface Item {

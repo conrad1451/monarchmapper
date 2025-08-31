@@ -2,10 +2,10 @@
 // CHQ: Gemini AI generated this
 
 import { useState, useEffect } from "react";
-import type { StudentRecord } from "../utils/dataTypes";
+import type { MonarchButterflyRecord } from "../utils/dataTypes";
 
 interface UseStudentsResult {
-  students: StudentRecord[];
+  students: MonarchButterflyRecord[];
   loading: boolean;
   error: string | null;
   refetchStudents: () => void; // Add a refetch function
@@ -13,10 +13,10 @@ interface UseStudentsResult {
 
 // Ensure VITE_API_URL is set in your .env file (e.g., VITE_API_URL=http://localhost:5000/api/students)
 // const apiURL = import.meta.env.VITE_API_URL_OTHERHOST;
-const apiURL = import.meta.env.VITE_API_URL;
+const apiURL = import.meta.env.VITE_API_URL + "/api/monarchs";
 
 export const useStudents = (): UseStudentsResult => {
-  const [students, setStudents] = useState<StudentRecord[]>([]);
+  const [students, setStudents] = useState<MonarchButterflyRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [triggerRefetch, setTriggerRefetch] = useState(0); // State to trigger refetch
@@ -37,7 +37,7 @@ export const useStudents = (): UseStudentsResult => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data: StudentRecord[] = await response.json();
+      const data: MonarchButterflyRecord[] = await response.json();
       setStudents(data);
     } catch (e: any) {
       setError(e.message);

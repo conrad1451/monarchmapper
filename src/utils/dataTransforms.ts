@@ -3,37 +3,39 @@
 import type { Item } from "./dataTypes";
 
 // CHQ: GEmini AI corrected the import method
-import type { RowPage, StudentRecord } from "./dataTypes";
-
-export function createCustomTableDataOld(
-  myID: number,
-  FirstName: string,
-  LastName: string,
-  Email: string,
-  Major: string
-): RowPage {
-  return {
-    myID,
-    FirstName,
-    LastName,
-    Email,
-    Major,
-  };
-}
+import type { RowPage, MonarchButterflyRecord } from "./dataTypes";
 
 export function createCustomTableData(
   myID: number,
-  FirstName: string,
-  LastName: string,
-  Email: string,
-  Major: string
+  cityOrTown: string,
+  countryCode: string,
+  county: string,
+  dateOnly: Date,
+  day: number,
+  dayOfWeek: number,
+  decimalLatitude: number,
+  decimalLongitude: number,
+  eventDate: Date,
+  stateProvince: string,
+  week_of_year: number,
+  year: number,
+  gbifID: string
 ): RowPage {
   return {
     myID,
-    FirstName,
-    LastName,
-    Email,
-    Major,
+    cityOrTown,
+    countryCode,
+    county,
+    dateOnly,
+    day,
+    dayOfWeek,
+    decimalLatitude,
+    decimalLongitude,
+    eventDate,
+    stateProvince,
+    week_of_year,
+    year,
+    gbifID,
   };
 }
 
@@ -41,7 +43,7 @@ export function createCustomTableData(
 // will also need to be updated to pass arguments to createCustomTableData in this new order.
 // For example:
 /**/
-// export function mapPagesToCustomTableData(pages: StudentRecord[]): RowPage[] {
+// export function mapPagesToCustomTableData(pages: MonarchButterflyRecord[]): RowPage[] {
 //   return pages.map((page) =>
 //     createCustomTableData(
 //       page.id,
@@ -53,17 +55,26 @@ export function createCustomTableData(
 //   );
 // }
 
-// Helper function to transform StudentRecord to RowPage
-export function transformStudentRecordToRowPage(
-  pages: StudentRecord[]
+// Helper function to transform MonarchButterflyRecord to RowPage
+export function transformMonarchButterflyRecordToRowPage(
+  pages: MonarchButterflyRecord[]
 ): RowPage[] {
   return pages.map((page) =>
     createCustomTableData(
       page.id,
-      page.first_name,
-      page.last_name,
-      page.email,
-      page.major
+      page.cityOrTown,
+      page.countryCode,
+      page.county,
+      page.date_only,
+      page.day,
+      page.day_of_week,
+      page.decimalLatitude,
+      page.decimalLongitude,
+      page.eventDate,
+      page.stateProvince,
+      page.week_of_year,
+      page.year,
+      page.gbifID
     )
   );
 }

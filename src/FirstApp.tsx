@@ -1,6 +1,6 @@
 import SamplePage from "./components/SamplePage";
 // import CustomTable from './MyTable'
-import SightingTable from "./components/SightingTable";
+// import SightingTable from "./components/SightingTable";
 
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";

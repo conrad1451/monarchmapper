@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import type { RowPage } from "../utils/dataTypes";
 
 // CHQ: Gemini AI added
-type SortableStringKeys = "FirstName" | "LastName" | "Email" | "Major";
+type SortableStringKeys = "county" | "cityOrTown" | "stateProvince";
 
 // CHQ: Gemini AI refactored from a specific comparator for first names to that for strings
 /**

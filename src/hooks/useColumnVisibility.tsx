@@ -4,53 +4,107 @@ import { useState } from "react";
 // --- Interfaces
 export interface ColumnVisibility {
   myID: boolean;
-  FirstName: boolean;
-  LastName: boolean;
-  Email: boolean;
-  Major: boolean;
+  cityOrTown: boolean;
+  countryCode: boolean;
+  county: boolean;
+  date_only: boolean;
+  day: boolean;
+  day_of_week: boolean;
+  decimalLatitude: boolean;
+  decimalLongitude: boolean;
+  eventDate: boolean;
+  stateProvince: boolean;
+  week_of_year: boolean;
+  year: boolean;
+  gbifID: boolean;
 }
 // --- Default and Preset Column Visibility Settings ---
 export const defaultColumnVisibility: ColumnVisibility = {
   myID: true,
-  FirstName: true,
-  LastName: true,
-  Email: true,
-  Major: true,
+  cityOrTown: true,
+  countryCode: true,
+  county: true,
+  date_only: true,
+  day: true,
+  day_of_week: true,
+  decimalLatitude: true,
+  decimalLongitude: true,
+  eventDate: true,
+  stateProvince: true,
+  week_of_year: true,
+  year: true,
+  gbifID: true,
 };
 
 export const smartphoneVisibility: ColumnVisibility = {
   myID: true,
-  FirstName: true,
-  LastName: true,
-  Email: true,
-  Major: true,
+  cityOrTown: true,
+  countryCode: true,
+  county: true,
+  date_only: true,
+  day: true,
+  day_of_week: true,
+  decimalLatitude: true,
+  decimalLongitude: true,
+  eventDate: true,
+  stateProvince: true,
+  week_of_year: true,
+  year: true,
+  gbifID: true,
 };
 
 export interface ColumnVisibilityMiniTable {
   myID: boolean;
-  FirstName: boolean;
   Qty: boolean;
-  LastName: boolean;
-  Email: boolean;
-  Major: boolean;
+  cityOrTown: boolean;
+  countryCode: boolean;
+  county: boolean;
+  date_only: boolean;
+  day: boolean;
+  day_of_week: boolean;
+  decimalLatitude: boolean;
+  decimalLongitude: boolean;
+  eventDate: boolean;
+  stateProvince: boolean;
+  week_of_year: boolean;
+  year: boolean;
+  gbifID: boolean;
 }
 
 export const defaultColumnVisibilityMiniTable: ColumnVisibilityMiniTable = {
   myID: true,
-  FirstName: true,
   Qty: true,
-  LastName: true,
-  Email: true,
-  Major: true,
+  cityOrTown: true,
+  countryCode: true,
+  county: true,
+  date_only: true,
+  day: true,
+  day_of_week: true,
+  decimalLatitude: true,
+  decimalLongitude: true,
+  eventDate: true,
+  stateProvince: true,
+  week_of_year: true,
+  year: true,
+  gbifID: true,
 };
 
 export const smartphoneVisibilityMiniTable: ColumnVisibilityMiniTable = {
   myID: true,
-  FirstName: true,
   Qty: true,
-  LastName: true,
-  Email: true,
-  Major: true,
+  cityOrTown: true,
+  countryCode: true,
+  county: true,
+  date_only: true,
+  day: true,
+  day_of_week: true,
+  decimalLatitude: true,
+  decimalLongitude: true,
+  eventDate: true,
+  stateProvince: true,
+  week_of_year: true,
+  year: true,
+  gbifID: true,
 };
 export const visibilityPresetsMiniTable: Map<
   string,

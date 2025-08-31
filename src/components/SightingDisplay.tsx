@@ -9,7 +9,7 @@ import SightingTable from "./SightingTable";
 
 import { Box, Button, Typography } from "@mui/material"; // Import necessary MUI components
 import type { RowPage } from "../utils/dataTypes"; // Import both
-import { transformStudentRecordToRowPage } from "../utils/dataTransforms";
+import { transformMonarchButterflyRecordToRowPage } from "../utils/dataTransforms";
 
 // Define the prop type for EmptyDatabase for better type safety
 interface EmptyDatabaseProps {
@@ -64,32 +64,9 @@ const SightingDisplay: React.FC = () => {
     );
   }
 
-  // Sample data, now explicitly typed as RowPage[] to match StudentTable's expectation
-  const studentSampleData: RowPage[] = [
-    {
-      myID: 101,
-      FirstName: "Steven",
-      LastName: "Okang",
-      Email: "steveokang@gmail.com",
-      Major: "Computer Science",
-    },
-    {
-      myID: 102,
-      FirstName: "Kwame",
-      LastName: "Kingston",
-      Email: "kwamekingston@gmail.com",
-      Major: "Electrical Engineering",
-    },
-  ];
-
   // --- Prepare the data for StudentTable based on 'useSampleData' flag ---
-  let dataForTable: RowPage[];
-  if (useSampleData) {
-    dataForTable = studentSampleData;
-  } else {
-    // --- THIS IS THE CRITICAL PART: Use the imported transformation function ---
-    dataForTable = transformStudentRecordToRowPage(students);
-  }
+  const dataForTable: RowPage[] =
+    transformMonarchButterflyRecordToRowPage(students);
   // --- END DATA PREPARATION ---
 
   // const isHidingEmptyDatabase = true;
@@ -111,7 +88,7 @@ const SightingDisplay: React.FC = () => {
       ) : (
         // Render StudentTable with the prepared data (either transformed real data or sample data)
         // <StudentTable thePages={dataForTable} />
-        <EmptyDatabase theRefetchOfStudents={refetchStudents} />
+        <SightingTable thePages={dataForTable} />
       )}
     </Box>
   );
