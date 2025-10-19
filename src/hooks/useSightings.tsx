@@ -1,27 +1,28 @@
-// src/hooks/useStudents.ts
+// src/hooks/useSightings.ts
 // CHQ: Gemini AI generated this
 
 import { useState, useEffect } from "react";
 import type { MonarchButterflyRecord } from "../utils/dataTypes";
 
-interface UseStudentsResult {
-  students: MonarchButterflyRecord[];
+interface useSightingsResult {
+  sightings: MonarchButterflyRecord[];
   loading: boolean;
   error: string | null;
-  refetchStudents: () => void; // Add a refetch function
+  refetchSightings: () => void; // Add a refetch function
 }
 
-// Ensure VITE_API_URL is set in your .env file (e.g., VITE_API_URL=http://localhost:5000/api/students)
+// Ensure VITE_API_URL is set in your .env file (e.g., VITE_API_URL=http://localhost:5000/api/sightings)
 // const apiURL = import.meta.env.VITE_API_URL_OTHERHOST;
-const apiURL = import.meta.env.VITE_API_URL + "/api/monarchs";
+// const apiURL = import.meta.env.VITE_API_URL + "/api/monarchs";
+const apiURL = import.meta.env.VITE_API_URL;
 
-export const useStudents = (): UseStudentsResult => {
-  const [students, setStudents] = useState<MonarchButterflyRecord[]>([]);
+export const useSightings = (): useSightingsResult => {
+  const [sightings, setSightings] = useState<MonarchButterflyRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [triggerRefetch, setTriggerRefetch] = useState(0); // State to trigger refetch
 
-  const fetchStudents = async () => {
+  const fetchSightings = async () => {
     setLoading(true); // Set loading to true on every fetch attempt
     setError(null); // Clear any previous errors
 
@@ -38,22 +39,22 @@ export const useStudents = (): UseStudentsResult => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data: MonarchButterflyRecord[] = await response.json();
-      setStudents(data);
+      setSightings(data);
     } catch (e: any) {
       setError(e.message);
-      console.error("Failed to fetch students:", e);
+      console.error("Failed to fetch butterflies for timeframe selected:", e);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchStudents();
+    fetchSightings();
   }, [triggerRefetch]); // Re-run effect when triggerRefetch changes
 
-  const refetchStudents = () => {
+  const refetchSightings = () => {
     setTriggerRefetch((prev) => prev + 1); // Increment to trigger refetch
   };
 
-  return { students, loading, error, refetchStudents };
+  return { sightings, loading, error, refetchSightings };
 };
