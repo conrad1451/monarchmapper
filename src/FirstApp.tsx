@@ -10,7 +10,6 @@ import SightingDisplay from "./components/SightingDisplay";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import "./App.css";
-// import DataFetcher from "./components/StudentsDisplay";
 
 // eslint@typescript-eslint/no-empty-object-type
 // interface NavigationButtonsProps {}
@@ -48,7 +47,6 @@ function FirstApp() {
         <Routes>
           <Route path="/" element={<NavigationButtons />} />
           <Route path="/orig" element={<SamplePage />} />
-          {/* <Route path="/datafetcher" element={<StudentsDisplay />} /> */}
           <Route path="/datafetcher" element={<SightingDisplay />} />
 
           {/* <Route path="/datafetcher" element={<DataFetcher />} /> */}

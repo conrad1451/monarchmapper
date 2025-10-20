@@ -65,13 +65,42 @@ interface ApiResponse {
 }
 
 const allColumnKeys: Array<keyof ColumnVisibilityMiniTable> = [
-  // "myID",
-  "FirstName",
-  "LastName",
-  "Email",
-  "Major",
+  "gbifID",
+  // "DatasetKey",
+  // "PublishingOrgKey",
+  "eventDate",
+  // "EventDateParsed",
+  "year",
+  // "Month",
+  "day",
+  "day_of_week",
+  "week_of_year",
+  "date_only",
+  // "ScientificName",
+  // "VernacularName",
+  // "TaxonKey",
+  // "Kingdom",
+  // "Phylum",
+  // "Class",
+  // "Order",
+  // "Family",
+  // "Genus",
+  // "Species",
+  "decimalLatitude",
+  "decimalLongitude",
+  // "CoordinateUncertaintyInMeters",
+  "countryCode",
+  "stateProvince",
+  // "IndividualCount",
+  // "BasisOfRecord",
+  // "RecordedBy",
+  // "OccurrenceID",
+  // "CollectionCode",
+  // "CatalogNumber",
+  "county",
+  "cityOrTown",
+  // "TimeOnly",
 ];
-
 const ColumnVisibilityToggles = (props: {
   visibleColumns: ColumnVisibilityMiniTable;
   handleToggleColumn: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -177,7 +206,7 @@ const TableHeaderCells = (props: {
   sortHandlers: ReturnType<typeof useTableSorting>["sortHandlers"];
   theColumnKeys: Array<keyof ColumnVisibilityMiniTable>;
 }) => {
-  type SortableTableColumns = "FirstName" | "LastName" | "Email" | "Major";
+  type SortableTableColumns = "cityOrTown" | "stateProvince" | "county";
 
   return (
     <TableHead>
@@ -191,10 +220,9 @@ const TableHeaderCells = (props: {
                 </Typography>
                 {(
                   [
-                    "FirstName",
-                    "LastName",
-                    "Email",
-                    "Major",
+                    "cityOrTown",
+                    "stateProvince",
+                    "county",
                   ] as SortableTableColumns[]
                 ).includes(colName as SortableTableColumns) && (
                   <>
@@ -285,21 +313,21 @@ interface TableBodyRowsProps {
   data: RowPage[];
   visibleColumns: ColumnVisibilityMiniTable;
   theColumnKeys: Array<keyof ColumnVisibilityMiniTable>;
-  onOpenActionModal: (student: RowPage) => void;
+  onOpenActionModal: (sighting: RowPage) => void;
   // NEW PROPS - passed down from SightingTable
   myId: number;
-  myFirstName: string;
-  setMyFirstName: (value: string) => void;
-  myLastName: string;
-  setMyLastName: (value: string) => void;
-  myEmail: string;
-  setMyEmail: (value: string) => void;
-  myMajor: string;
-  setMyMajor: (value: string) => void;
+  // myFirstName: string;
+  // setMyFirstName: (value: string) => void;
+  myCity: string;
+  SetMyCity: (value: string) => void;
+  myCounty: string;
+  setMyCounty: (value: string) => void;
+  myStateProvince: string;
+  setMyStateProvince: (value: string) => void;
   loading: boolean;
   successMessage: string | null;
   errorMessage: string | null;
-  // onNewStudentSubmit: (event: React.FormEvent) => Promise<void>;
+  // onNewSightingSubmit: (event: React.FormEvent) => Promise<void>;
 }
 
 const TableBodyRows = (props: TableBodyRowsProps) => {
@@ -314,7 +342,6 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
                 {colName === "cityOrTown" && row.cityOrTown}
                 {colName === "county" && row.county}
                 {colName === "gbifID" && row.gbifID}
-                {colName === "Major" && (row.Major || "N/A")}{" "}
               </TableCell>
             ) : null
           )}
@@ -329,15 +356,15 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
           </TableCell>
         </TableRow>
       ))}
-      {/* Footer row (Count of Students) */}
+      {/* Footer row (Count of Sightings) */}
       <TableRow>
         {props.theColumnKeys.map((colName) =>
           props.visibleColumns[colName] ? (
             <TableCell key={colName}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography variant="subtitle2" sx={{ mr: 1 }}>
-                  {colName === "FirstName"
-                    ? "Count of Students: " + String(props.data.length)
+                  {colName === "cityOrTown"
+                    ? "Count of Sightings: " + String(props.data.length)
                     : ""}
                 </Typography>
               </Box>
@@ -358,270 +385,270 @@ const MyExpandMoreIcon = () => {
   return <>🔽</>;
 };
 
-// New component for the Edit/Delete action modal
-const StudentActionModal = (props: {
-  open: boolean;
-  onClose: () => void;
-  student: RowPage | null;
-  onEdit: (student: RowPage) => void;
-  onDelete: (student: RowPage) => void;
-}) => {
-  if (!props.student) return null; // Don't render if no student is selected
+// // New component for the Edit/Delete action modal
+// const SightingActionModal = (props: {
+//   open: boolean;
+//   onClose: () => void;
+//   sighting: RowPage | null;
+//   onEdit: (sighting: RowPage) => void;
+//   onDelete: (sighting: RowPage) => void;
+// }) => {
+//   if (!props.sighting) return null; // Don't render if no sighting is selected
 
-  return (
-    <Modal open={props.open} onClose={props.onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: { xs: "90%", sm: 400 },
-          bgcolor: "background.paper",
-          border: "2px solid #000",
-          boxShadow: 24,
-          p: 4,
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          borderRadius: "8px", // Rounded corners
-        }}
-      >
-        <Typography variant="h6" component="h2">
-          Actions for {props.student.FirstName} {props.student.LastName} (ID:{" "}
-          {props.student.myID})
-        </Typography>
-        <Button
-          variant="contained"
-          onClick={() => props.onEdit(props.student!)}
-          sx={{
-            bgcolor: "primary.main",
-            "&:hover": { bgcolor: "primary.dark" },
-            borderRadius: "8px",
-          }}
-        >
-          Edit
-        </Button>
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={() => props.onDelete(props.student!)}
-          sx={{
-            borderColor: "error.main",
-            color: "error.main",
-            "&:hover": { bgcolor: "error.light" },
-            borderRadius: "8px",
-          }}
-        >
-          Delete
-        </Button>
-        <Button
-          onClick={props.onClose}
-          variant="text"
-          sx={{ mt: 1, borderRadius: "8px" }}
-        >
-          Cancel
-        </Button>
-      </Box>
-    </Modal>
-  );
-};
+//   return (
+//     <Modal open={props.open} onClose={props.onClose}>
+//       <Box
+//         sx={{
+//           position: "absolute",
+//           top: "50%",
+//           left: "50%",
+//           transform: "translate(-50%, -50%)",
+//           width: { xs: "90%", sm: 400 },
+//           bgcolor: "background.paper",
+//           border: "2px solid #000",
+//           boxShadow: 24,
+//           p: 4,
+//           display: "flex",
+//           flexDirection: "column",
+//           gap: 2,
+//           borderRadius: "8px", // Rounded corners
+//         }}
+//       >
+//         <Typography variant="h6" component="h2">
+//           Actions for {props.sighting.FirstName} {props.sighting.LastName} (ID:{" "}
+//           {props.sighting.myID})
+//         </Typography>
+//         <Button
+//           variant="contained"
+//           onClick={() => props.onEdit(props.sighting!)}
+//           sx={{
+//             bgcolor: "primary.main",
+//             "&:hover": { bgcolor: "primary.dark" },
+//             borderRadius: "8px",
+//           }}
+//         >
+//           Edit
+//         </Button>
+//         <Button
+//           variant="outlined"
+//           color="error"
+//           onClick={() => props.onDelete(props.sighting!)}
+//           sx={{
+//             borderColor: "error.main",
+//             color: "error.main",
+//             "&:hover": { bgcolor: "error.light" },
+//             borderRadius: "8px",
+//           }}
+//         >
+//           Delete
+//         </Button>
+//         <Button
+//           onClick={props.onClose}
+//           variant="text"
+//           sx={{ mt: 1, borderRadius: "8px" }}
+//         >
+//           Cancel
+//         </Button>
+//       </Box>
+//     </Modal>
+//   );
+// };
 
-// New Confirmation Modal component
-const UpdateConfirmationModal = (props: {
-  open: boolean;
-  onClose: () => void;
-  onConfirm: (data: ConfirmUpdateProps) => Promise<void>; // Corrected type for onConfirm
-  message: string;
-  // Pass current student data and setters from parent for editing
-  currentFirstName: string;
-  setCurrentFirstName: (value: string) => void;
-  currentLastName: string;
-  setCurrentLastName: (value: string) => void;
-  currentEmail: string;
-  setCurrentEmail: (value: string) => void;
-  currentMajor: string;
-  setCurrentMajor: (value: string) => void;
-  loading: boolean;
-  successMessage: string | null; // Can be null
-  errorMessage: string | null; // Can be null
-}) => {
-  // These states are now managed by the parent (SightingTable) and passed as props
-  // const [myFirstName, setMyFirstName] = useState("");
-  // const [myLastName, setMyLastName] = useState("");
-  // const [myEmail, setMyEmail] = useState("");
-  // const [myMajor, setMyMajor] = useState("");
+// // New Confirmation Modal component
+// const UpdateConfirmationModal = (props: {
+//   open: boolean;
+//   onClose: () => void;
+//   onConfirm: (data: ConfirmUpdateProps) => Promise<void>; // Corrected type for onConfirm
+//   message: string;
+//   // Pass current sighting data and setters from parent for editing
+//   currentFirstName: string;
+//   setCurrentFirstName: (value: string) => void;
+//   currentLastName: string;
+//   setCurrentLastName: (value: string) => void;
+//   currentEmail: string;
+//   setCurrentEmail: (value: string) => void;
+//   currentMajor: string;
+//   setCurrentMajor: (value: string) => void;
+//   loading: boolean;
+//   successMessage: string | null; // Can be null
+//   errorMessage: string | null; // Can be null
+// }) => {
+//   // These states are now managed by the parent (SightingTable) and passed as props
+//   // const [myFirstName, setMyFirstName] = useState("");
+//   // const [myCity, SetMyCity] = useState("");
+//   // const [myCounty, setMyCounty] = useState("");
+//   // const [myStateProvince, setMyStateProvince] = useState("");
 
-  // CHQ: Added by Gemini AI
-  const handleSubmit = () => {
-    props.onConfirm({
-      first_name: props.currentFirstName,
-      last_name: props.currentLastName,
-      email: props.currentEmail,
-      major: props.currentMajor,
-    });
-  };
+//   // CHQ: Added by Gemini AI
+//   const handleSubmit = () => {
+//     props.onConfirm({
+//       first_name: props.currentFirstName,
+//       last_name: props.currentLastName,
+//       email: props.currentEmail,
+//       major: props.currentMajor,
+//     });
+//   };
 
-  return (
-    <Modal open={props.open} onClose={props.onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: { xs: "90%", sm: 400 },
-          bgcolor: "background.paper",
-          border: "2px solid #000",
-          boxShadow: 24,
-          p: 4,
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          borderRadius: "8px",
-        }}
-      >
-        <Typography variant="h6" component="h2">
-          Confirmation
-        </Typography>
-        <Typography>{props.message}</Typography>
-        {/* // CHQ: Gemini AI changed empty div to TextField for each field */}
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
-          <TextField
-            label="First Name"
-            type="text"
-            value={props.currentFirstName}
-            onChange={(e) => props.setCurrentFirstName(e.target.value)}
-            placeholder="First Name"
-            size="small"
-            variant="outlined"
-          />
-          <TextField
-            label="Last Name"
-            type="text"
-            value={props.currentLastName}
-            onChange={(e) => props.setCurrentLastName(e.target.value)}
-            placeholder="Last Name"
-            size="small"
-            variant="outlined"
-          />
-          <TextField
-            label="Email"
-            type="email"
-            value={props.currentEmail}
-            onChange={(e) => props.setCurrentEmail(e.target.value)}
-            placeholder="Email"
-            size="small"
-            variant="outlined"
-          />
-          <TextField
-            label="Major"
-            type="text"
-            value={props.currentMajor}
-            onChange={(e) => props.setCurrentMajor(e.target.value)}
-            placeholder="Major"
-            size="small"
-            variant="outlined"
-          />
-        </Box>
-        {/* CHQ: Added by Gemini AI */}
-        {props.loading && <p>Loading...</p>}
-        {props.successMessage && (
-          <p style={{ color: "green" }}>{props.successMessage}</p>
-        )}
-        {props.errorMessage && (
-          <p style={{ color: "red" }}>{props.errorMessage}</p>
-        )}
-        <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
-          {/* CHQ: Gemini AI added disabling button during loading */}
-          <Button
-            variant="contained"
-            color="info"
-            onClick={handleSubmit} // Call local handleSubmit
-            sx={{ borderRadius: "8px" }}
-            disabled={props.loading} // Disable during loading
-          >
-            Confirm Update
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={props.onClose}
-            sx={{ borderRadius: "8px" }}
-            disabled={props.loading} // Disable during loading
-          >
-            Cancel
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
-  );
-};
+//   return (
+//     <Modal open={props.open} onClose={props.onClose}>
+//       <Box
+//         sx={{
+//           position: "absolute",
+//           top: "50%",
+//           left: "50%",
+//           transform: "translate(-50%, -50%)",
+//           width: { xs: "90%", sm: 400 },
+//           bgcolor: "background.paper",
+//           border: "2px solid #000",
+//           boxShadow: 24,
+//           p: 4,
+//           display: "flex",
+//           flexDirection: "column",
+//           gap: 2,
+//           borderRadius: "8px",
+//         }}
+//       >
+//         <Typography variant="h6" component="h2">
+//           Confirmation
+//         </Typography>
+//         <Typography>{props.message}</Typography>
+//         {/* // CHQ: Gemini AI changed empty div to TextField for each field */}
+//         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+//           <TextField
+//             label="First Name"
+//             type="text"
+//             value={props.currentFirstName}
+//             onChange={(e) => props.setCurrentFirstName(e.target.value)}
+//             placeholder="First Name"
+//             size="small"
+//             variant="outlined"
+//           />
+//           <TextField
+//             label="Last Name"
+//             type="text"
+//             value={props.currentLastName}
+//             onChange={(e) => props.setCurrentLastName(e.target.value)}
+//             placeholder="Last Name"
+//             size="small"
+//             variant="outlined"
+//           />
+//           <TextField
+//             label="Email"
+//             type="email"
+//             value={props.currentEmail}
+//             onChange={(e) => props.setCurrentEmail(e.target.value)}
+//             placeholder="Email"
+//             size="small"
+//             variant="outlined"
+//           />
+//           <TextField
+//             label="Major"
+//             type="text"
+//             value={props.currentMajor}
+//             onChange={(e) => props.setCurrentMajor(e.target.value)}
+//             placeholder="Major"
+//             size="small"
+//             variant="outlined"
+//           />
+//         </Box>
+//         {/* CHQ: Added by Gemini AI */}
+//         {props.loading && <p>Loading...</p>}
+//         {props.successMessage && (
+//           <p style={{ color: "green" }}>{props.successMessage}</p>
+//         )}
+//         {props.errorMessage && (
+//           <p style={{ color: "red" }}>{props.errorMessage}</p>
+//         )}
+//         <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
+//           {/* CHQ: Gemini AI added disabling button during loading */}
+//           <Button
+//             variant="contained"
+//             color="info"
+//             onClick={handleSubmit} // Call local handleSubmit
+//             sx={{ borderRadius: "8px" }}
+//             disabled={props.loading} // Disable during loading
+//           >
+//             Confirm Update
+//           </Button>
+//           <Button
+//             variant="outlined"
+//             onClick={props.onClose}
+//             sx={{ borderRadius: "8px" }}
+//             disabled={props.loading} // Disable during loading
+//           >
+//             Cancel
+//           </Button>
+//         </Box>
+//       </Box>
+//     </Modal>
+//   );
+// };
 
-// New Confirmation Modal component
-const DeletionConfirmationModal = (props: {
-  open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  message: string;
-  loading: boolean; // Added loading prop
-  successMessage: string | null; // Added successMessage prop
-  errorMessage: string | null; // Added errorMessage prop
-}) => {
-  return (
-    <Modal open={props.open} onClose={props.onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: { xs: "90%", sm: 400 },
-          bgcolor: "background.paper",
-          border: "2px solid #000",
-          boxShadow: 24,
-          p: 4,
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          borderRadius: "8px",
-        }}
-      >
-        <Typography variant="h6" component="h2">
-          Confirmation
-        </Typography>
-        <Typography>{props.message}</Typography>
-        {/* CHQ: Added by Gemini AI */}
-        {props.loading && <p>Loading...</p>}
-        {props.successMessage && (
-          <p style={{ color: "green" }}>{props.successMessage}</p>
-        )}
-        {props.errorMessage && (
-          <p style={{ color: "red" }}>{props.errorMessage}</p>
-        )}
-        <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
-          {/* CHQ: Gemini AI added disabling button during loading */}
-          <Button
-            variant="contained"
-            color="error"
-            onClick={props.onConfirm}
-            sx={{ borderRadius: "8px" }}
-            disabled={props.loading} // Disable during loading
-          >
-            Confirm Delete
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={props.onClose}
-            sx={{ borderRadius: "8px" }}
-            disabled={props.loading} // Disable during loading
-          >
-            Cancel
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
-  );
-};
+// // New Confirmation Modal component
+// const DeletionConfirmationModal = (props: {
+//   open: boolean;
+//   onClose: () => void;
+//   onConfirm: () => void;
+//   message: string;
+//   loading: boolean; // Added loading prop
+//   successMessage: string | null; // Added successMessage prop
+//   errorMessage: string | null; // Added errorMessage prop
+// }) => {
+//   return (
+//     <Modal open={props.open} onClose={props.onClose}>
+//       <Box
+//         sx={{
+//           position: "absolute",
+//           top: "50%",
+//           left: "50%",
+//           transform: "translate(-50%, -50%)",
+//           width: { xs: "90%", sm: 400 },
+//           bgcolor: "background.paper",
+//           border: "2px solid #000",
+//           boxShadow: 24,
+//           p: 4,
+//           display: "flex",
+//           flexDirection: "column",
+//           gap: 2,
+//           borderRadius: "8px",
+//         }}
+//       >
+//         <Typography variant="h6" component="h2">
+//           Confirmation
+//         </Typography>
+//         <Typography>{props.message}</Typography>
+//         {/* CHQ: Added by Gemini AI */}
+//         {props.loading && <p>Loading...</p>}
+//         {props.successMessage && (
+//           <p style={{ color: "green" }}>{props.successMessage}</p>
+//         )}
+//         {props.errorMessage && (
+//           <p style={{ color: "red" }}>{props.errorMessage}</p>
+//         )}
+//         <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
+//           {/* CHQ: Gemini AI added disabling button during loading */}
+//           <Button
+//             variant="contained"
+//             color="error"
+//             onClick={props.onConfirm}
+//             sx={{ borderRadius: "8px" }}
+//             disabled={props.loading} // Disable during loading
+//           >
+//             Confirm Delete
+//           </Button>
+//           <Button
+//             variant="outlined"
+//             onClick={props.onClose}
+//             sx={{ borderRadius: "8px" }}
+//             disabled={props.loading} // Disable during loading
+//           >
+//             Cancel
+//           </Button>
+//         </Box>
+//       </Box>
+//     </Modal>
+//   );
+// };
 
 const idGenerator = (rawTableData: RowPage[]) => {
   // CHQ: Gemini AI added following logic to calculate new ID
@@ -641,9 +668,9 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
     setRawTableData(props.thePages); // Update local state if props.thePages changes
   }, [props.thePages]);
 
-  const initialTableDataForHooks = rawTableData.filter(
-    (row) => row && row.FirstName && row.FirstName.trim() !== ""
-  );
+  // const initialTableDataForHooks = rawTableData.filter(
+  //   (row) => row && row.FirstName && row.FirstName.trim() !== ""
+  // );
 
   const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
   const {
@@ -654,11 +681,12 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
     presets,
   } = useColumnVisibilityMiniTable("default");
 
-  const { filteredData } = useTableFilters(initialTableDataForHooks);
+  // const { filteredData } = useTableFilters(initialTableDataForHooks);
+  const { filteredData } = useTableFilters(rawTableData);
 
   const { sortedData, sortProps, sortHandlers } = useTableSorting(filteredData);
 
-  // const allStudentNames: Item[] = useMemo(
+  // const allSightingNames: Item[] = useMemo(
   //   () =>
   //     rawTableData.map((row) => ({
   //       id: Math.floor(100 * Math.random()), // Consider using a more stable ID if available
@@ -670,10 +698,10 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   const [isTableCollapsed, setIsTableCollapsed] = useState(false);
 
   // --- Moved state variables and submission logic from TableBodyRows to SightingTable ---
-  const [myFirstName, setMyFirstName] = useState("");
-  const [myLastName, setMyLastName] = useState("");
-  const [myEmail, setMyEmail] = useState("");
-  const [myMajor, setMyMajor] = useState("");
+  // const [myFirstName, setMyFirstName] = useState("");
+  const [myCity, SetMyCity] = useState("");
+  const [myCounty, setMyCounty] = useState("");
+  const [myStateProvince, setMyStateProvince] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -684,81 +712,81 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
 
   const newMyID: number = idGenerator(rawTableData);
 
-  const handleNewStudentSubmit = async (event: React.FormEvent) => {
-    event.preventDefault(); // Prevent default form submission behavior
-    setLoading(true);
-    setErrorMessage(null);
-    setSuccessMessage(null);
+  // const handleNewSightingSubmit = async (event: React.FormEvent) => {
+  //   event.preventDefault(); // Prevent default form submission behavior
+  //   setLoading(true);
+  //   setErrorMessage(null);
+  //   setSuccessMessage(null);
 
-    try {
-      const BASE_URL =
-        import.meta.env.VITE_API_GCP_VM_DATABASE + "/api/monarchs";
+  //   try {
+  //     const BASE_URL =
+  //       import.meta.env.VITE_API_GCP_VM_DATABASE + "/api/monarchs";
 
-      const sessionToken = "sampleTokenIguess"; // Use a real session token here
+  //     const sessionToken = "sampleTokenIguess"; // Use a real session token here
 
-      // Form the data object from the state variables here in SightingTable
-      const formData = {
-        id: newMyID,
-        first_name: myFirstName,
-        last_name: myLastName,
-        email: myEmail,
-        major: myMajor,
-      };
+  //     // Form the data object from the state variables here in SightingTable
+  //     const formData = {
+  //       id: newMyID,
+  //       // first_name: myFirstName,
+  //       CityOrTown: myCity,
+  //       County: myCounty,
+  //       StateProvince: myStateProvince,
+  //     };
 
-      const response = await fetch(`${BASE_URL}/api/monarchs`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionToken}`, // Send JWT in Authorization header
-        },
-        body: JSON.stringify(formData), // Send form data in the body
-      });
+  //     const response = await fetch(`${BASE_URL}/api/monarchs`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${sessionToken}`, // Send JWT in Authorization header
+  //       },
+  //       body: JSON.stringify(formData), // Send form data in the body
+  //     });
 
-      if (!response.ok) {
-        if (response.status >= 400 && response.status < 600) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Server error");
-        }
-        throw new Error("Failed to submit to database");
-      }
+  //     if (!response.ok) {
+  //       if (response.status >= 400 && response.status < 600) {
+  //         const errorData = await response.json();
+  //         throw new Error(errorData.message || "Server error");
+  //       }
+  //       throw new Error("Failed to submit to database");
+  //     }
 
-      const result: ApiResponse = await response.json();
-      console.log("Data sent to database successfully:", result);
-      setSuccessMessage("Data sent to database successfully!");
+  //     const result: ApiResponse = await response.json();
+  //     console.log("Data sent to database successfully:", result);
+  //     setSuccessMessage("Data sent to database successfully!");
 
-      // Optimistically add the new student to the table
-      // setRawTableData((prevData) => [
-      //   ...prevData,
-      //   {
-      //     myID: newMyID,
-      //     FirstName: myFirstName,
-      //     LastName: myLastName,
-      //     Email: myEmail,
-      //     Major: myMajor,
-      //   } as RowPage, // Cast to RowPage
-      // ]);
+  //     // Optimistically add the new sighting to the table
+  //     // setRawTableData((prevData) => [
+  //     //   ...prevData,
+  //     //   {
+  //     //     myID: newMyID,
+  //     //     FirstName: myFirstName,
+  //     //     LastName: myCity,
+  //     //     Email: myCounty,
+  //     //     Major: myStateProvince,
+  //     //   } as RowPage, // Cast to RowPage
+  //     // ]);
 
-      // Clear the form fields after successful submission
-      setMyFirstName("");
-      setMyLastName("");
-      setMyEmail("");
-      setMyMajor("");
-    } catch (error: any) {
-      // Type 'any' for error for now
-      console.error("Error in database:", error);
-      setErrorMessage(
-        error.message || "Failed to send data to database. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     // Clear the form fields after successful submission
+  //     // setMyFirstName("");
+  //     SetMyCity("");
+  //     setMyCounty("");
+  //     setMyStateProvince("");
+  //   } catch (error: any) {
+  //     // Type 'any' for error for now
+  //     console.error("Error in database:", error);
+  //     setErrorMessage(
+  //       error.message || "Failed to send data to database. Please try again."
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   // CHQ: Gemini AI added the follow state variables
 
   // State for the new action modal (Edit/Delete)
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
-  const [selectedStudentForActions, setSelectedStudentForActions] =
+  const [selectedSightingForActions, setSelectedSightingForActions] =
     useState<RowPage | null>(null);
 
   // State for the confirmation modal
@@ -766,8 +794,8 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   //   useState(false);
   // const [isUpdateConfirmationModalOpen, setIsUpdateConfirmationModalOpen] =
   //   useState(false);
-  // const [studentToDelete, setStudentToDelete] = useState<RowPage | null>(null);
-  // const [studentToUpdate, setStudentToUpdate] = useState<RowPage | null>(null);
+  // const [sightingToDelete, setSightingToDelete] = useState<RowPage | null>(null);
+  // const [sightingToUpdate, setSightingToUpdate] = useState<RowPage | null>(null);
 
   // // States for the update modal's input fields
   // const [updateFirstName, setUpdateFirstName] = useState("");
@@ -776,15 +804,15 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   // const [updateMajor, setUpdateMajor] = useState("");
 
   // Handler to open the action modal
-  const handleOpenActionModal = (student: RowPage) => {
-    setSelectedStudentForActions(student);
+  const handleOpenActionModal = (sighting: RowPage) => {
+    setSelectedSightingForActions(sighting);
     setIsActionModalOpen(true);
   };
 
   // Handler to close the action modal
   // const handleCloseActionModal = () => {
   //   setIsActionModalOpen(false);
-  //   setSelectedStudentForActions(null); // Clear selected student on close
+  //   setSelectedSightingForActions(null); // Clear selected sighting on close
   // };
 
   return (
@@ -801,7 +829,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
           }}
         >
           <Typography variant="h5" component="div">
-            Student Data
+            Sighting Data
           </Typography>
           <Box sx={{ display: "flex", gap: 1 }}>
             <Button
@@ -832,7 +860,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
 
         {!isTableCollapsed && (
           <TableContainer>
-            <Table stickyHeader aria-label="student table">
+            <Table stickyHeader aria-label="sighting table">
               <TableHeaderCells
                 visibleColumns={visibleColumns}
                 sortProps={sortProps}
@@ -845,18 +873,18 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
                 theColumnKeys={allColumnKeys}
                 onOpenActionModal={handleOpenActionModal}
                 myId={newMyID} // Pass the newly generated ID
-                myFirstName={myFirstName}
-                setMyFirstName={setMyFirstName}
-                myLastName={myLastName}
-                setMyLastName={setMyLastName}
-                myEmail={myEmail}
-                setMyEmail={setMyEmail}
-                myMajor={myMajor}
-                setMyMajor={setMyMajor}
+                // myFirstName={myFirstName}
+                // setMyFirstName={setMyFirstName}
+                myCity={myCity}
+                SetMyCity={SetMyCity}
+                myCounty={myCounty}
+                setMyCounty={setMyCounty}
+                myStateProvince={myStateProvince}
+                setMyStateProvince={setMyStateProvince}
                 loading={loading}
                 successMessage={successMessage}
                 errorMessage={errorMessage}
-                // onNewStudentSubmit={handleNewStudentSubmit}
+                // onNewSightingSubmit={handleNewSightingSubmit}
               />
             </Table>
           </TableContainer>
@@ -864,12 +892,12 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
       </Paper>
 
       {/* Action Modal (Edit/Delete) */}
-      {/* <StudentActionModal
+      {/* <SightingActionModal
         open={isActionModalOpen}
         onClose={handleCloseActionModal}
-        student={selectedStudentForActions}
-        onEdit={handleEditStudent}
-        onDelete={handleDeleteStudent}
+        sighting={selectedSightingForActions}
+        onEdit={handleEditSighting}
+        onDelete={handleDeleteSighting}
       /> */}
 
       {/* Update Confirmation Modal */}
@@ -877,7 +905,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
         open={isUpdateConfirmationModalOpen}
         onClose={() => {
           setIsUpdateConfirmationModalOpen(false);
-          setStudentToUpdate(null); // Clear selected student
+          setSightingToUpdate(null); // Clear selected sighting
           setUpdateFirstName(""); // Clear form fields
           setUpdateLastName("");
           setUpdateEmail("");
@@ -885,8 +913,8 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
           setErrorMessage(null); // Clear messages
           setSuccessMessage(null);
         }}
-        onConfirm={confirmUpdateStudent} // Pass the handler
-        message={`Are you sure you want to update student ID ${studentToUpdate?.myID}?`}
+        onConfirm={confirmUpdateSighting} // Pass the handler
+        message={`Are you sure you want to update sighting ID ${sightingToUpdate?.myID}?`}
         currentFirstName={updateFirstName}
         setCurrentFirstName={setUpdateFirstName}
         currentLastName={updateLastName}
@@ -905,12 +933,12 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
         open={isDeletionConfirmationModalOpen}
         onClose={() => {
           setIsDeletionConfirmationModalOpen(false);
-          setStudentToDelete(null); // Clear selected student
+          setSightingToDelete(null); // Clear selected sighting
           setErrorMessage(null); // Clear messages
           setSuccessMessage(null);
         }}
-        onConfirm={confirmDeleteStudent}
-        message={`Are you sure you want to delete student ID ${studentToDelete?.myID} - ${studentToDelete?.FirstName} ${studentToDelete?.LastName}? This action cannot be undone.`}
+        onConfirm={confirmDeleteSighting}
+        message={`Are you sure you want to delete sighting ID ${sightingToDelete?.myID} - ${sightingToDelete?.FirstName} ${sightingToDelete?.LastName}? This action cannot be undone.`}
         loading={loading}
         successMessage={successMessage}
         errorMessage={errorMessage}

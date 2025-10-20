@@ -1,10 +1,7 @@
 // SightingDisplay.tsx
 
 import React from "react";
-// import { useStudents } from "../hooks/useStudents";
-
-import { useStudents } from "../hooks/useSightings";
-// import StudentTable from "./StudentTable";
+import { useSightings } from "../hooks/useSightings";
 import SightingTable from "./SightingTable";
 
 import { Box, Button, Typography } from "@mui/material"; // Import necessary MUI components
@@ -13,21 +10,21 @@ import { transformMonarchButterflyRecordToRowPage } from "../utils/dataTransform
 
 // Define the prop type for EmptyDatabase for better type safety
 interface EmptyDatabaseProps {
-  theRefetchOfStudents: () => void;
+  theRefetchOfSightings: () => void;
 }
 
 const EmptyDatabase = (props: EmptyDatabaseProps) => {
   return (
     <Box sx={{ mt: 2 }}>
       <Typography variant="body1">
-        No students found. Add some from your database or via a POST request.
+        No sightings found. Add some from your database or via a POST request.
       </Typography>
       <Button
         variant="contained"
-        onClick={props.theRefetchOfStudents}
+        onClick={props.theRefetchOfSightings}
         sx={{ mt: 2 }}
       >
-        Refresh Students
+        Refresh Sightings
       </Button>
     </Box>
   );
@@ -36,7 +33,7 @@ const EmptyDatabase = (props: EmptyDatabaseProps) => {
 // CHQ: Gemini AI renamed and refactored this.
 //      It split a single functional component into a hook and a component
 const SightingDisplay: React.FC = () => {
-  const { students, loading, error, refetchStudents } = useStudents();
+  const { sightings, loading, error, refetchSightings } = useSightings();
 
   // Set this to `false` to use real data from the API
   // const useSampleData = true;
@@ -45,7 +42,7 @@ const SightingDisplay: React.FC = () => {
   if (loading) {
     return (
       <Box sx={{ p: 2 }}>
-        <Typography variant="h5">Loading students...</Typography>
+        <Typography variant="h5">Loading sightings...</Typography>
       </Box>
     );
   }
@@ -57,16 +54,16 @@ const SightingDisplay: React.FC = () => {
         <Typography variant="h5" color="error">
           Error: {error}
         </Typography>
-        <Button variant="contained" onClick={refetchStudents} sx={{ mt: 2 }}>
+        <Button variant="contained" onClick={refetchSightings} sx={{ mt: 2 }}>
           Retry Fetch
         </Button>
       </Box>
     );
   }
 
-  // --- Prepare the data for StudentTable based on 'useSampleData' flag ---
+  // --- Prepare the data for SightingTable based on 'useSampleData' flag ---
   const dataForTable: RowPage[] =
-    transformMonarchButterflyRecordToRowPage(students);
+    transformMonarchButterflyRecordToRowPage(sightings);
   // --- END DATA PREPARATION ---
 
   // const isHidingEmptyDatabase = true;
@@ -78,16 +75,15 @@ const SightingDisplay: React.FC = () => {
         Student Management Dashboard
       </Typography>
 
-      {/* Show EmptyDatabase component if no error, no real students, AND not using sample data */}
+      {/* Show EmptyDatabase component if no error, no real sightings, AND not using sample data */}
 
       {!error &&
       dataForTable.length === 0 &&
       !useSampleData &&
       isHidingEmptyDatabase ? (
-        <EmptyDatabase theRefetchOfStudents={refetchStudents} />
+        <EmptyDatabase theRefetchOfSightings={refetchSightings} />
       ) : (
-        // Render StudentTable with the prepared data (either transformed real data or sample data)
-        // <StudentTable thePages={dataForTable} />
+        // Render SightingTable with the prepared data (either transformed real data or sample data)
         <SightingTable thePages={dataForTable} />
       )}
     </Box>
