@@ -34,7 +34,9 @@ export const useSightings = (): useSightingsResult => {
     }
 
     try {
-      const response = await fetch(apiURL);
+      const response = await fetch(
+        apiURL + "/monarchbutterlies/dayscan/06302025"
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

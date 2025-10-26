@@ -59,6 +59,7 @@ export interface ColumnVisibilityMiniTable {
   cityOrTown: boolean;
   countryCode: boolean;
   county: boolean;
+  time_only: boolean;
   date_only: boolean;
   day: boolean;
   day_of_week: boolean;
@@ -77,15 +78,16 @@ export const defaultColumnVisibilityMiniTable: ColumnVisibilityMiniTable = {
   cityOrTown: true,
   countryCode: true,
   county: true,
+  time_only: true,
   date_only: true,
   day: true,
   day_of_week: true,
-  decimalLatitude: true,
-  decimalLongitude: true,
-  eventDate: true,
+  decimalLatitude: false,
+  decimalLongitude: false,
+  eventDate: false,
   stateProvince: true,
-  week_of_year: true,
-  year: true,
+  week_of_year: false,
+  year: false,
   gbifID: true,
 };
 
@@ -95,9 +97,10 @@ export const smartphoneVisibilityMiniTable: ColumnVisibilityMiniTable = {
   cityOrTown: true,
   countryCode: true,
   county: true,
+  time_only: true,
   date_only: true,
-  day: true,
-  day_of_week: true,
+  day: false,
+  day_of_week: false,
   decimalLatitude: true,
   decimalLongitude: true,
   eventDate: true,

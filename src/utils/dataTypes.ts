@@ -4,7 +4,8 @@ export interface RowPage {
   cityOrTown: string;
   countryCode: string;
   county: string;
-  dateOnly: Date;
+  time_only: string;
+  date_only: Date;
   day: number;
   dayOfWeek: number;
   decimalLatitude: number;
@@ -30,6 +31,7 @@ export interface MonarchButterflyRecord {
   cityOrTown: string;
   countryCode: string;
   county: string;
+  time_only: string;
   date_only: Date;
   day: number;
   day_of_week: number;

@@ -72,7 +72,7 @@ const SightingDisplay: React.FC = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h4" gutterBottom>
-        Student Management Dashboard
+        Monarch Butterfly Sighting Dashboard
       </Typography>
 
       {/* Show EmptyDatabase component if no error, no real sightings, AND not using sample data */}
