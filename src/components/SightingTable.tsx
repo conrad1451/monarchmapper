@@ -75,6 +75,7 @@ const allColumnKeys: Array<keyof ColumnVisibilityMiniTable> = [
   "day",
   "day_of_week",
   "week_of_year",
+  "time_only",
   "date_only",
   // "ScientificName",
   // "VernacularName",
@@ -99,7 +100,6 @@ const allColumnKeys: Array<keyof ColumnVisibilityMiniTable> = [
   // "CatalogNumber",
   "county",
   "cityOrTown",
-  // "TimeOnly",
 ];
 const ColumnVisibilityToggles = (props: {
   visibleColumns: ColumnVisibilityMiniTable;
@@ -790,7 +790,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
     useState<RowPage | null>(null);
 
   // State for the confirmation modal
-  // const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] =
+  // const [isDeletionConfirmationModalOpe 6n, setIsDeletionConfirmationModalOpen] =
   //   useState(false);
   // const [isUpdateConfirmationModalOpen, setIsUpdateConfirmationModalOpen] =
   //   useState(false);
