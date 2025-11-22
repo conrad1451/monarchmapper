@@ -79,6 +79,7 @@ export function transformMonarchButterflyRecordToRowPage(
       page.stateProvince,
       page.week_of_year,
       page.year,
+      page.month,
       page.gbifID
     )
   );
