@@ -14,6 +14,7 @@ export interface RowPage {
   stateProvince: string;
   week_of_year: number;
   year: number;
+  month: string;
   gbifID: string;
 }
 
@@ -41,6 +42,7 @@ export interface MonarchButterflyRecord {
   stateProvince: string;
   week_of_year: number;
   year: number;
+  month: string;
   gbifID: string;
 }
 

@@ -69,6 +69,7 @@ export interface ColumnVisibilityMiniTable {
   stateProvince: boolean;
   week_of_year: boolean;
   year: boolean;
+  month: boolean;
   gbifID: boolean;
 }
 
@@ -88,6 +89,7 @@ export const defaultColumnVisibilityMiniTable: ColumnVisibilityMiniTable = {
   stateProvince: true,
   week_of_year: false,
   year: false,
+  month: true,
   gbifID: true,
 };
 
@@ -107,6 +109,7 @@ export const smartphoneVisibilityMiniTable: ColumnVisibilityMiniTable = {
   stateProvince: true,
   week_of_year: true,
   year: true,
+  month: true,
   gbifID: true,
 };
 export const visibilityPresetsMiniTable: Map<

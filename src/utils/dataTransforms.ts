@@ -20,6 +20,7 @@ export function createCustomTableData(
   stateProvince: string,
   week_of_year: number,
   year: number,
+  month: string,
   gbifID: string
 ): RowPage {
   return {
@@ -37,6 +38,7 @@ export function createCustomTableData(
     stateProvince,
     week_of_year,
     year,
+    month,
     gbifID,
   };
 }
