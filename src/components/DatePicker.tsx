@@ -1,6 +1,6 @@
 // MiniTable.tsx
 // import React, { useState, useEffect, useMemo } from "react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 
 import {
   //   Table,
@@ -50,7 +50,7 @@ const DatePicker = () => {
   };
 
   //   CHQ: Gemini AI ceated helper function to calculate the max days in a month for the current year
-  const getMaxDays = (monthIndex: number, year: number) => {
+  const getMaxDays = useCallback((monthIndex: number, year: number) => {
     const monthName = namesOfMonths[monthIndex - 1];
 
     if (monthName === "February") {
@@ -60,7 +60,7 @@ const DatePicker = () => {
       return 30;
     }
     return 31;
-  };
+  }, []);
 
   const namesOfMonths = [
     "January",
