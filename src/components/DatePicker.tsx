@@ -69,12 +69,12 @@ const DatePicker = () => {
     []
   );
 
-  //   const yearsSince2023 = useMemo(
+  //   const rangeOfYears = useMemo(
   //     () => Array.from({ length: 3 }, (_, i) => i + 1 + 2022),
   //     []
   //   );
-  const yearsSince2023 = useMemo(
-    () => Array.from({ length: 2 }, (_, i) => i + 1 + 2022),
+  const rangeOfYears = useMemo(
+    () => Array.from({ length: 4 }, (_, i) => i + 2022),
     []
   );
   // Handler to update the selected portion count
@@ -120,12 +120,18 @@ const DatePicker = () => {
               {/* CHQ: Gemini AI corrected the indexing */}
               {/* CHQ: Gemini AI mapped the array of numbers to MenuItem components in the February condition */}
               {namesOfMonths[chosenMonth - 1] === "February"
-                ? daysOfMonth.slice(0, 28).map((day) => (
-                    <MenuItem key={day} value={day}>
-                      {day}
-                    </MenuItem>
-                  ))
-                : (the30DayMonths.includes(namesOfMonths[chosenMonth])
+                ? chosenYear % 4 === 0
+                  ? daysOfMonth.slice(0, 29).map((day) => (
+                      <MenuItem key={day} value={day}>
+                        {day}
+                      </MenuItem>
+                    ))
+                  : daysOfMonth.slice(0, 28).map((day) => (
+                      <MenuItem key={day} value={day}>
+                        {day}
+                      </MenuItem>
+                    ))
+                : (the30DayMonths.includes(namesOfMonths[chosenMonth - 1])
                     ? daysOfMonth.slice(0, 30)
                     : daysOfMonth.slice(0, 31)
                   ).map((day) => (
@@ -148,11 +154,29 @@ const DatePicker = () => {
               //   color="black"
               onChange={handleMonthChange}
             >
-              {monthsOfYear.map((month) => (
+              {/* {monthsOfYear.map((month) => (
                 <MenuItem key={month} value={month}>
                   {namesOfMonths[month - 1]}
                 </MenuItem>
-              ))}
+              ))} */}
+
+              {chosenYear === 2025
+                ? monthsOfYear.slice(0, 9).map((month) => (
+                    <MenuItem key={month} value={month}>
+                      {namesOfMonths[month - 1]}
+                    </MenuItem>
+                  ))
+                : chosenYear === 2022
+                ? monthsOfYear.slice(4).map((month) => (
+                    <MenuItem key={month} value={month}>
+                      {namesOfMonths[month - 1]}
+                    </MenuItem>
+                  ))
+                : monthsOfYear.map((month) => (
+                    <MenuItem key={month} value={month}>
+                      {namesOfMonths[month - 1]}
+                    </MenuItem>
+                  ))}
             </Select>
           </FormControl>
 
@@ -168,7 +192,7 @@ const DatePicker = () => {
               //   color="black"
               onChange={handleYearChange}
             >
-              {yearsSince2023.map((year) => (
+              {rangeOfYears.map((year) => (
                 <MenuItem key={year} value={year}>
                   {year}
                 </MenuItem>
