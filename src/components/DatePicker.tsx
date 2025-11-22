@@ -100,133 +100,89 @@ const DatePicker = () => {
     );
   };
 
-  const [isTableCollapsed, setIsTableCollapsed] = useState(false);
-  const [isIngredientDetailCollapsed, setIsIngredientDetailCollapsed] =
-    useState(false);
-
   return (
     <>
       <p>{myText}</p>{" "}
       <Box sx={{ p: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-          <IconButton
-            onClick={() => setIsTableCollapsed(!isTableCollapsed)}
-            aria-label={isTableCollapsed ? "Expand Table" : "Collapse Table"}
-          >
-            {isTableCollapsed ? <MyChevronRightIcon /> : <MyExpandMoreIcon />}
-          </IconButton>
-          <Typography variant="h6">
-            {isTableCollapsed ? "Show Meal Breakdown" : "Meal Breakdown"}
-          </Typography>
-        </Box>
-        {!isTableCollapsed && (
-          <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-            <IconButton
-              onClick={() =>
-                setIsIngredientDetailCollapsed(!isIngredientDetailCollapsed)
-              }
-              aria-label={
-                isIngredientDetailCollapsed
-                  ? "Expand Ingredient List"
-                  : "Collapse Ingredient List"
-              }
+        <Box sx={{ display: "flex", alignItems: "center", ml: 2, gap: 1 }}>
+          <FormControl sx={{ minWidth: 100 }} size="small">
+            {/* <InputLabel id="num-portions-setter-label">
+                        Portions
+                    </InputLabel> */}
+            <Select
+              //   labelId="num-portions-setter-label"
+              //   id="num-portions-setter"
+              value={chosenDay}
+              label="day"
+              //   color="black"
+              onChange={handleDayChange}
             >
-              {!isIngredientDetailCollapsed ? (
-                <MyChevronRightIcon />
-              ) : (
-                <MyExpandMoreIcon />
-              )}
-            </IconButton>
-            <Typography variant="h6">
-              {!isIngredientDetailCollapsed
-                ? "Show Ingredients"
-                : "Hide Ingredients"}
-            </Typography>
-          </Box>
-        )}
-        {!isTableCollapsed && (
-          <>
-            <Box sx={{ display: "flex", alignItems: "center", ml: 2, gap: 1 }}>
-              <FormControl sx={{ minWidth: 100 }} size="small">
-                {/* <InputLabel id="num-portions-setter-label">
-                        Portions
-                    </InputLabel> */}
-                <Select
-                  //   labelId="num-portions-setter-label"
-                  //   id="num-portions-setter"
-                  value={chosenDay}
-                  label="day"
-                  //   color="black"
-                  onChange={handleDayChange}
-                >
-                  {/* CHQ: Gemini AI corrected the indexing */}
-                  {/* CHQ: Gemini AI mapped the array of numbers to MenuItem components in the February condition */}
-                  {namesOfMonths[chosenMonth - 1] === "February"
-                    ? daysOfMonth.slice(0, 28).map((day) => (
-                        <MenuItem key={day} value={day}>
-                          {day}
-                        </MenuItem>
-                      ))
-                    : (the30DayMonths.includes(namesOfMonths[chosenMonth])
-                        ? daysOfMonth.slice(0, 30)
-                        : daysOfMonth.slice(0, 31)
-                      ).map((day) => (
-                        <MenuItem key={day} value={day}>
-                          {day}
-                        </MenuItem>
-                      ))}
-                </Select>
-              </FormControl>
-
-              <FormControl sx={{ minWidth: 100 }} size="small">
-                {/* <InputLabel id="num-portions-setter-label">
-                        Portions
-                    </InputLabel> */}
-                <Select
-                  //   labelId="num-portions-setter-label"
-                  //   id="num-portions-setter"
-                  value={chosenMonth}
-                  label="month"
-                  //   color="black"
-                  onChange={handleMonthChange}
-                >
-                  {monthsOfYear.map((month) => (
-                    <MenuItem key={month} value={month}>
-                      {namesOfMonths[month - 1]}
+              {/* CHQ: Gemini AI corrected the indexing */}
+              {/* CHQ: Gemini AI mapped the array of numbers to MenuItem components in the February condition */}
+              {namesOfMonths[chosenMonth - 1] === "February"
+                ? daysOfMonth.slice(0, 28).map((day) => (
+                    <MenuItem key={day} value={day}>
+                      {day}
+                    </MenuItem>
+                  ))
+                : (the30DayMonths.includes(namesOfMonths[chosenMonth])
+                    ? daysOfMonth.slice(0, 30)
+                    : daysOfMonth.slice(0, 31)
+                  ).map((day) => (
+                    <MenuItem key={day} value={day}>
+                      {day}
                     </MenuItem>
                   ))}
-                </Select>
-              </FormControl>
+            </Select>
+          </FormControl>
 
-              <FormControl sx={{ minWidth: 100 }} size="small">
-                {/* <InputLabel id="num-portions-setter-label">
+          <FormControl sx={{ minWidth: 100 }} size="small">
+            {/* <InputLabel id="num-portions-setter-label">
                         Portions
                     </InputLabel> */}
-                <Select
-                  //   labelId="num-portions-setter-label"
-                  //   id="num-portions-setter"
-                  value={chosenYear}
-                  label="year"
-                  //   color="black"
-                  onChange={handleYearChange}
-                >
-                  {yearsSince2023.map((year) => (
-                    <MenuItem key={year} value={year}>
-                      {year}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <Button
-                variant="contained"
-                onClick={handleSearchDate}
-                sx={{ mb: { xs: 2, md: 0 } }}
-              >
-                Search Date
-              </Button>
-            </Box>
-          </>
-        )}
+            <Select
+              //   labelId="num-portions-setter-label"
+              //   id="num-portions-setter"
+              value={chosenMonth}
+              label="month"
+              //   color="black"
+              onChange={handleMonthChange}
+            >
+              {monthsOfYear.map((month) => (
+                <MenuItem key={month} value={month}>
+                  {namesOfMonths[month - 1]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl sx={{ minWidth: 100 }} size="small">
+            {/* <InputLabel id="num-portions-setter-label">
+                        Portions
+                    </InputLabel> */}
+            <Select
+              //   labelId="num-portions-setter-label"
+              //   id="num-portions-setter"
+              value={chosenYear}
+              label="year"
+              //   color="black"
+              onChange={handleYearChange}
+            >
+              {yearsSince2023.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+            variant="contained"
+            onClick={handleSearchDate}
+            sx={{ mb: { xs: 2, md: 0 } }}
+          >
+            Search Date
+          </Button>
+        </Box>
       </Box>
     </>
   );
