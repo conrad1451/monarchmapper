@@ -71,7 +71,7 @@ const allColumnKeys: Array<keyof ColumnVisibilityMiniTable> = [
   "eventDate",
   // "EventDateParsed",
   "year",
-  // "Month",
+  "month",
   "day",
   "day_of_week",
   "week_of_year",
@@ -334,33 +334,32 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
   return (
     <TableBody>
       {props.data.map((row) => (
-        <TableRow key={row.myID}>
+        <TableRow key={row.gbifID || row.myID}>
           {props.theColumnKeys.map((colName) =>
             props.visibleColumns[colName] ? (
               <TableCell key={colName}>
-                {/* {colName === "myID" && row.myID} */}
-                {colName === "cityOrTown" && row.cityOrTown}
-                {colName === "county" && row.county}
-                {colName === "gbifID" && row.gbifID}
+                {row[colName as keyof RowPage]}
               </TableCell>
             ) : null
           )}
           {/* TableCell for Actions button for existing rows */}
-          <TableCell>
+          <TableCell key={`actions-${row.gbifID || row.myID}`}>
             <IconButton
               aria-label="actions"
-              onClick={() => props.onOpenActionModal(row)} // Pass the entire row data
+              onClick={() => props.onOpenActionModal(row)}
             >
               <MoreVertIcon />
             </IconButton>
           </TableCell>
         </TableRow>
       ))}
-      {/* Footer row (Count of Sightings) */}
-      <TableRow>
+
+      {/* Footer row (Count of Sightings) - This also needs a unique key! */}
+      <TableRow key="footer-row">
         {props.theColumnKeys.map((colName) =>
           props.visibleColumns[colName] ? (
-            <TableCell key={colName}>
+            // ✅ FIX: The key is correctly placed on the <TableCell> here too
+            <TableCell key={`footer-${colName}`}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography variant="subtitle2" sx={{ mr: 1 }}>
                   {colName === "cityOrTown"
@@ -372,7 +371,8 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
           ) : null
         )}
         {/* Empty cell for the actions column in the footer row */}
-        <TableCell></TableCell>
+        {/* ✅ FIX: Add a unique key to this static cell */}
+        <TableCell key="footer-actions-cell"></TableCell>
       </TableRow>
     </TableBody>
   );
