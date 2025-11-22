@@ -44,7 +44,10 @@ const DatePicker = () => {
 
   //   CHQ: Gemini AI ceated variable
   // Helper to check if a year is a leap year (basic check sufficient for your range)
-  const isLeapYear = (year: number) => year % 4 === 0;
+  //   const isLeapYear = (year: number) => year % 4 === 0;
+  const isLeapYear = (year: number) => {
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  };
 
   //   CHQ: Gemini AI ceated helper function to calculate the max days in a month for the current year
   const getMaxDays = (monthIndex: number, year: number) => {
