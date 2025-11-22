@@ -145,6 +145,13 @@ const DatePicker = () => {
     );
   };
 
+  // Calculate the maximum valid day for the current month and year
+  const currentMaxDays = useMemo(
+    () => getMaxDays(chosenMonth, chosenYear),
+    [chosenMonth, chosenYear, getMaxDays]
+    // [chosenMonth, chosenYear]
+  );
+
   return (
     <>
       <p>{myText}</p>{" "}
@@ -184,6 +191,14 @@ const DatePicker = () => {
                       {day}
                     </MenuItem>
                   ))}
+            </Select>
+            <Select value={chosenDay} label="day" onChange={handleDayChange}>
+              {/* Render up to the calculated maximum day */}
+              {daysOfMonth.slice(0, currentMaxDays).map((day) => (
+                <MenuItem key={day} value={day}>
+                  {day}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
