@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
 import SightingDisplay from "./components/SightingDisplay";
+import DatePicker from "./components/DatePicker";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import "./App.css";
@@ -27,11 +28,15 @@ function NavigationButtons() {
       <Button variant="contained" onClick={() => handleNavigate("/orig")}>
         Go to original page
       </Button>
-      <Button
+      {/* <Button
         variant="contained"
-        onClick={() => handleNavigate("/datafetcher")}
+        // onClick={() => handleNavigate("/datafetcher")}
+        onClick={() => handleNavigate("/datepicker")}
       >
         Go to data fetcher
+      </Button> */}
+      <Button variant="contained" onClick={() => handleNavigate("/datepicker")}>
+        Pick Date to Analyze
       </Button>
       {/* <Button variant="contained" onClick={() => handleNavigate("/tabletest")}>
         Go to table testing
@@ -48,6 +53,7 @@ function FirstApp() {
           <Route path="/" element={<NavigationButtons />} />
           <Route path="/orig" element={<SamplePage />} />
           <Route path="/datafetcher" element={<SightingDisplay />} />
+          <Route path="/datepicker" element={<DatePicker />} />
 
           {/* <Route path="/datafetcher" element={<DataFetcher />} /> */}
 
