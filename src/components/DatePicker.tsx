@@ -92,7 +92,11 @@ const DatePicker = () => {
   // Handler to add a new portioning row
   const handleSearchDate = () => {
     setMyText(
-      namesOfMonths[chosenMonth] + String(chosenDay) + String(chosenYear)
+      namesOfMonths[chosenMonth - 1] +
+        " " +
+        String(chosenDay) +
+        ", " +
+        String(chosenYear)
     );
   };
 
