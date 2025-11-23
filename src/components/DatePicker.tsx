@@ -192,14 +192,6 @@ const DatePicker = () => {
                     </MenuItem>
                   ))}
             </Select>
-            <Select value={chosenDay} label="day" onChange={handleDayChange}>
-              {/* Render up to the calculated maximum day */}
-              {daysOfMonth.slice(0, currentMaxDays).map((day) => (
-                <MenuItem key={day} value={day}>
-                  {day}
-                </MenuItem>
-              ))}
-            </Select>
           </FormControl>
 
           <FormControl sx={{ minWidth: 100 }} size="small">
