@@ -16,7 +16,9 @@ interface useSightingsResult {
 // const apiURL = import.meta.env.VITE_API_URL + "/api/monarchs";
 const apiURL = import.meta.env.VITE_API_URL;
 
-export const useSightings = (): useSightingsResult => {
+export const useSightings = (props: {
+  sightingDate: string;
+}): useSightingsResult => {
   const [sightings, setSightings] = useState<MonarchButterflyRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +37,7 @@ export const useSightings = (): useSightingsResult => {
 
     try {
       const response = await fetch(
-        apiURL + "/monarchbutterlies/dayscan/06302025"
+        apiURL + "/monarchbutterlies/dayscan/" + props.sightingDate
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
