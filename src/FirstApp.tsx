@@ -1,78 +1,355 @@
-import SamplePage from "./components/SamplePage";
-// import CustomTable from './MyTable'
-// import SightingTable from "./components/SightingTable";
+// CHQ: Gemini AI included imports
+import React, { useState, useMemo, useCallback } from "react";
+import {
+  Button,
+  Box,
+  Typography,
+  FormControl,
+  Select,
+  MenuItem,
+  useTheme,
+  Paper,
+} from "@mui/material";
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
+// CHQ: Gemini AI included imports
+import type { SelectChangeEvent } from "@mui/material/Select";
 
-import SightingDisplay from "./components/SightingDisplay";
-import DatePicker from "./components/DatePicker";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// --- START: Utility Functions ---
 
-import "./App.css";
+// CHQ: Gemini AI included utility functions here
+/**
+ * Implements the full Gregorian calendar leap year rule:
+ * Divisible by 4, but not by 100 unless also by 400.
+ */
+const isLeapYear = (year: number): boolean => {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+};
 
-// eslint@typescript-eslint/no-empty-object-type
-// interface NavigationButtonsProps {}
+// CHQ: Gemini AI included list here
+const namesOfMonths = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
-// const NavigationButtons: React.FC<NavigationButtonsProps> = () => {
-function NavigationButtons() {
-  const navigate = useNavigate();
+const the30DayMonths = ["April", "June", "September", "November"];
 
-  const handleNavigate = (path: string) => {
-    navigate(path);
+/**
+ * Calculates the maximum number of days for a given month and year.
+ * @param monthIndex 1-based index (1=Jan, 12=Dec)
+ * @param year The year to check for leap year status
+ * @returns The maximum number of days in that month (28, 29, 30, or 31)
+ */
+const getMaxDays = (monthIndex: number, year: number) => {
+  const monthName = namesOfMonths[monthIndex - 1];
+
+  if (monthName === "February") {
+    return isLeapYear(year) ? 29 : 28;
+  }
+  if (the30DayMonths.includes(monthName)) {
+    return 30;
+  }
+  return 31;
+};
+
+// --- END: Utility Functions ---
+
+// --- START: DatePicker Component ---
+
+interface DatePickerProps {
+  setDate: (date: string) => void;
+  // This prop will be used to show the currently selected date, but doesn't manage selection.
+  currentDateDisplay: string;
+}
+
+// (props: {
+// setDate: React.Dispatch<React.SetStateAction<string>>;
+// })
+
+// Member 'setDate' implicitly has an 'any' type.ts(7008)
+// const DatePicker = (props: { setDate; currentDateDisplay }) => {
+const DatePicker: React.FC<DatePickerProps> = ({
+  setDate,
+  currentDateDisplay,
+}) => {
+  // Initialize with a date that highlights 2024 as a leap year is available.
+  const [chosenDay, setChosenDay] = useState<number>(29);
+  const [chosenMonth, setChosenMonth] = useState<number>(2); // February
+  const [chosenYear, setChosenYear] = useState<number>(2024); // Leap Year
+
+  const daysOfMonth = useMemo(
+    () => Array.from({ length: 31 }, (_, i) => i + 1),
+    []
+  );
+
+  const monthsOfYear = useMemo(
+    () => Array.from({ length: 12 }, (_, i) => i + 1),
+    []
+  );
+
+  const rangeOfYears = useMemo(
+    () => Array.from({ length: 4 }, (_, i) => i + 2022), // 2022, 2023, 2024, 2025
+    []
+  );
+
+  // Calculate the maximum valid day for the current month and year
+  const currentMaxDays = useMemo(
+    () => getMaxDays(chosenMonth, chosenYear),
+    [chosenMonth, chosenYear]
+  );
+  const daysToRender = daysOfMonth.slice(0, currentMaxDays);
+
+  const handleDayChange = (event: SelectChangeEvent<number>) => {
+    setChosenDay(event.target.value as number);
   };
 
+  const handleMonthChange = (event: SelectChangeEvent<number>) => {
+    const newMonth = event.target.value as number;
+    setChosenMonth(newMonth);
+
+    // Calculate max days for the NEW month
+    const maxDays = getMaxDays(newMonth, chosenYear);
+
+    // If the currently selected day (e.g., 31) is too high for the new month (e.g., 30), reset it
+    if (chosenDay > maxDays) {
+      setChosenDay(maxDays);
+    }
+  };
+
+  const handleYearChange = (event: SelectChangeEvent<number>) => {
+    const newYear = event.target.value as number;
+    setChosenYear(newYear);
+
+    // Only need to adjust the day if February is the current month
+    if (namesOfMonths[chosenMonth - 1] === "February") {
+      const maxDays = getMaxDays(chosenMonth, newYear);
+
+      // If the currently selected day (e.g., 29 in 2024) is now too high (e.g., 28 in 2023), reset it
+      if (chosenDay > maxDays) {
+        setChosenDay(maxDays);
+      }
+    }
+  };
+
+  // Handler to update the date in the parent component
+  const handleSearchDate = () => {
+    const paddedMonth = String(chosenMonth).padStart(2, "0");
+    const paddedDay = String(chosenDay).padStart(2, "0");
+
+    // Format: MMddyyyy (e.g., 02292024)
+    const formattedDate = `${paddedMonth}${paddedDay}${chosenYear}`;
+    setDate(formattedDate);
+  };
+
+  // Determine the display string for the current selection
+  const currentSelectionDisplay = `${
+    namesOfMonths[chosenMonth - 1]
+  } ${chosenDay}, ${chosenYear}`;
+
   return (
-    <Box sx={{ display: "flex", gap: 2, justifyContent: "center", mb: 2 }}>
-      <Button variant="contained" onClick={() => handleNavigate("/orig")}>
+    <Box sx={{ p: 4, maxWidth: 600, mx: "auto" }}>
+      <Typography
+        variant="h5"
+        gutterBottom
+        align="center"
+        sx={{ color: "#1976d2" }}
+      >
+        Date Selection
+      </Typography>
+      <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          Selected Date (Local State): **{currentSelectionDisplay}**
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 2, color: "green.700" }}>
+          Date passed to parent (After Search): **{currentDateDisplay || "N/A"}
+          **
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            flexWrap: "wrap",
+          }}
+        >
+          {/* --- Day Select --- */}
+          <FormControl sx={{ minWidth: 100 }} size="small">
+            <Select value={chosenDay} displayEmpty onChange={handleDayChange}>
+              {daysToRender.map((day) => (
+                <MenuItem key={day} value={day}>
+                  {day}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* --- Month Select --- */}
+          <FormControl sx={{ minWidth: 150 }} size="small">
+            <Select
+              value={chosenMonth}
+              displayEmpty
+              onChange={handleMonthChange}
+            >
+              {/* Simplified Month Rendering for demo */}
+              {monthsOfYear.map((month) => (
+                <MenuItem key={month} value={month}>
+                  {namesOfMonths[month - 1]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* --- Year Select --- */}
+          <FormControl sx={{ minWidth: 100 }} size="small">
+            <Select value={chosenYear} displayEmpty onChange={handleYearChange}>
+              {rangeOfYears.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button
+            variant="contained"
+            onClick={handleSearchDate}
+            sx={{ flexGrow: 1 }}
+          >
+            Update Global Date
+          </Button>
+        </Box>
+      </Paper>
+    </Box>
+  );
+};
+// --- END: DatePicker Component ---
+
+// --- START: Placeholder Components ---
+
+const SamplePage: React.FC = () => (
+  <Box sx={{ p: 4, textAlign: "center" }}>
+    <Typography variant="h4" color="primary">
+      Original Sample Page
+    </Typography>
+    <Typography variant="body1" mt={2}>
+      This is a placeholder for your original content.
+    </Typography>
+  </Box>
+);
+
+interface SightingDisplayProps {
+  sightingDate: string;
+}
+
+const SightingDisplay: React.FC<SightingDisplayProps> = ({ sightingDate }) => (
+  <Box sx={{ p: 4, textAlign: "center" }}>
+    <Typography variant="h4" color="secondary">
+      Sighting Data Fetcher
+    </Typography>
+    <Typography variant="body1" mt={2}>
+      The parent app has selected this date:
+      <Box component="span" sx={{ fontWeight: "bold", color: "red" }}>
+        {sightingDate || "No date selected yet."}
+      </Box>
+    </Typography>
+    <Typography variant="caption" display="block" mt={1}>
+      (Format: MMddyyyy)
+    </Typography>
+  </Box>
+);
+
+// --- END: Placeholder Components ---
+
+// --- START: Navigation & Main App ---
+
+interface NavigationButtonsProps {
+  navigate: (path: string) => void;
+}
+
+const NavigationButtons: React.FC<NavigationButtonsProps> = ({ navigate }) => {
+  return (
+    <Box sx={{ display: "flex", gap: 2, justifyContent: "center", p: 4 }}>
+      <Button variant="contained" onClick={() => navigate("/orig")}>
         Go to original page
       </Button>
-      {/* <Button
-        variant="contained"
-        // onClick={() => handleNavigate("/datafetcher")}
-        onClick={() => handleNavigate("/datepicker")}
-      >
-        Go to data fetcher
-      </Button> */}
-      <Button variant="contained" onClick={() => handleNavigate("/datepicker")}>
+      <Button variant="contained" onClick={() => navigate("/datepicker")}>
         Pick Date to Analyze
       </Button>
-      {/* <Button variant="contained" onClick={() => handleNavigate("/tabletest")}>
-        Go to table testing
-      </Button> */}
+    </Box>
+  );
+};
+
+function App() {
+  const [chosenDate, setChosenDate] = useState<string>("");
+  const [currentPath, setCurrentPath] = useState<string>("/");
+
+  // Function to simulate navigation (replaces useNavigate)
+  const navigate = useCallback((path: string) => {
+    setCurrentPath(path);
+  }, []);
+
+  let content;
+
+  switch (currentPath) {
+    case "/orig":
+      content = <SamplePage />;
+      break;
+    case "/datepicker":
+      content = (
+        <DatePicker setDate={setChosenDate} currentDateDisplay={chosenDate} />
+      );
+      break;
+    case "/datafetcher": // Automatically navigate here after selecting date
+      content = <SightingDisplay sightingDate={chosenDate} />;
+      break;
+    case "/":
+    default:
+      content = (
+        <Box sx={{ p: 4, textAlign: "center" }}>
+          <Typography variant="h3" gutterBottom>
+            Welcome
+          </Typography>
+          <NavigationButtons navigate={navigate} />
+          {chosenDate && (
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => navigate("/datafetcher")}
+              sx={{ mt: 2 }}
+            >
+              View Data for {chosenDate}
+            </Button>
+          )}
+        </Box>
+      );
+      break;
+  }
+
+  return (
+    <Box sx={{ fontFamily: "Inter", bgcolor: "#f4f7f9", minHeight: "100vh" }}>
+      <Box sx={{ maxWidth: 800, mx: "auto", pt: 4 }}>
+        {currentPath !== "/" && (
+          <Button
+            onClick={() => navigate("/")}
+            sx={{ mb: 2, ml: 2 }}
+            variant="text"
+          >
+            ← Back to Home
+          </Button>
+        )}
+        {content}
+      </Box>
     </Box>
   );
 }
 
-function FirstApp() {
-  const [chosenDate, setChosenDate] = useState<string>("");
-
-  return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<NavigationButtons />} />
-          <Route path="/orig" element={<SamplePage />} />
-          <Route
-            path="/datafetcher"
-            element={<SightingDisplay sightingDate={chosenDate} />}
-            // element={<SightingDisplay sightingDate="07302025" />}
-          />
-          <Route
-            path="/datepicker"
-            element={<DatePicker setDate={setChosenDate} />}
-          />
-
-          {/* <Route path="/datafetcher" element={<DataFetcher />} /> */}
-
-          {/* <Route path="/test" element={<MyTableTest />} /> */}
-          {/* <Route path="/orig" element={ <CustomTable/>} /> */}
-        </Routes>
-      </Router>
-    </>
-  );
-}
-
-export default FirstApp;
+export default App;
