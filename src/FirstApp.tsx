@@ -14,6 +14,8 @@ import {
 // CHQ: Gemini AI included imports
 import type { SelectChangeEvent } from "@mui/material/Select";
 
+import type { DatePickerProps } from "./utils/dataTypes";
+
 // --- START: Utility Functions ---
 
 // CHQ: Gemini AI included utility functions here
@@ -64,12 +66,6 @@ const getMaxDays = (monthIndex: number, year: number) => {
 // --- END: Utility Functions ---
 
 // --- START: DatePicker Component ---
-
-interface DatePickerProps {
-  setDate: (date: string) => void;
-  // This prop will be used to show the currently selected date, but doesn't manage selection.
-  currentDateDisplay: string;
-}
 
 // (props: {
 // setDate: React.Dispatch<React.SetStateAction<string>>;

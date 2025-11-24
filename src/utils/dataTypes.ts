@@ -51,4 +51,8 @@ export interface Item {
   value: string;
 }
 
+export interface DatePickerProps {
+  setDate: (date: string) => void;
+  // This prop will be used to show the currently selected date, but doesn't manage selection.
+  currentDateDisplay: string;
 }
