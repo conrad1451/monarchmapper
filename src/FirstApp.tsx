@@ -142,6 +142,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
   // Handler to update the date in the parent component
   const handleSearchDate = () => {
+    // CHQ: Gemini AI pads months and dates to prevent errors with string assembly
     const paddedMonth = String(chosenMonth).padStart(2, "0");
     const paddedDay = String(chosenDay).padStart(2, "0");
 
