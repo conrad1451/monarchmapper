@@ -16,9 +16,11 @@ import type { SelectChangeEvent } from "@mui/material/Select";
 
 import type {
   DatePickerProps,
-  SightingDisplayProps,
+  // SightingDisplayProps,
   NavigationButtonsProps,
 } from "./utils/dataTypes";
+import { SightingDisplay } from "./components/SightingDisplay";
+// import { SightingDisplayAlt } from "./components/SightingDisplay";
 
 // --- START: Utility Functions ---
 
@@ -247,23 +249,6 @@ const SamplePage: React.FC = () => (
   </Box>
 );
 
-const SightingDisplay: React.FC<SightingDisplayProps> = ({ sightingDate }) => (
-  <Box sx={{ p: 4, textAlign: "center" }}>
-    <Typography variant="h4" color="secondary">
-      Sighting Data Fetcher
-    </Typography>
-    <Typography variant="body1" mt={2}>
-      The parent app has selected this date:
-      <Box component="span" sx={{ fontWeight: "bold", color: "red" }}>
-        {sightingDate || "No date selected yet."}
-      </Box>
-    </Typography>
-    <Typography variant="caption" display="block" mt={1}>
-      (Format: MMddyyyy)
-    </Typography>
-  </Box>
-);
-
 // --- END: Placeholder Components ---
 
 // --- START: Navigation & Main App ---
@@ -303,6 +288,7 @@ function App() {
       break;
     case "/datafetcher": // Automatically navigate here after selecting date
       content = <SightingDisplay sightingDate={chosenDate} />;
+      // content = <SightingDisplayAlt sightingDate={chosenDate} />;
       break;
     case "/":
     default:

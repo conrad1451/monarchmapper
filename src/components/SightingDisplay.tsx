@@ -5,7 +5,7 @@ import { useSightings } from "../hooks/useSightings";
 import SightingTable from "./SightingTable";
 
 import { Box, Button, Typography } from "@mui/material"; // Import necessary MUI components
-import type { RowPage } from "../utils/dataTypes"; // Import both
+import type { RowPage, SightingDisplayProps } from "../utils/dataTypes"; // Import both
 import { transformMonarchButterflyRecordToRowPage } from "../utils/dataTransforms";
 
 // Define the prop type for EmptyDatabase for better type safety
@@ -32,7 +32,7 @@ const EmptyDatabase = (props: EmptyDatabaseProps) => {
 
 // CHQ: Gemini AI renamed and refactored this.
 //      It split a single functional component into a hook and a component
-const SightingDisplay = (props: { sightingDate: string }) => {
+export const SightingDisplay = (props: { sightingDate: string }) => {
   const { sightings, loading, error, refetchSightings } = useSightings({
     // sightingDate: "06302025",
     sightingDate: props.sightingDate,
@@ -93,4 +93,23 @@ const SightingDisplay = (props: { sightingDate: string }) => {
   );
 };
 
-export default SightingDisplay;
+export const SightingDisplayAlt: React.FC<SightingDisplayProps> = ({
+  sightingDate,
+}) => (
+  <Box sx={{ p: 4, textAlign: "center" }}>
+    <Typography variant="h4" color="secondary">
+      Sighting Data Fetcher
+    </Typography>
+    <Typography variant="body1" mt={2}>
+      The parent app has selected this date:
+      <Box component="span" sx={{ fontWeight: "bold", color: "red" }}>
+        {sightingDate || "No date selected yet."}
+      </Box>
+    </Typography>
+    <Typography variant="caption" display="block" mt={1}>
+      (Format: MMddyyyy)
+    </Typography>
+  </Box>
+);
+
+// export default SightingDisplay;
