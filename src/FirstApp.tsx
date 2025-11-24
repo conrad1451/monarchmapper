@@ -2,6 +2,7 @@ import SamplePage from "./components/SamplePage";
 // import CustomTable from './MyTable'
 // import SightingTable from "./components/SightingTable";
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -46,14 +47,23 @@ function NavigationButtons() {
 }
 
 function FirstApp() {
+  const [chosenDate, setChosenDate] = useState<string>("");
+
   return (
     <>
       <Router>
         <Routes>
           <Route path="/" element={<NavigationButtons />} />
           <Route path="/orig" element={<SamplePage />} />
-          <Route path="/datafetcher" element={<SightingDisplay />} />
-          <Route path="/datepicker" element={<DatePicker />} />
+          <Route
+            path="/datafetcher"
+            element={<SightingDisplay sightingDate={chosenDate} />}
+            // element={<SightingDisplay sightingDate="07302025" />}
+          />
+          <Route
+            path="/datepicker"
+            element={<DatePicker setDate={setChosenDate} />}
+          />
 
           {/* <Route path="/datafetcher" element={<DataFetcher />} /> */}
 

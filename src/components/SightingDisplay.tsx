@@ -32,9 +32,10 @@ const EmptyDatabase = (props: EmptyDatabaseProps) => {
 
 // CHQ: Gemini AI renamed and refactored this.
 //      It split a single functional component into a hook and a component
-const SightingDisplay: React.FC = () => {
+const SightingDisplay = (props: { sightingDate: string }) => {
   const { sightings, loading, error, refetchSightings } = useSightings({
-    sightingDate: "06302025",
+    // sightingDate: "06302025",
+    sightingDate: props.sightingDate,
   });
 
   // Set this to `false` to use real data from the API

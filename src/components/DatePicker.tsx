@@ -1,4 +1,4 @@
-// MiniTable.tsx
+// DatePicker.tsx
 // import React, { useState, useEffect, useMemo } from "react";
 import { useState, useMemo, useCallback } from "react";
 
@@ -32,8 +32,11 @@ const MyChevronRightIcon = () => {
 const MyExpandMoreIcon = () => {
   return <>🔽</>;
 };
+// const setChosenDate: React.Dispatch<React.SetStateAction<string>>
 
-const DatePicker = () => {
+const DatePicker = (props: {
+  setDate: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const [myText, setMyText] = useState<string>("");
   const [chosenDay, setChosenDay] = useState<number>(1);
 
@@ -143,6 +146,11 @@ const DatePicker = () => {
         ", " +
         String(chosenYear)
     );
+
+    const theOutput: string =
+      String(chosenMonth) + String(chosenDay) + String(chosenYear);
+
+    props.setDate(theOutput);
   };
 
   // Calculate the maximum valid day for the current month and year
