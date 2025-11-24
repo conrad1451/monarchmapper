@@ -19,11 +19,11 @@ import {
   FormControl,
   Select,
   MenuItem,
-  IconButton,
-  TextField, // Added TextField for better input control in modals
+  // IconButton,
+  // TextField, // Added TextField for better input control in modals
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import MoreVertIcon from "@mui/icons-material/MoreVert"; // Icon for the action button
+// import MoreVertIcon from "@mui/icons-material/MoreVert"; // Icon for the action button
 
 // --- Import Custom Hooks ---
 import { useTableFilters } from "../hooks/useTableFilters";
@@ -38,31 +38,31 @@ import type { ColumnVisibilityMiniTable } from "../hooks/useColumnVisibility";
 import type { RowPage } from "../utils/dataTypes";
 
 // --- WebFormProps & WebForm Component ---
-interface WebFormProps {
-  onSubmit: (event: React.FormEvent) => Promise<void>;
-}
+// interface WebFormProps {
+//   onSubmit: (event: React.FormEvent) => Promise<void>;
+// }
 
-interface ConfirmUpdateProps {
-  first_name: string;
-  last_name: string;
-  email: string;
-  major: string;
-}
+// interface ConfirmUpdateProps {
+//   first_name: string;
+//   last_name: string;
+//   email: string;
+//   major: string;
+// }
 
-const WebForm: React.FC<WebFormProps> = ({ onSubmit }) => {
-  return (
-    <form onSubmit={onSubmit}>
-      {" "}
-      {/* Pass the onSubmit handler directly */}
-      <button type="submit">Submit data to database</button>
-    </form>
-  );
-};
+// const WebForm: React.FC<WebFormProps> = ({ onSubmit }) => {
+//   return (
+//     <form onSubmit={onSubmit}>
+//       {" "}
+//       {/* Pass the onSubmit handler directly */}
+//       <button type="submit">Submit data to database</button>
+//     </form>
+//   );
+// };
 
-interface ApiResponse {
-  message: string;
-  // ... other properties
-}
+// interface ApiResponse {
+//   message: string;
+//   // ... other properties
+// }
 
 const allColumnKeys: Array<keyof ColumnVisibilityMiniTable> = [
   "gbifID",
@@ -313,7 +313,7 @@ interface TableBodyRowsProps {
   data: RowPage[];
   visibleColumns: ColumnVisibilityMiniTable;
   theColumnKeys: Array<keyof ColumnVisibilityMiniTable>;
-  onOpenActionModal: (sighting: RowPage) => void;
+  // onOpenActionModal: (sighting: RowPage) => void;
   // NEW PROPS - passed down from SightingTable
   myId: number;
   // myFirstName: string;
@@ -324,9 +324,9 @@ interface TableBodyRowsProps {
   setMyCounty: (value: string) => void;
   myStateProvince: string;
   setMyStateProvince: (value: string) => void;
-  loading: boolean;
-  successMessage: string | null;
-  errorMessage: string | null;
+  // loading: boolean;
+  // successMessage: string | null;
+  // errorMessage: string | null;
   // onNewSightingSubmit: (event: React.FormEvent) => Promise<void>;
 }
 
@@ -343,14 +343,14 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
             ) : null
           )}
           {/* TableCell for Actions button for existing rows */}
-          <TableCell key={`actions-${row.gbifID || row.myID}`}>
+          {/* <TableCell key={`actions-${row.gbifID || row.myID}`}>
             <IconButton
               aria-label="actions"
               onClick={() => props.onOpenActionModal(row)}
             >
               <MoreVertIcon />
             </IconButton>
-          </TableCell>
+          </TableCell> */}
         </TableRow>
       ))}
 
@@ -703,9 +703,9 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   const [myCounty, setMyCounty] = useState("");
   const [myStateProvince, setMyStateProvince] = useState("");
 
-  const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // const [loading, setLoading] = useState(false);
+  // const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // CHQ: commented out unused code
   // const apiURL = import.meta.env.VITE_API_GCP_VM_DATABASE; // Declare apiURL here
@@ -785,9 +785,9 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   // CHQ: Gemini AI added the follow state variables
 
   // State for the new action modal (Edit/Delete)
-  const [isActionModalOpen, setIsActionModalOpen] = useState(false);
-  const [selectedSightingForActions, setSelectedSightingForActions] =
-    useState<RowPage | null>(null);
+  // const [isActionModalOpen, setIsActionModalOpen] = useState(false);
+  // const [selectedSightingForActions, setSelectedSightingForActions] =
+  //   useState<RowPage | null>(null);
 
   // State for the confirmation modal
   // const [isDeletionConfirmationModalOpe 6n, setIsDeletionConfirmationModalOpen] =
@@ -804,10 +804,10 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   // const [updateMajor, setUpdateMajor] = useState("");
 
   // Handler to open the action modal
-  const handleOpenActionModal = (sighting: RowPage) => {
-    setSelectedSightingForActions(sighting);
-    setIsActionModalOpen(true);
-  };
+  // const handleOpenActionModal = (sighting: RowPage) => {
+  //   setSelectedSightingForActions(sighting);
+  //   setIsActionModalOpen(true);
+  // };
 
   // Handler to close the action modal
   // const handleCloseActionModal = () => {
@@ -871,7 +871,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
                 data={sortedData}
                 visibleColumns={visibleColumns}
                 theColumnKeys={allColumnKeys}
-                onOpenActionModal={handleOpenActionModal}
+                // onOpenActionModal={handleOpenActionModal}
                 myId={newMyID} // Pass the newly generated ID
                 // myFirstName={myFirstName}
                 // setMyFirstName={setMyFirstName}
@@ -881,9 +881,9 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
                 setMyCounty={setMyCounty}
                 myStateProvince={myStateProvince}
                 setMyStateProvince={setMyStateProvince}
-                loading={loading}
-                successMessage={successMessage}
-                errorMessage={errorMessage}
+                // loading={loading}
+                // successMessage={successMessage}
+                // errorMessage={errorMessage}
                 // onNewSightingSubmit={handleNewSightingSubmit}
               />
             </Table>
