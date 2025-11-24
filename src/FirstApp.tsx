@@ -159,7 +159,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
   } ${chosenDay}, ${chosenYear}`;
 
   return (
-    <Box sx={{ p: 4, maxWidth: 600, mx: "auto" }}>
+    // <Box sx={{ p: 4, maxWidth: 600, mx: "auto" }}>
+    <Box sx={{ p: 4, minWidth: 800, mx: "auto" }}>
       <Typography
         variant="h5"
         gutterBottom
@@ -314,8 +315,28 @@ function App() {
   }
 
   return (
-    <Box sx={{ fontFamily: "Inter", bgcolor: "#f4f7f9", minHeight: "100vh" }}>
-      <Box sx={{ maxWidth: 800, mx: "auto", pt: 4 }}>
+    // CHQ: Gemini AI modified to apply flexbox to the outer container to center the inner container.
+
+    <Box
+      sx={{
+        fontFamily: "Inter",
+        bgcolor: "#f4f7f9",
+        minHeight: "100vh",
+        minWidth: "100vw",
+        display: "flex", // Enable flex container
+        justifyContent: "center", // Center content horizontally
+        // alignItems: 'flex-start', // (Optional) Keep content aligned to the top
+      }}
+    >
+      <Box
+        sx={{
+          // maxWidth: 800,
+          // minWidth: 1400,
+          // minWidth: 1000,
+          width: "100%", // Ensure it uses max width available up to 800px
+          pt: 4,
+        }}
+      >
         {currentPath !== "/" && (
           <Button
             onClick={() => navigate("/")}
