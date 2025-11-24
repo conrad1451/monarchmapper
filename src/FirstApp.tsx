@@ -14,7 +14,11 @@ import {
 // CHQ: Gemini AI included imports
 import type { SelectChangeEvent } from "@mui/material/Select";
 
-import type { DatePickerProps } from "./utils/dataTypes";
+import type {
+  DatePickerProps,
+  SightingDisplayProps,
+  NavigationButtonsProps,
+} from "./utils/dataTypes";
 
 // --- START: Utility Functions ---
 
@@ -243,10 +247,6 @@ const SamplePage: React.FC = () => (
   </Box>
 );
 
-interface SightingDisplayProps {
-  sightingDate: string;
-}
-
 const SightingDisplay: React.FC<SightingDisplayProps> = ({ sightingDate }) => (
   <Box sx={{ p: 4, textAlign: "center" }}>
     <Typography variant="h4" color="secondary">
@@ -267,10 +267,6 @@ const SightingDisplay: React.FC<SightingDisplayProps> = ({ sightingDate }) => (
 // --- END: Placeholder Components ---
 
 // --- START: Navigation & Main App ---
-
-interface NavigationButtonsProps {
-  navigate: (path: string) => void;
-}
 
 const NavigationButtons: React.FC<NavigationButtonsProps> = ({ navigate }) => {
   return (

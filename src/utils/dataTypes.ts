@@ -56,3 +56,11 @@ export interface DatePickerProps {
   // This prop will be used to show the currently selected date, but doesn't manage selection.
   currentDateDisplay: string;
 }
+
+export interface SightingDisplayProps {
+  sightingDate: string;
+}
+
+export interface NavigationButtonsProps {
+  navigate: (path: string) => void;
+}
