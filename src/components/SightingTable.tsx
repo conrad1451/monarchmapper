@@ -338,7 +338,7 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
           {props.theColumnKeys.map((colName) =>
             props.visibleColumns[colName] ? (
               <TableCell key={colName}>
-                {row[colName as keyof RowPage]}
+                {String(row[colName as keyof RowPage])}
               </TableCell>
             ) : null
           )}
