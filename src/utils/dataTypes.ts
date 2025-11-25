@@ -7,7 +7,7 @@ export interface RowPage {
   time_only: string;
   date_only: Date;
   day: number;
-  dayOfWeek: number;
+  day_of_week: number;
   decimalLatitude: number;
   decimalLongitude: number;
   eventDate: Date;
