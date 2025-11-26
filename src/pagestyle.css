@@ -1,0 +1,59 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: #000133;
+}
+
+/* Source: [1] */
+.header,
+.footer {
+  background: #00022e;
+  height: 50px;
+  color: rgb(228, 234, 246);
+  min-height: 10vh;
+}
+
+.left-part {
+  width: 25%;
+}
+
+.sidebar {
+  /* width: 25%; */
+  /* width: 15vw; */
+  width: 240px;
+  background-color: rgb(23, 124, 255);
+}
+
+.content {
+  /* width: 75%; */
+
+  width: 85vw;
+
+  background-color: rgb(203, 224, 240);
+}
+
+.container {
+  display: flex;
+  /* height: 100vh; */
+  /* min-height: 100vh; */
+  /* min-height: 130vh; */
+  flex: 1;
+}
+
+.drawer {
+  background: #d8dcd6;
+  width: 240px;
+}
+
+.main {
+  flex: 1;
+  background: #f7f5f5;
+}
+
+/* Sources:
+[1]: https://dev.to/ramonak/dashboard-layout-with-react-js-and-material-ui-27m4
+
+
+*/

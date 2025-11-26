@@ -1,7 +1,7 @@
 "use client";
 // page.tsx
 import { useState, useEffect } from "react";
-// import "./pagestyle.css";
+import "../pagestyle.css";
 
 // CHQ: Gemini AI refactored to import hook into parent component
 import { useNewDataFetch } from "../hooks/useNewDataFetch";
@@ -131,9 +131,9 @@ const MyApp = function () {
   return (
     <>
       <div className="App">
-        <div className="header">
+        {/* <div className="header">
           <h1>Hello, Next.js! ({mapType} View)</h1>
-        </div>
+        </div> */}
         <div className="container">
           <div className="sidebar">
             <SidebarControls currentMap={mapType} setMapType={setMapType} />
