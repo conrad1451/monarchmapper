@@ -2,8 +2,9 @@
 
 // CHQ: Gemini AI created
 
-import * as React from "react";
-import { useState, useMemo } from "react"; // Added useMemo for static data
+// import * as React from "react";
+// import { useState, useMemo } from "react"; // Added useMemo for static data
+import { useState } from "react"; // Added useMemo for static data
 import Map, {
   Popup,
   Source,

@@ -1,6 +1,6 @@
 "use client";
 // Using Mapbox
-import * as React from "react";
+// import * as React from "react";
 import Map from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 
