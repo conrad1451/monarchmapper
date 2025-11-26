@@ -2,7 +2,7 @@
 // Sources:
 // [1]: https://visgl.github.io/react-map-gl/docs/api-reference/mapbox/popup
 
-import * as React from "react";
+// import * as React from "react";
 import { useState } from "react";
 import Map, { Popup } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
