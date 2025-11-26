@@ -143,7 +143,6 @@ const MyApp = function () {
             <h2>Main Content: Map Integration</h2>
             {renderMap()}
 
-            {/* 5. CHQ: Gemini put button here: Conditionally render and wire the button */}
             {mapType === "PopupWithDyanmicLayers" && (
               <button
                 onClick={fetchNewData} //

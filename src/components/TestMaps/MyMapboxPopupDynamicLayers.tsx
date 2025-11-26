@@ -39,8 +39,6 @@ export function MyMapboxDynamicLayer({
 
   return (
     <div>
-      {/* 2. Button has been REMOVED (it is now in page.tsx) */}
-
       <Map
         mapboxAccessToken={MAPBOX_TOKEN}
         initialViewState={{

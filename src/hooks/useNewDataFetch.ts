@@ -1,10 +1,8 @@
 // useNewDataFetch.ts
 
 import { useCallback } from "react";
-// CHQ: Gemini AI exported interface
 import type { GeoJsonFeatureCollection } from "../utils/dataTypes";
 
-// CHQ: Gemini debugged hook
 export const useNewDataFetch = (
   // Destructure the setter function from the component
   setGeoJSON: (geoJson: GeoJsonFeatureCollection) => void

@@ -2,7 +2,6 @@
 
 import type { Item } from "./dataTypes";
 
-// CHQ: GEmini AI corrected the import method
 import type { RowPage, MonarchButterflyRecord } from "./dataTypes";
 
 export function createCustomTableData(
