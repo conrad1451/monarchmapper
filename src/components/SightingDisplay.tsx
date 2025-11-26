@@ -52,72 +52,77 @@ export const SightingDisplay = (props: {
   // const useSampleData = true;
   const useSampleData = false;
 
-  if (!loading && !(error && !useSampleData)) {
-    // --- Prepare the data for SightingTable based on 'useSampleData' flag ---
-    const dataForTable: RowPage[] =
-      transformMonarchButterflyRecordToRowPage(sightings);
-    // --- END DATA PREPARATION ---
+  // CHQ: Gemini AI moved dataForTable outside conditional statement to top level
+  // Conditionally determine the data for the table (can be null/empty if loading/error)
+  const dataForTable: RowPage[] = sightings
+    ? transformMonarchButterflyRecordToRowPage(sightings)
+    : []; // Default to empty array if no sightings yet
 
-    // CHQ: Gemini AI corrected coordList implementation to avoid infinite render loop
-    // NEW: Calculate the coordinate list once, using useMemo
-    const coordList: CoordListProps[] = useMemo(() => {
-      return dataForTable.map((sighting) => ({
-        lat: sighting.decimalLatitude,
-        lon: sighting.decimalLongitude,
-      }));
-    }, [dataForTable]); // Re-calculate only when dataForTable changes
+  // CHQ: Gemini AI moved useMemo hook to top level
+  // 2. HOOK: useMemo is called unconditionally at the top
+  const coordList: CoordListProps[] = useMemo(() => {
+    return dataForTable.map((sighting) => ({
+      lat: sighting.decimalLatitude,
+      lon: sighting.decimalLongitude,
+    }));
+  }, [dataForTable]);
 
-    // CHQ: Gemini AI corrected coordList implementation to avoid infinite render loop
-    // NEW: Use useEffect to call the parent state setter ONLY when the coordList changes
-    useEffect(() => {
-      // This runs only after the component has rendered AND coordList has changed.
+  // CHQ: Gemini AI moved useEffect hook to top level
+  // 3. HOOK: useEffect is called unconditionally at the top
+  useEffect(() => {
+    // We only set the coordinates if we have data (i.e., dataForTable is not empty)
+    if (dataForTable.length > 0) {
       props.setLatLongList(coordList);
-    }, [coordList, props.setLatLongList]); // Dependencies: coordList and the setter function
-    // const isHidingEmptyDatabase = true;
+    } else {
+      // Optionally clear the map if data is cleared
+      props.setLatLongList([]);
+    }
+  }, [coordList, props.setLatLongList, dataForTable.length]);
 
-    const isHidingEmptyDatabase = false;
+  // --- EARLY RETURNS (Conditional Rendering) ---
+
+  if (loading) {
     return (
       <Box sx={{ p: 2 }}>
-        <Typography variant="h4" gutterBottom>
-          Monarch Butterfly Sighting Dashboard
-        </Typography>
-
-        {/* Show EmptyDatabase component if no error, no real sightings, AND not using sample data */}
-
-        {!error &&
-        dataForTable.length === 0 &&
-        !useSampleData &&
-        isHidingEmptyDatabase ? (
-          <EmptyDatabase theRefetchOfSightings={refetchSightings} />
-        ) : (
-          // Render SightingTable with the prepared data (either transformed real data or sample data)
-          <SightingTable thePages={dataForTable} />
-        )}
+        <Typography variant="h5">Loading sightings...</Typography>
       </Box>
     );
-  } else {
-    if (loading) {
-      return (
-        <Box sx={{ p: 2 }}>
-          <Typography variant="h5">Loading sightings...</Typography>
-        </Box>
-      );
-    }
-
-    // Display error message if there's an error and we're not explicitly using sample data
-    if (error && !useSampleData) {
-      return (
-        <Box sx={{ p: 2 }}>
-          <Typography variant="h5" color="error">
-            Error: {error}
-          </Typography>
-          <Button variant="contained" onClick={refetchSightings} sx={{ mt: 2 }}>
-            Retry Fetch
-          </Button>
-        </Box>
-      );
-    }
   }
+
+  // Display error message if there's an error and we're not explicitly using sample data
+  if (error && !useSampleData) {
+    return (
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h5" color="error">
+          Error: {error}
+        </Typography>
+        <Button variant="contained" onClick={refetchSightings} sx={{ mt: 2 }}>
+          Retry Fetch
+        </Button>
+      </Box>
+    );
+  }
+
+  // --- REGULAR RENDER ---
+
+  const isHidingEmptyDatabase = false; // Moved out of the conditional block
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h4" gutterBottom>
+        Monarch Butterfly Sighting Dashboard
+      </Typography>
+
+      {!error &&
+      dataForTable.length === 0 &&
+      !useSampleData &&
+      isHidingEmptyDatabase ? (
+        <EmptyDatabase theRefetchOfSightings={refetchSightings} />
+      ) : (
+        <SightingTable thePages={dataForTable} />
+      )}
+    </Box>
+  );
 };
 
 export const SightingDisplayAlt: React.FC<SightingDisplayProps> = ({
