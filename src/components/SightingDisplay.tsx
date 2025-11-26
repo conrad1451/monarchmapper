@@ -34,18 +34,19 @@ const EmptyDatabase = (props: EmptyDatabaseProps) => {
   );
 };
 
-// CHQ: Gemini AI renamed and refactored this.
-//      It split a single functional component into a hook and a component
-export const SightingDisplay = (props: {
+// CHQ: Gemini AI destructured the prop
+// Change component signature to destructure the required prop
+export const SightingDisplay = ({
+  sightingDate,
+  setLatLongList,
+}: {
   sightingDate: string;
-  // setLatLongList: CoordListProps[];
-  // setLatLongList: any;
-  // setLatLongList: React.Dispatch<React.SetStateAction<number[]>>;
   setLatLongList: React.Dispatch<React.SetStateAction<CoordListProps[]>>;
 }) => {
   const { sightings, loading, error, refetchSightings } = useSightings({
     // sightingDate: "06302025",
-    sightingDate: props.sightingDate,
+    // sightingDate: props.sightingDate,
+    sightingDate: sightingDate,
   });
 
   // Set this to `false` to use real data from the API
@@ -54,9 +55,9 @@ export const SightingDisplay = (props: {
 
   // CHQ: Gemini AI moved dataForTable outside conditional statement to top level
   // Conditionally determine the data for the table (can be null/empty if loading/error)
-  const dataForTable: RowPage[] = sightings
-    ? transformMonarchButterflyRecordToRowPage(sightings)
-    : []; // Default to empty array if no sightings yet
+  const dataForTable: RowPage[] = useMemo(() => {
+    return sightings ? transformMonarchButterflyRecordToRowPage(sightings) : [];
+  }, [sightings]);
 
   // CHQ: Gemini AI moved useMemo hook to top level
   // 2. HOOK: useMemo is called unconditionally at the top
@@ -72,12 +73,15 @@ export const SightingDisplay = (props: {
   useEffect(() => {
     // We only set the coordinates if we have data (i.e., dataForTable is not empty)
     if (dataForTable.length > 0) {
-      props.setLatLongList(coordList);
+      // props.setLatLongList(coordList);
+      setLatLongList(coordList);
     } else {
       // Optionally clear the map if data is cleared
-      props.setLatLongList([]);
+      // props.setLatLongList([]);
+      setLatLongList([]);
     }
-  }, [coordList, props.setLatLongList, dataForTable.length]);
+    // }, [coordList, props.setLatLongList, dataForTable.length]);
+  }, [coordList, setLatLongList, dataForTable.length]);
 
   // --- EARLY RETURNS (Conditional Rendering) ---
 
