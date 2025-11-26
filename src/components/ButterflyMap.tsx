@@ -91,7 +91,10 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
 };
 
 const MyApp = function (props: { coords: CoordListProps[] }) {
-  const [mapType, setMapType] = useState("Popup");
+  // const [mapType, setMapType] = useState("Popup");
+  // CHQ: Gemini AI changed default map
+  // Change "Popup" to the component name that uses the dynamicGeoJson state
+  const [mapType, setMapType] = useState("PopupWithDyanmicLayers");
 
   // CHQ: Gemini AI: 1. STATE AND HOOK LIFTED UP: Define state for dynamic data
   // const [dynamicGeoJson, setDynamicGeoJson] = useState({
@@ -120,6 +123,21 @@ const MyApp = function (props: { coords: CoordListProps[] }) {
       fetchCustomData();
     }
   }, [fetchNewData, fetchCustomData]); // fetchNewData is stable due to useCallback in the hook
+
+  // CHQ: Gemini AI added
+  // ADDED: useEffect to log the GeoJSON state whenever it changes
+  useEffect(() => {
+    console.log("🐛 dynamicGeoJson Updated:", dynamicGeoJson);
+    // You can also check if the features array is populated:
+    if (dynamicGeoJson.features.length > 0) {
+      console.log(`✅ Loaded ${dynamicGeoJson.features.length} points.`);
+      // Check the structure of the first feature to ensure it's GeoJSON
+      console.log(
+        "First Feature Geometry:",
+        dynamicGeoJson.features[0].geometry
+      );
+    }
+  }, [dynamicGeoJson]); // Dependency array ensures this runs whenever dynamicGeoJson state changes
 
   // Function to conditionally render the correct map component
   const renderMap = () => {
@@ -157,7 +175,8 @@ const MyApp = function (props: { coords: CoordListProps[] }) {
 
             {mapType === "PopupWithDyanmicLayers" && (
               <button
-                onClick={fetchNewData} //
+                onClick={dataChoice === 1 ? fetchNewData : fetchCustomData}
+                // onClick={dataChoice === 1 ? fetchNewData() : fetchCustomData()}
                 style={{
                   margin: "10px 5px", // Adjusted margin for better placement
                   padding: "10px",
