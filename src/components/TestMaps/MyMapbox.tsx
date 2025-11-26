@@ -6,7 +6,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 export function MyMapComponent() {
   const MAPBOX_TOKEN =
-    import.meta.env.VITE_PUBLIC_MAPBOX_KEY || "YOUR_MAPBOX_PUBLIC_TOKEN_HERE";
+    import.meta.env.VITE_BUTTERFLY_MAPBOX_KEY ||
+    "YOUR_MAPBOX_PUBLIC_TOKEN_HERE";
 
   return (
     <Map

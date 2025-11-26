@@ -28,7 +28,8 @@ const layerStyle: LayerProps = {
 export function MyMapboxPopupWithLayers() {
   const [showPopup, setShowPopup] = useState<boolean>(true);
   const MAPBOX_TOKEN =
-    import.meta.env.NEXT_PUBLIC_MAPBOX_KEY || "YOUR_MAPBOX_PUBLIC_TOKEN_HERE";
+    import.meta.env.VITE_BUTTERFLY_MAPBOX_KEY ||
+    "YOUR_MAPBOX_PUBLIC_TOKEN_HERE";
 
   // 3. Define the data source. Using a simple GeoJSON URL for US states.
   const geojsonUrl =
