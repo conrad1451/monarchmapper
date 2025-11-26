@@ -1,7 +1,7 @@
 {
   "name": "monarchmapper",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,8 +15,10 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.1",
+    "mapbox-gl": "^3.16.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-map-gl": "^8.1.0",
     "react-router-dom": "^7.9.5"
   },
   "devDependencies": {

@@ -22,6 +22,8 @@ import type {
 import { SightingDisplay } from "./components/SightingDisplay";
 // import { SightingDisplayAlt } from "./components/SightingDisplay";
 
+import ButterflyMap from "./components/ButterflyMap";
+
 // --- START: Utility Functions ---
 
 // CHQ: Gemini AI included utility functions here
@@ -263,6 +265,9 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ navigate }) => {
       <Button variant="contained" onClick={() => navigate("/datepicker")}>
         Pick Date to Analyze
       </Button>
+      <Button variant="contained" onClick={() => navigate("/mymap")}>
+        See Map
+      </Button>
     </Box>
   );
 };
@@ -289,6 +294,10 @@ function App() {
       break;
     case "/datafetcher": // Automatically navigate here after selecting date
       content = <SightingDisplay sightingDate={chosenDate} />;
+      // content = <SightingDisplayAlt sightingDate={chosenDate} />;
+      break;
+    case "/mymap": // Automatically navigate here after selecting date
+      content = <ButterflyMap />;
       // content = <SightingDisplayAlt sightingDate={chosenDate} />;
       break;
     case "/":
