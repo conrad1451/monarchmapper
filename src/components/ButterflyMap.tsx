@@ -1,14 +1,18 @@
 "use client";
-// page.tsx
+// ButterflyMap.tsx
 import { useState, useEffect } from "react";
 import "../pagestyle.css";
 
 // CHQ: Gemini AI refactored to import hook into parent component
-import { useNewDataFetch } from "../hooks/useNewDataFetch";
+import {
+  useCustomDataFetch,
+  useDefaultDataFetch,
+} from "../hooks/useNewDataFetch";
 
 import type {
   GeoJsonFeatureCollection,
   SidebarControlsProps,
+  CoordListProps,
 } from "../utils/dataTypes";
 
 import { MyMapComponent } from "./TestMaps/MyMapbox";
@@ -86,7 +90,7 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
   );
 };
 
-const MyApp = function () {
+const MyApp = function (props: { coords: CoordListProps[] }) {
   const [mapType, setMapType] = useState("Popup");
 
   // CHQ: Gemini AI: 1. STATE AND HOOK LIFTED UP: Define state for dynamic data
@@ -101,13 +105,21 @@ const MyApp = function () {
       features: [], // Starts with an empty array
     });
 
+  const dataChoice: number = 2;
+
   // CHQ: Gemini AI: 2. HOOK CALL: Call the custom hook to get the stable fetch function
-  const fetchNewData = useNewDataFetch(setDynamicGeoJson);
+  const fetchNewData = useDefaultDataFetch(setDynamicGeoJson);
+
+  const fetchCustomData = useCustomDataFetch(props.coords, setDynamicGeoJson);
 
   // CHQ: Gemini AI: 3. INITIAL DATA LOAD: Use useEffect to call the function on mount
   useEffect(() => {
-    fetchNewData(); //
-  }, [fetchNewData]); // fetchNewData is stable due to useCallback in the hook
+    if (dataChoice === 1) {
+      fetchNewData();
+    } else {
+      fetchCustomData();
+    }
+  }, [fetchNewData, fetchCustomData]); // fetchNewData is stable due to useCallback in the hook
 
   // Function to conditionally render the correct map component
   const renderMap = () => {
@@ -170,10 +182,12 @@ const MyApp = function () {
   );
 };
 
-export default function ButterflyMap() {
+export default function ButterflyMap(props: {
+  monarchCoordinates: CoordListProps[];
+}) {
   return (
     <>
-      <MyApp />
+      <MyApp coords={props.monarchCoordinates} />
     </>
   );
 }

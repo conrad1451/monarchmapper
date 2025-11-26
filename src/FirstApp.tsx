@@ -17,6 +17,7 @@ import type { SelectChangeEvent } from "@mui/material/Select";
 import type {
   DatePickerProps,
   // SightingDisplayProps,
+  CoordListProps,
   NavigationButtonsProps,
 } from "./utils/dataTypes";
 import { SightingDisplay } from "./components/SightingDisplay";
@@ -276,6 +277,12 @@ function App() {
   const [chosenDate, setChosenDate] = useState<string>("");
   const [currentPath, setCurrentPath] = useState<string>("/");
 
+  const [butterflyCoords, setButterflyCoords] = useState<Array<CoordListProps>>(
+    []
+  );
+
+  // const [butterflyCoords, setButterflyCoords] = useState<Array<number>>([]);
+
   // Function to simulate navigation (replaces useNavigate)
   const navigate = useCallback((path: string) => {
     setCurrentPath(path);
@@ -293,11 +300,16 @@ function App() {
       );
       break;
     case "/datafetcher": // Automatically navigate here after selecting date
-      content = <SightingDisplay sightingDate={chosenDate} />;
+      content = (
+        <SightingDisplay
+          sightingDate={chosenDate}
+          setLatLongList={setButterflyCoords}
+        />
+      );
       // content = <SightingDisplayAlt sightingDate={chosenDate} />;
       break;
     case "/mymap": // Automatically navigate here after selecting date
-      content = <ButterflyMap />;
+      content = <ButterflyMap monarchCoordinates={butterflyCoords} />;
       // content = <SightingDisplayAlt sightingDate={chosenDate} />;
       break;
     case "/":

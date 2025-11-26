@@ -81,3 +81,8 @@ export interface SightingDisplayProps {
 export interface NavigationButtonsProps {
   navigate: (path: string) => void;
 }
+
+export interface CoordListProps {
+  lat: number;
+  lon: number;
+}
