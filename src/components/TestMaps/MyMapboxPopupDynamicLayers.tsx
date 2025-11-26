@@ -14,7 +14,18 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import type { MyMapboxDynamicLayerProps } from "../../utils/dataTypes";
 
-const pointLayerStyle: LayerProps = {
+const stateBoundariesLayer: LayerProps = {
+  id: "us-state-boundaries", // Unique ID for the layer
+  type: "line", // The type of visualization (e.g., fill, line, circle, symbol)
+  source: "states", // Must match the Source component's id
+  layout: {},
+  paint: {
+    "line-color": "#0099ff", // Blue line color
+    "line-width": 2, // Line thickness
+  },
+};
+
+const butterflyCoordsLayer: LayerProps = {
   id: "dynamic-points",
   type: "circle",
   source: "dynamic-data",
@@ -37,6 +48,9 @@ export function MyMapboxDynamicLayer({
     import.meta.env.VITE_BUTTERFLY_MAPBOX_KEY ||
     "YOUR_MAPBOX_PUBLIC_TOKEN_HERE";
 
+  const geojsonUrl =
+    "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_1_states_provinces_lines.geojson";
+
   return (
     <div>
       <Map
@@ -56,7 +70,17 @@ export function MyMapboxDynamicLayer({
           data={dynamicGeoJson} // <--- Uses the prop passed from the parent
         />
 
-        <Layer {...pointLayerStyle} />
+        <Layer {...butterflyCoordsLayer} />
+
+        {/* 4. Add the Source component inside the Map */}
+        <Source
+          id="states" // Unique ID for the data source
+          type="geojson"
+          data={geojsonUrl} // The URL or object containing the GeoJSON data
+        />
+
+        {/* 5. Add the Layer component, referencing the Source ID */}
+        <Layer {...stateBoundariesLayer} />
 
         {showPopup && (
           <Popup
