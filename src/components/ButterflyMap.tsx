@@ -38,7 +38,7 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
     <>
       <h2>🗺️ Map Controls</h2>
       <p>Currently showing: **{currentMap}**</p>
-      <button
+      {/* <button
         onClick={() => setMapType("Popup")}
         disabled={currentMap === "Popup"}
         style={{
@@ -49,10 +49,10 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
         }}
       >
         Show Popup Map
-      </button>
+      </button> */}
       <button
-        onClick={() => setMapType("PopupWithLayers")}
-        disabled={currentMap === "PopupWithLayers"}
+        onClick={() => setMapType("ButterflySightingsTable")}
+        disabled={currentMap === "ButterflySightingsTable"}
         style={{
           margin: "5px",
           padding: "10px",
@@ -60,11 +60,11 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
           width: "90%",
         }}
       >
-        Show PopupWithLayers Map
+        Show ButterflySightingsTable Map
       </button>
       <button
-        onClick={() => setMapType("PopupWithDyanmicLayers")}
-        disabled={currentMap === "PopupWithDyanmicLayers"}
+        onClick={() => setMapType("ButterflySightingsMap")}
+        disabled={currentMap === "ButterflySightingsMap"}
         style={{
           margin: "5px",
           padding: "10px",
@@ -72,10 +72,10 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
           width: "90%",
         }}
       >
-        Show PopupWithDyanmicLayers Map
+        Show ButterflySightingsMap
       </button>
 
-      <button
+      {/* <button
         onClick={() => setMapType("Basic")}
         disabled={currentMap === "Basic"}
         style={{
@@ -86,7 +86,7 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
         }}
       >
         Show Basic Map
-      </button>
+      </button> */}
     </>
   );
 };
@@ -95,7 +95,7 @@ const MyApp = function (props: { coords: CoordListProps[] }) {
   // const [mapType, setMapType] = useState("Popup");
   // CHQ: Gemini AI changed default map
   // Change "Popup" to the component name that uses the dynamicGeoJson state
-  const [mapType, setMapType] = useState("PopupWithDyanmicLayers");
+  const [mapType, setMapType] = useState("ButterflySightingsMap");
 
   // CHQ: Gemini AI: 1. STATE AND HOOK LIFTED UP: Define state for dynamic data
   // const [dynamicGeoJson, setDynamicGeoJson] = useState({
@@ -147,11 +147,11 @@ const MyApp = function (props: { coords: CoordListProps[] }) {
         return <MyMapboxPopup />;
       case "Basic":
         return <MyMapComponent />;
-      case "PopupWithLayers":
+      case "ButterflySightingsTable":
         return <MyMapboxPopupWithLayers />;
       // case "PopupWithLayersAlt":
       //   return <MyMapboxLayersAlt />;
-      case "PopupWithDyanmicLayers":
+      case "ButterflySightingsMap":
         // CHQ: Gemini AI: 4. PASS PROPS: Render the dynamic map and pass the data state
         return <MyMapboxDynamicLayer dynamicGeoJson={dynamicGeoJson} />;
       default:
@@ -174,7 +174,7 @@ const MyApp = function (props: { coords: CoordListProps[] }) {
             <h2>Main Content: Map Integration</h2>
             {renderMap()}
 
-            {mapType === "PopupWithDyanmicLayers" && (
+            {mapType === "ButterflySightingsMap" && (
               <button
                 onClick={dataChoice === 1 ? fetchNewData : fetchCustomData}
                 // onClick={dataChoice === 1 ? fetchNewData() : fetchCustomData()}
@@ -228,13 +228,13 @@ const MyButterflyContent = function (props: {
         return <MyMapboxPopup />;
       case "Basic":
         return <MyMapComponent />;
-      case "PopupWithLayers":
+      case "ButterflySightingsTable":
         // return <MyMapboxPopupWithLayers />;
         return <SightingTable thePages={dataForTable} />;
 
       // case "PopupWithLayersAlt":
       //   return <MyMapboxLayersAlt />;
-      case "PopupWithDyanmicLayers":
+      case "ButterflySightingsMap":
         // CHQ: Gemini AI: 4. PASS PROPS: Render the dynamic map and pass the data state
         return <MyMapboxDynamicLayer dynamicGeoJson={dynamicGeoJson} />;
       default:
@@ -283,7 +283,7 @@ export const ButterflyMap = function (props: {
   const { coords, chosenDate, setChosenDate, setButterflyCoords } = props;
   // const { coords, chosenDate, setButterflyCoords } = props;
 
-  const [mapType, setMapType] = useState("PopupWithDyanmicLayers");
+  const [mapType, setMapType] = useState("ButterflySightingsMap");
 
   const { sightings, loading, error, refetchSightings } = useSightings({
     // sightingDate: "06302025",
