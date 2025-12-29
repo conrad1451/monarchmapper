@@ -15,6 +15,8 @@ import type {
   CoordListProps,
 } from "../utils/dataTypes";
 
+import DatePicker from "./DatePicker";
+
 import { MyMapComponent } from "./TestMaps/MyMapbox";
 import { MyMapboxPopup } from "./TestMaps/MyMapboxPopup";
 import { MyMapboxPopupWithLayers } from "./TestMaps/MyMapboxPopupWithLayers";
@@ -201,12 +203,148 @@ const MyApp = function (props: { coords: CoordListProps[] }) {
   );
 };
 
-export default function ButterflyMap(props: {
+const MyAppComplex = function (props: {
+  coords: CoordListProps[];
+  chosenDate: string;
+  setChosenDate: (date: string) => void;
+}) {
+  // const [mapType, setMapType] = useState("Popup");
+  // CHQ: Gemini AI changed default map
+  // Change "Popup" to the component name that uses the dynamicGeoJson state
+  const [mapType, setMapType] = useState("PopupWithDyanmicLayers");
+
+  // CHQ: Gemini AI: 1. STATE AND HOOK LIFTED UP: Define state for dynamic data
+  // const [dynamicGeoJson, setDynamicGeoJson] = useState({
+  //   type: "FeatureCollection",
+  //   features: [], // Starts with an empty array
+  // });
+
+  const [dynamicGeoJson, setDynamicGeoJson] =
+    useState<GeoJsonFeatureCollection>({
+      type: "FeatureCollection",
+      features: [], // Starts with an empty array
+    });
+
+  const dataChoice: number = 2;
+
+  // CHQ: Gemini AI: 2. HOOK CALL: Call the custom hook to get the stable fetch function
+  const fetchNewData = useDefaultDataFetch(setDynamicGeoJson);
+
+  const fetchCustomData = useCustomDataFetch(props.coords, setDynamicGeoJson);
+
+  // CHQ: Gemini AI: 3. INITIAL DATA LOAD: Use useEffect to call the function on mount
+  useEffect(() => {
+    if (dataChoice === 1) {
+      fetchNewData();
+    } else {
+      fetchCustomData();
+    }
+  }, [fetchNewData, fetchCustomData]); // fetchNewData is stable due to useCallback in the hook
+
+  // CHQ: Gemini AI added
+  // ADDED: useEffect to log the GeoJSON state whenever it changes
+  useEffect(() => {
+    console.log("🐛 dynamicGeoJson Updated:", dynamicGeoJson);
+    // You can also check if the features array is populated:
+    if (dynamicGeoJson.features.length > 0) {
+      console.log(`✅ Loaded ${dynamicGeoJson.features.length} points.`);
+      // Check the structure of the first feature to ensure it's GeoJSON
+      console.log(
+        "First Feature Geometry:",
+        dynamicGeoJson.features[0].geometry
+      );
+    }
+  }, [dynamicGeoJson]); // Dependency array ensures this runs whenever dynamicGeoJson state changes
+
+  // Function to conditionally render the correct map component
+  const renderMap = () => {
+    switch (mapType) {
+      case "Popup":
+        return <MyMapboxPopup />;
+      case "Basic":
+        return <MyMapComponent />;
+      case "PopupWithLayers":
+        return <MyMapboxPopupWithLayers />;
+      // case "PopupWithLayersAlt":
+      //   return <MyMapboxLayersAlt />;
+      case "PopupWithDyanmicLayers":
+        // CHQ: Gemini AI: 4. PASS PROPS: Render the dynamic map and pass the data state
+        return <MyMapboxDynamicLayer dynamicGeoJson={dynamicGeoJson} />;
+      default:
+        return <p>Select a map type from the sidebar.</p>;
+    }
+  };
+
+  return (
+    <>
+      <div className="App">
+        {/* <div className="header">
+          <h1>Hello, Next.js! ({mapType} View)</h1>
+        </div> */}
+        <div className="container">
+          <div className="sidebar">
+            <SidebarControls currentMap={mapType} setMapType={setMapType} />
+          </div>
+
+          <div className="content">
+            <h2>Main Content: Map Integration</h2>
+            {renderMap()}
+
+            {mapType === "PopupWithDyanmicLayers" && (
+              // <button
+              //   onClick={dataChoice === 1 ? fetchNewData : fetchCustomData}
+              //   // onClick={dataChoice === 1 ? fetchNewData() : fetchCustomData()}
+              //   style={{
+              //     margin: "10px 5px", // Adjusted margin for better placement
+              //     padding: "10px",
+              //     display: "block",
+              //     width: "90%",
+              //     backgroundColor: "#007bff",
+              //     color: "white",
+              //     border: "none",
+              //     borderRadius: "4px",
+              //   }}
+              // >
+              //   Generate random points ({dynamicGeoJson.features.length} points)
+              // </button>
+
+              <DatePicker
+                setDate={props.setChosenDate}
+                currentDateDisplay={props.chosenDate}
+              />
+            )}
+          </div>
+        </div>
+        <div className="footer">
+          <h3>The footer is here!</h3>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export function ButterflyMapSimple(props: {
   monarchCoordinates: CoordListProps[];
 }) {
   return (
     <>
       <MyApp coords={props.monarchCoordinates} />
+    </>
+  );
+}
+
+export function ButterflyMapComplex(props: {
+  monarchCoordinates: CoordListProps[];
+  sightingDate: string;
+  setDate: (date: string) => void;
+}) {
+  return (
+    <>
+      <MyAppComplex
+        coords={props.monarchCoordinates}
+        chosenDate={props.sightingDate}
+        setChosenDate={props.setDate}
+      />
     </>
   );
 }
