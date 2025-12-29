@@ -23,7 +23,8 @@ import { SightingDisplay } from "./components/SightingDisplay";
 
 import {
   ButterflyMapSimple,
-  ButterflyMapComplex,
+  // ButterflyMapComplex,
+  ButterflyMap,
 } from "./components/ButterflyMap";
 import DatePicker from "./components/DatePicker";
 
@@ -97,11 +98,20 @@ function App() {
       break;
     case "/mymap": // Automatically navigate here after selecting date
       // content = <ButterflyMapSimple monarchCoordinates={butterflyCoords} />;
+      // content = (
+      //   <ButterflyMapComplex
+      //     monarchCoordinates={butterflyCoords}
+      //     sightingDate={chosenDate}
+      //     setDate={setChosenDate}
+      //     setButterflyCoords={setButterflyCoords}
+      //   />
+      // );
+
       content = (
-        <ButterflyMapComplex
-          monarchCoordinates={butterflyCoords}
-          sightingDate={chosenDate}
-          setDate={setChosenDate}
+        <ButterflyMap
+          coords={butterflyCoords}
+          chosenDate={chosenDate}
+          setChosenDate={setChosenDate}
           setButterflyCoords={setButterflyCoords}
         />
       );
