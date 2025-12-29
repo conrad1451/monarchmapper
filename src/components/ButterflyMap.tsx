@@ -74,18 +74,7 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
       >
         Show PopupWithDyanmicLayers Map
       </button>
-      {/* <button
-        onClick={() => setMapType("PopupWithLayersAlt")}
-        disabled={currentMap === "PopupWithLayersAlt"}
-        style={{
-          margin: "5px",
-          padding: "10px",
-          display: "block",
-          width: "90%",
-        }}
-      >
-        Show PopupWithLayersAlt Map
-      </button> */}
+
       <button
         onClick={() => setMapType("Basic")}
         disabled={currentMap === "Basic"}
@@ -277,23 +266,6 @@ const MyButterflyContent = function (props: {
           <div>{renderMap()}</div>
         )}
       </>
-
-      {/* <div>
-                <SightingDisplayV2
-                  sightingDate={props.chosenDate}
-                  setLatLongList={props.setButterflyCoords}
-                  exposeRefetch={setTrigger}
-                />
-              </div> */}
-
-      {/* <Button
-                variant="outlined"
-                color="secondary"
-                onClick={() => triggerUpdateOfSightingDisplay?.()}
-                sx={{ mt: 2 }}
-              >
-                View Data for {props.chosenDate}
-              </Button> */}
     </div>
   );
 };
@@ -386,7 +358,7 @@ export const ButterflyMap = function (props: {
   // CHQ: Gemini AI added
   // ADDED: useEffect to log the GeoJSON state whenever it changes
   useEffect(() => {
-    console.log("🐛 dynamicGeoJson Updated:", dynamicGeoJson);
+    console.log("dynamicGeoJson Updated:", dynamicGeoJson);
     // You can also check if the features array is populated:
     if (dynamicGeoJson.features.length > 0) {
       console.log(`✅ Loaded ${dynamicGeoJson.features.length} points.`);
@@ -452,24 +424,3 @@ export function ButterflyMapSimple(props: {
     </>
   );
 }
-
-// export function ButterflyMapComplex(props: {
-//   monarchCoordinates: CoordListProps[];
-//   sightingDate: string;
-//   setDate: (date: string) => void;
-//   setButterflyCoords: React.Dispatch<React.SetStateAction<CoordListProps[]>>;
-// }) {
-//   const { monarchCoordinates, sightingDate, setDate, setButterflyCoords } =
-//     props;
-
-//   return (
-//     <>
-//       <ButterflyMap
-//         coords={monarchCoordinates}
-//         chosenDate={sightingDate}
-//         setChosenDate={setDate}
-//         setButterflyCoords={setButterflyCoords}
-//       />
-//     </>
-//   );
-// }
