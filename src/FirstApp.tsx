@@ -22,7 +22,7 @@ import { SightingDisplay } from "./components/SightingDisplay";
 // import { SightingDisplayAlt } from "./components/SightingDisplay";
 
 import {
-  ButterflyMapSimple,
+  // ButterflyMapSimple,
   // ButterflyMapComplex,
   ButterflyMap,
 } from "./components/ButterflyMap";
