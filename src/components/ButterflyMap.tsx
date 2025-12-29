@@ -1,7 +1,8 @@
 "use client";
 // ButterflyMap.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "../pagestyle.css";
+import { Box, Button, Typography } from "@mui/material"; // Import necessary MUI components
 
 // CHQ: Gemini AI refactored to import hook into parent component
 import {
@@ -13,7 +14,14 @@ import type {
   GeoJsonFeatureCollection,
   SidebarControlsProps,
   CoordListProps,
+  RowPage,
+  // SightingDisplayProps,
 } from "../utils/dataTypes";
+
+import { transformMonarchButterflyRecordToRowPage } from "../utils/dataTransforms";
+
+import { useSightings } from "../hooks/useSightings";
+// import { SightingDisplayV2 } from "./SightingDisplay";
 
 import DatePicker from "./DatePicker";
 
@@ -207,17 +215,62 @@ const MyAppComplex = function (props: {
   coords: CoordListProps[];
   chosenDate: string;
   setChosenDate: (date: string) => void;
+  setButterflyCoords: React.Dispatch<React.SetStateAction<CoordListProps[]>>;
 }) {
   // const [mapType, setMapType] = useState("Popup");
   // CHQ: Gemini AI changed default map
   // Change "Popup" to the component name that uses the dynamicGeoJson state
+
+  const { coords, chosenDate, setChosenDate, setButterflyCoords } = props;
+
   const [mapType, setMapType] = useState("PopupWithDyanmicLayers");
+
+  const { sightings, loading, error, refetchSightings } = useSightings({
+    // sightingDate: "06302025",
+    // sightingDate: props.sightingDate,
+    sightingDate: chosenDate,
+  });
 
   // CHQ: Gemini AI: 1. STATE AND HOOK LIFTED UP: Define state for dynamic data
   // const [dynamicGeoJson, setDynamicGeoJson] = useState({
   //   type: "FeatureCollection",
   //   features: [], // Starts with an empty array
   // });
+
+  // CHQ: Gemini AI moved dataForTable outside conditional statement to top level
+  // Conditionally determine the data for the table (can be null/empty if loading/error)
+  const dataForTable: RowPage[] = useMemo(() => {
+    return sightings ? transformMonarchButterflyRecordToRowPage(sightings) : [];
+  }, [sightings]);
+
+  // CHQ: Gemini AI moved useMemo hook to top level
+  // 2. HOOK: useMemo is called unconditionally at the top
+  const coordList: CoordListProps[] = useMemo(() => {
+    return dataForTable.map((sighting) => ({
+      lat: sighting.decimalLatitude,
+      lon: sighting.decimalLongitude,
+    }));
+  }, [dataForTable]);
+
+  // CHQ: Gemini AI moved useEffect hook to top level
+  // 3. HOOK: useEffect is called unconditionally at the top
+  useEffect(() => {
+    // We only set the coordinates if we have data (i.e., dataForTable is not empty)
+    if (dataForTable.length > 0) {
+      // props.setButterflyCoords(coordList);
+      setButterflyCoords(coordList);
+    } else {
+      // Optionally clear the map if data is cleared
+      // props.setButterflyCoords([]);
+      setButterflyCoords([]);
+    }
+    // }, [coordList, props.setButterflyCoords, dataForTable.length]);
+  }, [coordList, setButterflyCoords, dataForTable.length]);
+
+  // CHQ: ChatGPT added
+  // const [triggerUpdateOfSightingDisplay, setTrigger] = useState<
+  //   (() => void) | null
+  // >(null);
 
   const [dynamicGeoJson, setDynamicGeoJson] =
     useState<GeoJsonFeatureCollection>({
@@ -230,7 +283,8 @@ const MyAppComplex = function (props: {
   // CHQ: Gemini AI: 2. HOOK CALL: Call the custom hook to get the stable fetch function
   const fetchNewData = useDefaultDataFetch(setDynamicGeoJson);
 
-  const fetchCustomData = useCustomDataFetch(props.coords, setDynamicGeoJson);
+  // const fetchCustomData = useCustomDataFetch(props.coords, setDynamicGeoJson);
+  const fetchCustomData = useCustomDataFetch(coords, setDynamicGeoJson);
 
   // CHQ: Gemini AI: 3. INITIAL DATA LOAD: Use useEffect to call the function on mount
   useEffect(() => {
@@ -288,7 +342,57 @@ const MyAppComplex = function (props: {
 
           <div className="content">
             <h2>Main Content: Map Integration</h2>
-            {renderMap()}
+
+            <div style={{ display: "flex", width: "20vw" }}>
+              <>
+                {loading ? (
+                  <Box sx={{ p: 2 }}>
+                    <Typography variant="h5">Loading sightings...</Typography>
+                  </Box>
+                ) : error ? (
+                  <Box sx={{ p: 2 }}>
+                    <Typography variant="h5" color="error">
+                      Error: {error}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      onClick={refetchSightings}
+                      sx={{ mt: 2 }}
+                    >
+                      Retry Fetch
+                    </Button>
+                  </Box>
+                ) : (
+                  <div>{renderMap()}</div>
+                )}
+              </>
+
+              {/* <div>
+                <SightingDisplayV2
+                  sightingDate={props.chosenDate}
+                  setLatLongList={props.setButterflyCoords}
+                  exposeRefetch={setTrigger}
+                />
+              </div> */}
+
+              {/* <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => triggerUpdateOfSightingDisplay?.()}
+                sx={{ mt: 2 }}
+              >
+                View Data for {props.chosenDate}
+              </Button> */}
+
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={refetchSightings}
+                sx={{ mt: 2 }}
+              >
+                View Data for {props.chosenDate}
+              </Button>
+            </div>
 
             {mapType === "PopupWithDyanmicLayers" && (
               // <button
@@ -309,8 +413,10 @@ const MyAppComplex = function (props: {
               // </button>
 
               <DatePicker
-                setDate={props.setChosenDate}
-                currentDateDisplay={props.chosenDate}
+                // setDate={props.setChosenDate}
+                setDate={setChosenDate}
+                // currentDateDisplay={props.chosenDate}
+                currentDateDisplay={chosenDate}
               />
             )}
           </div>
@@ -337,6 +443,7 @@ export function ButterflyMapComplex(props: {
   monarchCoordinates: CoordListProps[];
   sightingDate: string;
   setDate: (date: string) => void;
+  setButterflyCoords: React.Dispatch<React.SetStateAction<CoordListProps[]>>;
 }) {
   return (
     <>
@@ -344,6 +451,7 @@ export function ButterflyMapComplex(props: {
         coords={props.monarchCoordinates}
         chosenDate={props.sightingDate}
         setChosenDate={props.setDate}
+        setButterflyCoords={props.setButterflyCoords}
       />
     </>
   );

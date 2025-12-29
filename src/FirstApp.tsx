@@ -102,6 +102,7 @@ function App() {
           monarchCoordinates={butterflyCoords}
           sightingDate={chosenDate}
           setDate={setChosenDate}
+          setButterflyCoords={setButterflyCoords}
         />
       );
 
