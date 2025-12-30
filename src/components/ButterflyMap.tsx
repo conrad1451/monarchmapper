@@ -23,7 +23,9 @@ import { transformMonarchButterflyRecordToRowPage } from "../utils/dataTransform
 import { useSightings } from "../hooks/useSightings";
 // import { SightingDisplayV2 } from "./SightingDisplay";
 
-import DatePicker from "./DatePicker";
+// import DatePicker from "./DatePicker";
+
+import CustomDatePicker from "./CustomDatePicker";
 
 import { MyMapComponent } from "./TestMaps/MyMapbox";
 import { MyMapboxPopup } from "./TestMaps/MyMapboxPopup";
@@ -401,9 +403,13 @@ export const ButterflyMap = function (props: {
             >
               View Data for {chosenDate}
             </Button>
-            <DatePicker
+            {/* <DatePicker
               setDate={setChosenDate}
               currentDateDisplay={chosenDate}
+            /> */}
+            {/* <CustomDatePicker   onConfirm={("ddd")=> void }  /> */}
+            <CustomDatePicker
+              onConfirm={(dateString) => setChosenDate(dateString)}
             />
           </div>
         </div>
