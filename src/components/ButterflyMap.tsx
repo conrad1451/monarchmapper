@@ -43,7 +43,7 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
         disabled={currentMap === "Popup"}
         style={{
           margin: "5px",
-          padding: "10px",
+          padding: "10px",    
           display: "block",
           width: "90%",
         }}

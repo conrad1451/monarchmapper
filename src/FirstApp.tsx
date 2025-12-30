@@ -51,9 +51,9 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ navigate }) => {
       <Button variant="contained" onClick={() => navigate("/orig")}>
         Go to original page
       </Button>
-      <Button variant="contained" onClick={() => navigate("/datepicker")}>
+      {/* <Button variant="contained" onClick={() => navigate("/datepicker")}>
         Pick Date to Analyze
-      </Button>
+      </Button> */}
       <Button variant="contained" onClick={() => navigate("/mymap")}>
         See Map
       </Button>
@@ -87,15 +87,15 @@ function App() {
         <DatePicker setDate={setChosenDate} currentDateDisplay={chosenDate} />
       );
       break;
-    case "/datafetcher": // Automatically navigate here after selecting date
-      content = (
-        <SightingDisplay
-          sightingDate={chosenDate}
-          setLatLongList={setButterflyCoords}
-        />
-      );
-      // content = <SightingDisplayAlt sightingDate={chosenDate} />;
-      break;
+    // case "/datafetcher": // Automatically navigate here after selecting date
+    //   content = (
+    //     <SightingDisplay
+    //       sightingDate={chosenDate}
+    //       setLatLongList={setButterflyCoords}
+    //     />
+    //   );
+    //   // content = <SightingDisplayAlt sightingDate={chosenDate} />;
+    //   break;
     case "/mymap": // Automatically navigate here after selecting date
       // content = <ButterflyMapSimple monarchCoordinates={butterflyCoords} />;
       // content = (
@@ -126,7 +126,7 @@ function App() {
             Welcome
           </Typography>
           <NavigationButtons navigate={navigate} />
-          {chosenDate && (
+          {/* {chosenDate && (
             <Button
               variant="outlined"
               color="secondary"
@@ -135,7 +135,7 @@ function App() {
             >
               View Data for {chosenDate}
             </Button>
-          )}
+          )} */}
         </Box>
       );
       break;
