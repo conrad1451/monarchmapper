@@ -74,6 +74,18 @@ export interface DatePickerProps {
   currentDateDisplay: string;
 }
 
+// CHQ: ChatGPT made interface
+export interface DatePickerPropsAlt {
+  value: string;
+  onChange: (date: string) => void;
+  onConfirm: () => void;
+}
+
+export interface DatePickerPropsAlt1 {
+  value: string;
+  onConfirm: (date: string) => void;
+}
+
 export interface SightingDisplayProps {
   sightingDate: string;
 }

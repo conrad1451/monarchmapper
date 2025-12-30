@@ -1,4 +1,5 @@
 // CHQ: Gemini AI included imports
+// import React from "react";
 import React, { useState, useMemo } from "react";
 import {
   Button,
@@ -7,14 +8,19 @@ import {
   FormControl,
   Select,
   MenuItem,
-  // useTheme,
+  TextField,
   Paper,
+  // useTheme,
 } from "@mui/material";
 
 // CHQ: Gemini AI included imports
 import type { SelectChangeEvent } from "@mui/material/Select";
 
-import type { DatePickerProps } from "../utils/dataTypes";
+import type {
+  DatePickerProps,
+  DatePickerPropsAlt,
+  DatePickerPropsAlt1,
+} from "../utils/dataTypes";
 
 // --- START: Utility Functions ---
 
@@ -62,6 +68,7 @@ const getMaxDays = (monthIndex: number, year: number) => {
   }
   return 31;
 };
+// --- END: Utility Functions ---
 
 // --- START: DatePicker Component ---
 
@@ -71,14 +78,23 @@ const getMaxDays = (monthIndex: number, year: number) => {
 
 // Member 'setDate' implicitly has an 'any' type.ts(7008)
 // const DatePicker = (props: { setDate; currentDateDisplay }) => {
-const DatePicker: React.FC<DatePickerProps> = ({
-  setDate,
-  currentDateDisplay,
+// const DatePicker: React.FC<DatePickerProps> = ({
+//   setDate,
+//   currentDateDisplay,
+// }) => {
+
+export const DatePickerV1: React.FC<DatePickerPropsAlt1> = ({
+  value,
+  onConfirm,
 }) => {
   // Initialize with a date that highlights 2024 as a leap year is available.
   const [chosenDay, setChosenDay] = useState<number>(29);
   const [chosenMonth, setChosenMonth] = useState<number>(2); // February
   const [chosenYear, setChosenYear] = useState<number>(2024); // Leap Year
+
+  const setDate = onConfirm;
+
+  const currentDateDisplay = value;
 
   const daysOfMonth = useMemo(
     () => Array.from({ length: 31 }, (_, i) => i + 1),
@@ -227,8 +243,36 @@ const DatePicker: React.FC<DatePickerProps> = ({
     </Box>
   );
 };
+
+export const DatePickerV2: React.FC<DatePickerPropsAlt> = ({
+  value,
+  onChange,
+  onConfirm,
+}) => {
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 4 }}>
+      <TextField
+        type="date"
+        label="Select date"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        // InputLabelProps={{ shrink: true }}
+      />
+
+      <Button variant="contained" disabled={!value} onClick={onConfirm}>
+        View butterfly data
+      </Button>
+    </Box>
+  );
+};
 // --- END: DatePicker Component ---
 
 // --- START: Placeholder Components ---
 
-export default DatePicker;
+// const DatePicker = function () {
+//   const myChoice: number = 1;
+
+//   return myChoice === 1 ? <DatePickerV1 /> : <DatePickerV2 />;
+// };
+
+// export default DatePicker;
