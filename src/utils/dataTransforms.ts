@@ -8,7 +8,8 @@ import type { RowPage, MonarchButterflyRecord } from "./dataTypes";
  * Creates a stable, deterministic ID for records that might lack a primary key.
  * This prevents React Hydration Mismatch (Error #527).
  */
-function generateStableId(page: MonarchButterflyRecord, index: number): string {
+// function generateStableId(page: MonarchButterflyRecord, index: number): string {
+function generateStableId(page: MonarchButterflyRecord): string {
   // 1. Priority: Use the official Global Biodiversity ID if it exists
   if (page.gbifID) return String(page.gbifID);
 
@@ -78,9 +79,11 @@ export function createCustomTableData(
 export function transformMonarchButterflyRecordToRowPage(
   pages: MonarchButterflyRecord[]
 ): RowPage[] {
+  // return pages.map((page, index) => {
   return pages.map((page, index) => {
     // Generate the stable ID once here
-    const stableIdString = generateStableId(page, index);
+    // const stableIdString = generateStableId(page, index);
+    const stableIdString = generateStableId(page);
     const stableIdNumber = page.id || 1000 + index; // Consistent offset for numeric ID needs
 
     return {

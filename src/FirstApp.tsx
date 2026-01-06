@@ -1,6 +1,6 @@
 // CHQ: Gemini AI included imports
 // import React, { useState, useMemo, useCallback } from "react";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Button,
   Box,
@@ -70,7 +70,6 @@ function App() {
   const [butterflyCoords, setButterflyCoords] = useState<Array<CoordListProps>>(
     []
   );
-  const [hasMounted, setHasMounted] = useState(false);
   // CHQ: ChatGPT added
   // const [draftDate, setDraftDate] = useState("");
 
