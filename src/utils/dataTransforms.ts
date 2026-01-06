@@ -4,6 +4,22 @@ import type { Item } from "./dataTypes";
 
 import type { RowPage, MonarchButterflyRecord } from "./dataTypes";
 
+/**
+ * Creates a stable, deterministic ID for records that might lack a primary key.
+ * This prevents React Hydration Mismatch (Error #527).
+ */
+function generateStableId(page: MonarchButterflyRecord, index: number): string {
+  // 1. Priority: Use the official Global Biodiversity ID if it exists
+  if (page.gbifID) return String(page.gbifID);
+
+  // 2. Secondary: Use the record's internal ID if it exists
+  if (page.id) return String(page.id);
+
+  // 3. Fallback: Create a hash string from unique sighting data
+  // Even if index changes, the data attributes remain the same.
+  return `alt-${page.decimalLatitude}-${page.decimalLongitude}-${page.eventDate}`;
+}
+
 export function createCustomTableData(
   myID: number,
   cityOrTown: string,
@@ -62,28 +78,31 @@ export function createCustomTableData(
 export function transformMonarchButterflyRecordToRowPage(
   pages: MonarchButterflyRecord[]
 ): RowPage[] {
-  return pages.map((page) =>
-    createCustomTableData(
-      page.id,
-      page.cityOrTown,
-      page.countryCode,
-      page.county,
-      page.time_only,
-      page.date_only,
-      page.day,
-      page.day_of_week,
-      page.decimalLatitude,
-      page.decimalLongitude,
-      page.eventDate,
-      page.stateProvince,
-      page.week_of_year,
-      page.year,
-      page.month,
-      page.gbifID
-    )
-  );
-}
+  return pages.map((page, index) => {
+    // Generate the stable ID once here
+    const stableIdString = generateStableId(page, index);
+    const stableIdNumber = page.id || 1000 + index; // Consistent offset for numeric ID needs
 
+    return {
+      myID: stableIdNumber,
+      cityOrTown: page.cityOrTown,
+      countryCode: page.countryCode,
+      county: page.county,
+      time_only: page.time_only,
+      date_only: page.date_only,
+      day: page.day,
+      day_of_week: page.day_of_week,
+      decimalLatitude: page.decimalLatitude,
+      decimalLongitude: page.decimalLongitude,
+      eventDate: page.eventDate,
+      stateProvince: page.stateProvince,
+      week_of_year: page.week_of_year,
+      year: page.year,
+      month: page.month,
+      gbifID: stableIdString, // Now guaranteed to be a stable string
+    };
+  });
+}
 /**
  * Generates a list of unique property values from an array of RowPage objects,
  * suitable for populating dropdown filters. It can handle both single-string properties
