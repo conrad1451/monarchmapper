@@ -18,6 +18,7 @@ import type {
   // SightingDisplayProps,
 } from "../utils/dataTypes";
 
+import { HydrationShield } from "./HydrationShield";
 import { transformMonarchButterflyRecordToRowPage } from "../utils/dataTransforms";
 
 import { useSightings } from "../hooks/useSightings";
@@ -387,14 +388,23 @@ export const ButterflyMap = function (props: {
 
           <div className="content">
             <h2>Main Content: Map Integration</h2>
-            <MyButterflyContent
-              mapType={mapType}
-              dataForTable={dataForTable}
-              dynamicGeoJson={dynamicGeoJson}
-              loading={loading}
-              error={error}
-              refetchSightings={refetchSightings}
-            />
+            <HydrationShield
+              fallback={
+                <div style={{ height: "400px", background: "#eee" }}>
+                  Loading Map...
+                </div>
+              }
+            >
+              <MyButterflyContent
+                mapType={mapType}
+                dataForTable={dataForTable}
+                dynamicGeoJson={dynamicGeoJson}
+                loading={loading}
+                error={error}
+                refetchSightings={refetchSightings}
+              />
+            </HydrationShield>
+
             <Button
               variant="outlined"
               color="secondary"

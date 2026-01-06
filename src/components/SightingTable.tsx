@@ -36,6 +36,7 @@ import {
 import type { ColumnVisibilityMiniTable } from "../hooks/useColumnVisibility";
 // import type { Item, RowPage } from "../utils/dataTypes";
 import type { RowPage } from "../utils/dataTypes";
+import { HydrationShield } from "./HydrationShield";
 
 // --- WebFormProps & WebForm Component ---
 // interface WebFormProps {
@@ -301,7 +302,12 @@ const TableHeaderCells = (props: {
         )}
         {/* New TableCell for Actions header */}
         <TableCell>
-          <Typography variant="subtitle2">Actions</Typography>
+          <Box
+            component="span"
+            sx={{ fontWeight: "bold", fontSize: "0.875rem" }}
+          >
+            Actions
+          </Box>
         </TableCell>
       </TableRow>
     </TableHead>
@@ -334,7 +340,7 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
   return (
     <TableBody>
       {props.data.map((row) => (
-        <TableRow key={row.gbifID || row.myID}>
+        <TableRow key={row.gbifID}>
           {props.theColumnKeys.map((colName) =>
             props.visibleColumns[colName] ? (
               <TableCell key={colName}>
@@ -385,280 +391,15 @@ const MyExpandMoreIcon = () => {
   return <>🔽</>;
 };
 
-// // New component for the Edit/Delete action modal
-// const SightingActionModal = (props: {
-//   open: boolean;
-//   onClose: () => void;
-//   sighting: RowPage | null;
-//   onEdit: (sighting: RowPage) => void;
-//   onDelete: (sighting: RowPage) => void;
-// }) => {
-//   if (!props.sighting) return null; // Don't render if no sighting is selected
-
-//   return (
-//     <Modal open={props.open} onClose={props.onClose}>
-//       <Box
-//         sx={{
-//           position: "absolute",
-//           top: "50%",
-//           left: "50%",
-//           transform: "translate(-50%, -50%)",
-//           width: { xs: "90%", sm: 400 },
-//           bgcolor: "background.paper",
-//           border: "2px solid #000",
-//           boxShadow: 24,
-//           p: 4,
-//           display: "flex",
-//           flexDirection: "column",
-//           gap: 2,
-//           borderRadius: "8px", // Rounded corners
-//         }}
-//       >
-//         <Typography variant="h6" component="h2">
-//           Actions for {props.sighting.FirstName} {props.sighting.LastName} (ID:{" "}
-//           {props.sighting.myID})
-//         </Typography>
-//         <Button
-//           variant="contained"
-//           onClick={() => props.onEdit(props.sighting!)}
-//           sx={{
-//             bgcolor: "primary.main",
-//             "&:hover": { bgcolor: "primary.dark" },
-//             borderRadius: "8px",
-//           }}
-//         >
-//           Edit
-//         </Button>
-//         <Button
-//           variant="outlined"
-//           color="error"
-//           onClick={() => props.onDelete(props.sighting!)}
-//           sx={{
-//             borderColor: "error.main",
-//             color: "error.main",
-//             "&:hover": { bgcolor: "error.light" },
-//             borderRadius: "8px",
-//           }}
-//         >
-//           Delete
-//         </Button>
-//         <Button
-//           onClick={props.onClose}
-//           variant="text"
-//           sx={{ mt: 1, borderRadius: "8px" }}
-//         >
-//           Cancel
-//         </Button>
-//       </Box>
-//     </Modal>
-//   );
+// const idGenerator = (rawTableData: RowPage[]) => {
+//   // CHQ: Gemini AI added following logic to calculate new ID
+//   // --- Logic to determine the new myID ---
+//   const maxId = rawTableData.reduce((max, row) => {
+//     const currentId = row.myID; // Assuming myID is already a number
+//     return isNaN(currentId) ? max : Math.max(max, currentId);
+//   }, 0); // Start with 0 if no valid IDs found
+//   return maxId + 1;
 // };
-
-// // New Confirmation Modal component
-// const UpdateConfirmationModal = (props: {
-//   open: boolean;
-//   onClose: () => void;
-//   onConfirm: (data: ConfirmUpdateProps) => Promise<void>; // Corrected type for onConfirm
-//   message: string;
-//   // Pass current sighting data and setters from parent for editing
-//   currentFirstName: string;
-//   setCurrentFirstName: (value: string) => void;
-//   currentLastName: string;
-//   setCurrentLastName: (value: string) => void;
-//   currentEmail: string;
-//   setCurrentEmail: (value: string) => void;
-//   currentMajor: string;
-//   setCurrentMajor: (value: string) => void;
-//   loading: boolean;
-//   successMessage: string | null; // Can be null
-//   errorMessage: string | null; // Can be null
-// }) => {
-//   // These states are now managed by the parent (SightingTable) and passed as props
-//   // const [myFirstName, setMyFirstName] = useState("");
-//   // const [myCity, SetMyCity] = useState("");
-//   // const [myCounty, setMyCounty] = useState("");
-//   // const [myStateProvince, setMyStateProvince] = useState("");
-
-//   // CHQ: Added by Gemini AI
-//   const handleSubmit = () => {
-//     props.onConfirm({
-//       first_name: props.currentFirstName,
-//       last_name: props.currentLastName,
-//       email: props.currentEmail,
-//       major: props.currentMajor,
-//     });
-//   };
-
-//   return (
-//     <Modal open={props.open} onClose={props.onClose}>
-//       <Box
-//         sx={{
-//           position: "absolute",
-//           top: "50%",
-//           left: "50%",
-//           transform: "translate(-50%, -50%)",
-//           width: { xs: "90%", sm: 400 },
-//           bgcolor: "background.paper",
-//           border: "2px solid #000",
-//           boxShadow: 24,
-//           p: 4,
-//           display: "flex",
-//           flexDirection: "column",
-//           gap: 2,
-//           borderRadius: "8px",
-//         }}
-//       >
-//         <Typography variant="h6" component="h2">
-//           Confirmation
-//         </Typography>
-//         <Typography>{props.message}</Typography>
-//         {/* // CHQ: Gemini AI changed empty div to TextField for each field */}
-//         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
-//           <TextField
-//             label="First Name"
-//             type="text"
-//             value={props.currentFirstName}
-//             onChange={(e) => props.setCurrentFirstName(e.target.value)}
-//             placeholder="First Name"
-//             size="small"
-//             variant="outlined"
-//           />
-//           <TextField
-//             label="Last Name"
-//             type="text"
-//             value={props.currentLastName}
-//             onChange={(e) => props.setCurrentLastName(e.target.value)}
-//             placeholder="Last Name"
-//             size="small"
-//             variant="outlined"
-//           />
-//           <TextField
-//             label="Email"
-//             type="email"
-//             value={props.currentEmail}
-//             onChange={(e) => props.setCurrentEmail(e.target.value)}
-//             placeholder="Email"
-//             size="small"
-//             variant="outlined"
-//           />
-//           <TextField
-//             label="Major"
-//             type="text"
-//             value={props.currentMajor}
-//             onChange={(e) => props.setCurrentMajor(e.target.value)}
-//             placeholder="Major"
-//             size="small"
-//             variant="outlined"
-//           />
-//         </Box>
-//         {/* CHQ: Added by Gemini AI */}
-//         {props.loading && <p>Loading...</p>}
-//         {props.successMessage && (
-//           <p style={{ color: "green" }}>{props.successMessage}</p>
-//         )}
-//         {props.errorMessage && (
-//           <p style={{ color: "red" }}>{props.errorMessage}</p>
-//         )}
-//         <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
-//           {/* CHQ: Gemini AI added disabling button during loading */}
-//           <Button
-//             variant="contained"
-//             color="info"
-//             onClick={handleSubmit} // Call local handleSubmit
-//             sx={{ borderRadius: "8px" }}
-//             disabled={props.loading} // Disable during loading
-//           >
-//             Confirm Update
-//           </Button>
-//           <Button
-//             variant="outlined"
-//             onClick={props.onClose}
-//             sx={{ borderRadius: "8px" }}
-//             disabled={props.loading} // Disable during loading
-//           >
-//             Cancel
-//           </Button>
-//         </Box>
-//       </Box>
-//     </Modal>
-//   );
-// };
-
-// // New Confirmation Modal component
-// const DeletionConfirmationModal = (props: {
-//   open: boolean;
-//   onClose: () => void;
-//   onConfirm: () => void;
-//   message: string;
-//   loading: boolean; // Added loading prop
-//   successMessage: string | null; // Added successMessage prop
-//   errorMessage: string | null; // Added errorMessage prop
-// }) => {
-//   return (
-//     <Modal open={props.open} onClose={props.onClose}>
-//       <Box
-//         sx={{
-//           position: "absolute",
-//           top: "50%",
-//           left: "50%",
-//           transform: "translate(-50%, -50%)",
-//           width: { xs: "90%", sm: 400 },
-//           bgcolor: "background.paper",
-//           border: "2px solid #000",
-//           boxShadow: 24,
-//           p: 4,
-//           display: "flex",
-//           flexDirection: "column",
-//           gap: 2,
-//           borderRadius: "8px",
-//         }}
-//       >
-//         <Typography variant="h6" component="h2">
-//           Confirmation
-//         </Typography>
-//         <Typography>{props.message}</Typography>
-//         {/* CHQ: Added by Gemini AI */}
-//         {props.loading && <p>Loading...</p>}
-//         {props.successMessage && (
-//           <p style={{ color: "green" }}>{props.successMessage}</p>
-//         )}
-//         {props.errorMessage && (
-//           <p style={{ color: "red" }}>{props.errorMessage}</p>
-//         )}
-//         <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
-//           {/* CHQ: Gemini AI added disabling button during loading */}
-//           <Button
-//             variant="contained"
-//             color="error"
-//             onClick={props.onConfirm}
-//             sx={{ borderRadius: "8px" }}
-//             disabled={props.loading} // Disable during loading
-//           >
-//             Confirm Delete
-//           </Button>
-//           <Button
-//             variant="outlined"
-//             onClick={props.onClose}
-//             sx={{ borderRadius: "8px" }}
-//             disabled={props.loading} // Disable during loading
-//           >
-//             Cancel
-//           </Button>
-//         </Box>
-//       </Box>
-//     </Modal>
-//   );
-// };
-
-const idGenerator = (rawTableData: RowPage[]) => {
-  // CHQ: Gemini AI added following logic to calculate new ID
-  // --- Logic to determine the new myID ---
-  const maxId = rawTableData.reduce((max, row) => {
-    const currentId = row.myID; // Assuming myID is already a number
-    return isNaN(currentId) ? max : Math.max(max, currentId);
-  }, 0); // Start with 0 if no valid IDs found
-  return maxId + 1;
-};
 
 const SightingTable = (props: { thePages: RowPage[] }) => {
   // CHQ: Gemini AI turned this from a variable assigned from a prop into a state variable
@@ -686,15 +427,6 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
 
   const { sortedData, sortProps, sortHandlers } = useTableSorting(filteredData);
 
-  // const allSightingNames: Item[] = useMemo(
-  //   () =>
-  //     rawTableData.map((row) => ({
-  //       id: Math.floor(100 * Math.random()), // Consider using a more stable ID if available
-  //       value: row.FirstName,
-  //     })),
-  //   [rawTableData]
-  // );
-
   const [isTableCollapsed, setIsTableCollapsed] = useState(false);
 
   // --- Moved state variables and submission logic from TableBodyRows to SightingTable ---
@@ -703,247 +435,90 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   const [myCounty, setMyCounty] = useState("");
   const [myStateProvince, setMyStateProvince] = useState("");
 
-  // const [loading, setLoading] = useState(false);
-  // const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  // CHQ: commented out unused code
-  // const apiURL = import.meta.env.VITE_API_GCP_VM_DATABASE; // Declare apiURL here
-
-  const newMyID: number = idGenerator(rawTableData);
-
-  // const handleNewSightingSubmit = async (event: React.FormEvent) => {
-  //   event.preventDefault(); // Prevent default form submission behavior
-  //   setLoading(true);
-  //   setErrorMessage(null);
-  //   setSuccessMessage(null);
-
-  //   try {
-  //     const BASE_URL =
-  //       import.meta.env.VITE_API_GCP_VM_DATABASE + "/api/monarchs";
-
-  //     const sessionToken = "sampleTokenIguess"; // Use a real session token here
-
-  //     // Form the data object from the state variables here in SightingTable
-  //     const formData = {
-  //       id: newMyID,
-  //       // first_name: myFirstName,
-  //       CityOrTown: myCity,
-  //       County: myCounty,
-  //       StateProvince: myStateProvince,
-  //     };
-
-  //     const response = await fetch(`${BASE_URL}/api/monarchs`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${sessionToken}`, // Send JWT in Authorization header
-  //       },
-  //       body: JSON.stringify(formData), // Send form data in the body
-  //     });
-
-  //     if (!response.ok) {
-  //       if (response.status >= 400 && response.status < 600) {
-  //         const errorData = await response.json();
-  //         throw new Error(errorData.message || "Server error");
-  //       }
-  //       throw new Error("Failed to submit to database");
-  //     }
-
-  //     const result: ApiResponse = await response.json();
-  //     console.log("Data sent to database successfully:", result);
-  //     setSuccessMessage("Data sent to database successfully!");
-
-  //     // Optimistically add the new sighting to the table
-  //     // setRawTableData((prevData) => [
-  //     //   ...prevData,
-  //     //   {
-  //     //     myID: newMyID,
-  //     //     FirstName: myFirstName,
-  //     //     LastName: myCity,
-  //     //     Email: myCounty,
-  //     //     Major: myStateProvince,
-  //     //   } as RowPage, // Cast to RowPage
-  //     // ]);
-
-  //     // Clear the form fields after successful submission
-  //     // setMyFirstName("");
-  //     SetMyCity("");
-  //     setMyCounty("");
-  //     setMyStateProvince("");
-  //   } catch (error: any) {
-  //     // Type 'any' for error for now
-  //     console.error("Error in database:", error);
-  //     setErrorMessage(
-  //       error.message || "Failed to send data to database. Please try again."
-  //     );
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // CHQ: Gemini AI added the follow state variables
-
-  // State for the new action modal (Edit/Delete)
-  // const [isActionModalOpen, setIsActionModalOpen] = useState(false);
-  // const [selectedSightingForActions, setSelectedSightingForActions] =
-  //   useState<RowPage | null>(null);
-
-  // State for the confirmation modal
-  // const [isDeletionConfirmationModalOpe 6n, setIsDeletionConfirmationModalOpen] =
-  //   useState(false);
-  // const [isUpdateConfirmationModalOpen, setIsUpdateConfirmationModalOpen] =
-  //   useState(false);
-  // const [sightingToDelete, setSightingToDelete] = useState<RowPage | null>(null);
-  // const [sightingToUpdate, setSightingToUpdate] = useState<RowPage | null>(null);
-
-  // // States for the update modal's input fields
-  // const [updateFirstName, setUpdateFirstName] = useState("");
-  // const [updateLastName, setUpdateLastName] = useState("");
-  // const [updateEmail, setUpdateEmail] = useState("");
-  // const [updateMajor, setUpdateMajor] = useState("");
-
-  // Handler to open the action modal
-  // const handleOpenActionModal = (sighting: RowPage) => {
-  //   setSelectedSightingForActions(sighting);
-  //   setIsActionModalOpen(true);
-  // };
-
-  // Handler to close the action modal
-  // const handleCloseActionModal = () => {
-  //   setIsActionModalOpen(false);
-  //   setSelectedSightingForActions(null); // Clear selected sighting on close
-  // };
+  // const newMyID: number = idGenerator(rawTableData);
 
   return (
-    <Box sx={{ width: "100%", overflowX: "auto" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <Box
-          sx={{
-            p: 2,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 2,
-          }}
-        >
-          <Typography variant="h5" component="div">
-            Sighting Data
-          </Typography>
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <Button
-              variant="outlined"
-              onClick={() => setIsColumnModalOpen(true)}
-            >
-              Customize Columns
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() => setIsTableCollapsed(!isTableCollapsed)}
-            >
-              {isTableCollapsed ? <MyChevronRightIcon /> : <MyExpandMoreIcon />}{" "}
-              {isTableCollapsed ? "Expand" : "Collapse"} Table
-            </Button>
+    <HydrationShield>
+      <Box sx={{ width: "100%", overflowX: "auto" }}>
+        <Paper sx={{ width: "100%", mb: 2 }}>
+          <Box
+            sx={{
+              p: 2,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: 2,
+            }}
+          >
+            <Typography variant="h5" component="div">
+              Sighting Data
+            </Typography>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button
+                variant="outlined"
+                onClick={() => setIsColumnModalOpen(true)}
+              >
+                Customize Columns
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => setIsTableCollapsed(!isTableCollapsed)}
+              >
+                {isTableCollapsed ? (
+                  <MyChevronRightIcon />
+                ) : (
+                  <MyExpandMoreIcon />
+                )}{" "}
+                {isTableCollapsed ? "Expand" : "Collapse"} Table
+              </Button>
+            </Box>
           </Box>
-        </Box>
 
-        <ColumnVisibilityControlModal
-          open={isColumnModalOpen}
-          onClose={() => setIsColumnModalOpen(false)}
-          visibleColumns={visibleColumns}
-          onToggle={handleToggleColumn}
-          onSelectPreset={setPresetVisibility}
-          onReset={resetVisibility}
-          presets={presets}
-        />
+          <ColumnVisibilityControlModal
+            open={isColumnModalOpen}
+            onClose={() => setIsColumnModalOpen(false)}
+            visibleColumns={visibleColumns}
+            onToggle={handleToggleColumn}
+            onSelectPreset={setPresetVisibility}
+            onReset={resetVisibility}
+            presets={presets}
+          />
 
-        {!isTableCollapsed && (
-          <TableContainer>
-            <Table stickyHeader aria-label="sighting table">
-              <TableHeaderCells
-                visibleColumns={visibleColumns}
-                sortProps={sortProps}
-                sortHandlers={sortHandlers}
-                theColumnKeys={allColumnKeys}
-              />
-              <TableBodyRows
-                data={sortedData}
-                visibleColumns={visibleColumns}
-                theColumnKeys={allColumnKeys}
-                // onOpenActionModal={handleOpenActionModal}
-                myId={newMyID} // Pass the newly generated ID
-                // myFirstName={myFirstName}
-                // setMyFirstName={setMyFirstName}
-                myCity={myCity}
-                SetMyCity={SetMyCity}
-                myCounty={myCounty}
-                setMyCounty={setMyCounty}
-                myStateProvince={myStateProvince}
-                setMyStateProvince={setMyStateProvince}
-                // loading={loading}
-                // successMessage={successMessage}
-                // errorMessage={errorMessage}
-                // onNewSightingSubmit={handleNewSightingSubmit}
-              />
-            </Table>
-          </TableContainer>
-        )}
-      </Paper>
-
-      {/* Action Modal (Edit/Delete) */}
-      {/* <SightingActionModal
-        open={isActionModalOpen}
-        onClose={handleCloseActionModal}
-        sighting={selectedSightingForActions}
-        onEdit={handleEditSighting}
-        onDelete={handleDeleteSighting}
-      /> */}
-
-      {/* Update Confirmation Modal */}
-      {/* <UpdateConfirmationModal
-        open={isUpdateConfirmationModalOpen}
-        onClose={() => {
-          setIsUpdateConfirmationModalOpen(false);
-          setSightingToUpdate(null); // Clear selected sighting
-          setUpdateFirstName(""); // Clear form fields
-          setUpdateLastName("");
-          setUpdateEmail("");
-          setUpdateMajor("");
-          setErrorMessage(null); // Clear messages
-          setSuccessMessage(null);
-        }}
-        onConfirm={confirmUpdateSighting} // Pass the handler
-        message={`Are you sure you want to update sighting ID ${sightingToUpdate?.myID}?`}
-        currentFirstName={updateFirstName}
-        setCurrentFirstName={setUpdateFirstName}
-        currentLastName={updateLastName}
-        setCurrentLastName={setUpdateLastName}
-        currentEmail={updateEmail}
-        setCurrentEmail={setUpdateEmail}
-        currentMajor={updateMajor}
-        setCurrentMajor={setUpdateMajor}
-        loading={loading}
-        successMessage={successMessage}
-        errorMessage={errorMessage}
-      /> */}
-
-      {/* Deletion Confirmation Modal */}
-      {/* <DeletionConfirmationModal
-        open={isDeletionConfirmationModalOpen}
-        onClose={() => {
-          setIsDeletionConfirmationModalOpen(false);
-          setSightingToDelete(null); // Clear selected sighting
-          setErrorMessage(null); // Clear messages
-          setSuccessMessage(null);
-        }}
-        onConfirm={confirmDeleteSighting}
-        message={`Are you sure you want to delete sighting ID ${sightingToDelete?.myID} - ${sightingToDelete?.FirstName} ${sightingToDelete?.LastName}? This action cannot be undone.`}
-        loading={loading}
-        successMessage={successMessage}
-        errorMessage={errorMessage}
-      /> */}
-    </Box>
+          {!isTableCollapsed && (
+            <TableContainer>
+              <Table stickyHeader aria-label="sighting table">
+                <TableHeaderCells
+                  visibleColumns={visibleColumns}
+                  sortProps={sortProps}
+                  sortHandlers={sortHandlers}
+                  theColumnKeys={allColumnKeys}
+                />
+                <TableBodyRows
+                  data={sortedData}
+                  visibleColumns={visibleColumns}
+                  theColumnKeys={allColumnKeys}
+                  // onOpenActionModal={handleOpenActionModal}
+                  myId={0} // Pass the newly generated ID
+                  // myFirstName={myFirstName}
+                  // setMyFirstName={setMyFirstName}
+                  myCity={myCity}
+                  SetMyCity={SetMyCity}
+                  myCounty={myCounty}
+                  setMyCounty={setMyCounty}
+                  myStateProvince={myStateProvince}
+                  setMyStateProvince={setMyStateProvince}
+                  // loading={loading}
+                  // successMessage={successMessage}
+                  // errorMessage={errorMessage}
+                  // onNewSightingSubmit={handleNewSightingSubmit}
+                />
+              </Table>
+            </TableContainer>
+          )}
+        </Paper>
+      </Box>
+    </HydrationShield>
   );
 };
 

@@ -70,7 +70,6 @@ function App() {
   const [butterflyCoords, setButterflyCoords] = useState<Array<CoordListProps>>(
     []
   );
-
   // CHQ: ChatGPT added
   // const [draftDate, setDraftDate] = useState("");
 
@@ -81,10 +80,10 @@ function App() {
     setCurrentPath(path);
   }, []);
 
-  const handleDateConfirm = (formattedDate: string) => {
-    setChosenDate(formattedDate);
-    navigate("/mymap"); // Auto-navigate on confirmation
-  };
+  // const handleDateConfirm = (formattedDate: string) => {
+  //   setChosenDate(formattedDate);
+  //   navigate("/mymap"); // Auto-navigate on confirmation
+  // };
 
   let content;
 
