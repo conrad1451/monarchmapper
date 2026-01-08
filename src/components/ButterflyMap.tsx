@@ -40,7 +40,9 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
   return (
     <>
       <h2>🗺️ Map Controls</h2>
-      <p>Currently showing: **{currentMap}**</p>
+      <Typography variant="body1">
+        Currently showing: <strong>{currentMap}</strong>
+      </Typography>
       {/* <button
         onClick={() => setMapType("Popup")}
         disabled={currentMap === "Popup"}
@@ -388,11 +390,14 @@ export const ButterflyMap = function (props: {
 
           <div className="content">
             <h2>Main Content: Map Integration</h2>
+            {/* Move the Loading/Error logic inside the Shield or make the fallback match */}
             <HydrationShield
               fallback={
-                <div style={{ height: "400px", background: "#eee" }}>
-                  Loading Map...
-                </div>
+                <Box sx={{ p: 2, height: "400px", background: "#eee" }}>
+                  <Typography variant="h5">
+                    Initializing Interface...
+                  </Typography>
+                </Box>
               }
             >
               <MyButterflyContent
