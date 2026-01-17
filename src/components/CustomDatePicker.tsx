@@ -10,6 +10,9 @@ import {
 } from "@mui/material";
 // import { SelectChangeEvent } from "@mui/material/Select";
 
+import type { TableNameItem } from "../utils/dataTypes";
+import { useMonarchInventory } from "../hooks/useMonarchInventory";
+
 // --- Constants & Helpers ---
 const MONTHS = [
   "January",
@@ -41,6 +44,31 @@ interface CustomDatePickerProps {
   initialYear?: number;
 }
 
+// const hasDataLoaded = function (inputDate: string) {
+// const hasDataLoaded = function (inputDate: string, listOfValidDates: string[]) {
+const hasDataLoaded = function (
+  day: number,
+  month: number,
+  year: number,
+  listOfValidDates: string[],
+) {
+  const theMonth = String(MONTHS[month - 1]).toLowerCase();
+
+  const paddedDay = String(day).padStart(2, "0");
+
+  const potentialDate = `${theMonth}${paddedDay}${year}`;
+
+  // onConfirm();
+
+  // const { inventory, loading, error } = useMonarchInventory();
+
+  // const listOfValidDates: string[] = inventory.map((tableTitle) => {
+  //   // return tableTitle.tableName;
+  //   return tableTitle.table_name;
+  // });
+  return listOfValidDates.includes(potentialDate);
+};
+
 const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   onConfirm,
   initialYear = 2024,
@@ -48,6 +76,12 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const [day, setDay] = useState(29);
   const [month, setMonth] = useState(2); // February
   const [year, setYear] = useState(initialYear);
+  const { inventory, loading, error } = useMonarchInventory();
+
+  const listOfValidDates: string[] = inventory.map((tableTitle) => {
+    // return tableTitle.tableName;
+    return tableTitle.table_name;
+  });
 
   // Auto-adjust day if it exceeds the max days of a newly selected month/year
   useEffect(() => {
@@ -63,7 +97,19 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const handleConfirm = () => {
     const paddedMonth = String(month).padStart(2, "0");
     const paddedDay = String(day).padStart(2, "0");
-    onConfirm(`${paddedMonth}${paddedDay}${year}`);
+
+    // if the potential date is not among the list of valid dates, then
+    // it does not have data loaded and so we cannot load that date
+    // into the date picker
+    const isValidDate = hasDataLoaded(day, month, year, listOfValidDates);
+
+    if (isValidDate) {
+      onConfirm(`${paddedMonth}${paddedDay}${year}`);
+    } else {
+      console.log(
+        "No Data loaded for date - pick a date with some data loaded!",
+      );
+    }
   };
 
   const displayDate = `${MONTHS[month - 1]} ${day}, ${year}`;
