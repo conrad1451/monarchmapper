@@ -347,7 +347,6 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
               <TableCell key={colName}>
                 {String(row[colName as keyof RowPage])}
               </TableCell>
-            ) : null
             ) : null,
           )}
           {/* TableCell for Actions button for existing rows */}
