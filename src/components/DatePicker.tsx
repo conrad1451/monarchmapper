@@ -98,23 +98,23 @@ export const DatePickerV1: React.FC<DatePickerPropsAlt1> = ({
 
   const daysOfMonth = useMemo(
     () => Array.from({ length: 31 }, (_, i) => i + 1),
-    []
+    [],
   );
 
   const monthsOfYear = useMemo(
     () => Array.from({ length: 12 }, (_, i) => i + 1),
-    []
+    [],
   );
 
   const rangeOfYears = useMemo(
     () => Array.from({ length: 4 }, (_, i) => i + 2022), // 2022, 2023, 2024, 2025
-    []
+    [],
   );
 
   // Calculate the maximum valid day for the current month and year
   const currentMaxDays = useMemo(
     () => getMaxDays(chosenMonth, chosenYear),
-    [chosenMonth, chosenYear]
+    [chosenMonth, chosenYear],
   );
   const daysToRender = daysOfMonth.slice(0, currentMaxDays);
 

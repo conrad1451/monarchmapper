@@ -57,7 +57,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 
   const daysToRender = useMemo(
     () => Array.from({ length: getMaxDays(month, year) }, (_, i) => i + 1),
-    [month, year]
+    [month, year],
   );
 
   const handleConfirm = () => {

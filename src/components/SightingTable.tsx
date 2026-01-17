@@ -165,7 +165,7 @@ const ColumnVisibilityControlModal = (props: {
               label="Presets"
               onChange={(e) =>
                 props.onSelectPreset(
-                  e.target.value as keyof typeof visibilityPresetsMiniTable
+                  e.target.value as keyof typeof visibilityPresetsMiniTable,
                 )
               }
             >
@@ -231,7 +231,7 @@ const TableHeaderCells = (props: {
                     <Button
                       onClick={() =>
                         props.sortHandlers.handleSort(
-                          colName as SortableTableColumns
+                          colName as SortableTableColumns,
                         )
                       }
                       title={
@@ -259,7 +259,7 @@ const TableHeaderCells = (props: {
                     <Button
                       onClick={() =>
                         props.sortHandlers.handleSort(
-                          colName as SortableTableColumns
+                          colName as SortableTableColumns,
                         )
                       }
                       title={
@@ -299,7 +299,7 @@ const TableHeaderCells = (props: {
                 )}
               </Box>
             </TableCell>
-          ) : null
+          ) : null,
         )}
         {/* New TableCell for Actions header */}
         <TableCell>
@@ -348,6 +348,7 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
                 {String(row[colName as keyof RowPage])}
               </TableCell>
             ) : null
+            ) : null,
           )}
           {/* TableCell for Actions button for existing rows */}
           {/* <TableCell key={`actions-${row.gbifID || row.myID}`}>
@@ -375,7 +376,7 @@ const TableBodyRows = (props: TableBodyRowsProps) => {
                 </Typography>
               </Box>
             </TableCell>
-          ) : null
+          ) : null,
         )}
         {/* Empty cell for the actions column in the footer row */}
         {/* ✅ FIX: Add a unique key to this static cell */}

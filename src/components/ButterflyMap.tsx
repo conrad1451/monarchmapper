@@ -140,7 +140,7 @@ const MyApp = function (props: { coords: CoordListProps[] }) {
       // Check the structure of the first feature to ensure it's GeoJSON
       console.log(
         "First Feature Geometry:",
-        dynamicGeoJson.features[0].geometry
+        dynamicGeoJson.features[0].geometry,
       );
     }
   }, [dynamicGeoJson]); // Dependency array ensures this runs whenever dynamicGeoJson state changes
@@ -370,7 +370,7 @@ export const ButterflyMap = function (props: {
       // Check the structure of the first feature to ensure it's GeoJSON
       console.log(
         "First Feature Geometry:",
-        dynamicGeoJson.features[0].geometry
+        dynamicGeoJson.features[0].geometry,
       );
     }
   }, [dynamicGeoJson]); // Dependency array ensures this runs whenever dynamicGeoJson state changes

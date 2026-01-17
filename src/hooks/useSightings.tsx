@@ -37,7 +37,7 @@ export const useSightings = (props: {
 
     try {
       const response = await fetch(
-        apiURL + "/monarchbutterlies/dayscan/" + props.sightingDate
+        apiURL + "/monarchbutterlies/dayscan/" + props.sightingDate,
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
