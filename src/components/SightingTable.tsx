@@ -35,8 +35,9 @@ import {
 
 import type { ColumnVisibilityMiniTable } from "../hooks/useColumnVisibility";
 // import type { Item, RowPage } from "../utils/dataTypes";
-import type { RowPage } from "../utils/dataTypes";
+import type { RowPage, TableNameItem } from "../utils/dataTypes";
 import { HydrationShield } from "./HydrationShield";
+import { useMonarchInventory } from "../hooks/useMonarchInventory";
 
 // --- WebFormProps & WebForm Component ---
 // interface WebFormProps {
@@ -412,6 +413,9 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   // const initialTableDataForHooks = rawTableData.filter(
   //   (row) => row && row.FirstName && row.FirstName.trim() !== ""
   // );
+
+  // const { inventory, loading, error, formatDate } = useMonarchInventory();
+  const { inventory, loading, error } = useMonarchInventory();
 
   const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
   const {

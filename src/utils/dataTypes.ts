@@ -74,6 +74,21 @@ export interface DatePickerProps {
   currentDateDisplay: string;
 }
 
+// export interface TableNameItem {
+//   id: string;
+//   availableDate: Date | string;
+//   tableName: string;
+//   processedAt: Date | string;
+//   recordCount: number;
+// }
+export interface TableNameItem {
+  id: number;
+  available_date: string; // Matches snake_case from Go struct tags
+  table_name: string;
+  processed_at: string;
+  record_count: number;
+}
+
 // CHQ: ChatGPT made interface
 export interface DatePickerPropsAlt {
   value: string;

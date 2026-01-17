@@ -2,7 +2,9 @@
 
 // src/hooks/useMonarchInventory.ts
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+
+import type { TableNameItem } from "../utils/dataTypes";
 
 /**
  * Custom hook to fetch and manage the monarch data inventory.
@@ -10,7 +12,7 @@ import { useState, useEffect } from "react";
  */
 // export const useMonarchInventory = (baseUrl: string) => {
 export const useMonarchInventory = () => {
-  const [inventory, setInventory] = useState([]);
+  const [inventory, setInventory] = useState<TableNameItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -30,7 +32,7 @@ export const useMonarchInventory = () => {
           throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const data: TableNameItem[] = await response.json();
 
         // // Optional: Sort by date so the newest scans appear first
         // const sortedData = data.sort(
