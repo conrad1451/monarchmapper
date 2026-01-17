@@ -106,9 +106,19 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     if (isValidDate) {
       onConfirm(`${paddedMonth}${paddedDay}${year}`);
     } else {
-      console.log(
-        "No Data loaded for date - pick a date with some data loaded!",
+      // CHQ: Gemini AI added UX improvement
+      // UX Improvement: Show the user which format failed in the console
+      const monthName = MONTHS[month - 1].toLowerCase();
+      console.warn(
+        `Validation failed: ${monthName}${paddedDay}${year} not found in inventory.`,
       );
+      alert(
+        "No data found for this date. Please check the 'Available Scanned Dates' list.",
+      );
+
+      // console.log(
+      //   "No Data loaded for date - pick a date with some data loaded!",
+      // );
     }
   };
 
