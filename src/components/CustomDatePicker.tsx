@@ -85,6 +85,11 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     return tableTitle.table_name;
   });
 
+  const isValid = useMemo(
+    () => hasDataLoaded(day, month, year, listOfValidDates),
+    [day, month, year, listOfValidDates],
+  );
+
   // Auto-adjust day if it exceeds the max days of a newly selected month/year
   useEffect(() => {
     const max = getMaxDays(month, year);
@@ -154,11 +159,19 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         {/* Day Select */}
         <FormControl size="small" sx={{ minWidth: 80 }}>
           <Select value={day} onChange={(e) => setDay(Number(e.target.value))}>
-            {daysToRender.map((d) => (
-              <MenuItem key={d} value={d}>
-                {d}
-              </MenuItem>
-            ))}
+            {daysToRender.map((d) => {
+              const dayIsValid = hasDataLoaded(
+                d,
+                month,
+                year,
+                listOfValidDates,
+              );
+              return (
+                <MenuItem key={d} value={d}>
+                  {d} {dayIsValid ? "✅" : "❌"}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
 
@@ -168,7 +181,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
           >
-            {[2022, 2023, 2024, 2025].map((y) => (
+            {[2020, 2021, 2022, 2023, 2024, 2025].map((y) => (
               <MenuItem key={y} value={y}>
                 {y}
               </MenuItem>
@@ -179,9 +192,14 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         <Button
           variant="contained"
           onClick={handleConfirm}
-          sx={{ flexGrow: 1 }}
+          color={isValid ? "primary" : "inherit"} // Turns grey if invalid
+          sx={{
+            flexGrow: 1,
+            opacity: isValid ? 1 : 0.6,
+            cursor: isValid ? "pointer" : "not-allowed",
+          }}
         >
-          Confirm Date
+          {isValid ? "Confirm Date" : "No Data Available"}
         </Button>
       </Box>
     </Paper>
