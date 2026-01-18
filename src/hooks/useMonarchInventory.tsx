@@ -2,7 +2,8 @@
 
 // src/hooks/useMonarchInventory.ts
 
-import { useState, useEffect, useCallback } from "react";
+// import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 import type { TableNameItem } from "../utils/dataTypes";
 
@@ -14,7 +15,15 @@ import type { TableNameItem } from "../utils/dataTypes";
 export const useMonarchInventory = () => {
   const [inventory, setInventory] = useState<TableNameItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // // Helper to turn "2021-12-01" into "December 1st, 2021"
+  // const formatDate = useCallback((dateString) => {
+  //   if (!dateString) return "";
+  //   const options = { year: "numeric", month: "long", day: "numeric" };
+  //   return new Date(dateString).toLocaleDateString(undefined, options);
+  // }, []);
 
   const baseUrl = import.meta.env.VITE_API_URL;
 
@@ -42,7 +51,12 @@ export const useMonarchInventory = () => {
         // setInventory(sortedData);
         setInventory(data);
       } catch (err) {
-        setError(err.message);
+        // FIX: Check if err is an instance of Error before accessing .message
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unexpected error occurred");
+        }
       } finally {
         setLoading(false);
       }
@@ -53,5 +67,6 @@ export const useMonarchInventory = () => {
     }
   }, [baseUrl]);
 
+  // return { inventory, loading, error, formatDate };
   return { inventory, loading, error };
 };
