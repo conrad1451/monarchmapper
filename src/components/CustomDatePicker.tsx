@@ -9,10 +9,12 @@ import {
   Select,
   MenuItem,
   Paper,
+  CircularProgress, // CHQ: Added by Gemini AI: Added for loading state
+  Alert, // CHQ: Added by Gemini AI: Added for error state
 } from "@mui/material";
 // import { SelectChangeEvent } from "@mui/material/Select";
 
-import type { TableNameItem } from "../utils/dataTypes";
+// import type { TableNameItem } from "../utils/dataTypes";
 import { useMonarchInventory } from "../hooks/useMonarchInventory";
 
 // --- Constants & Helpers ---
@@ -141,6 +143,13 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         Current Selection: {displayDate}
       </Typography>
 
+      {/* USE: error display */}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          Failed to load available dates: {error}
+        </Alert>
+      )}
+
       <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
         {/* Month Select */}
         <FormControl size="small" sx={{ minWidth: 140 }}>
@@ -199,7 +208,14 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             cursor: isValid ? "pointer" : "not-allowed",
           }}
         >
-          {isValid ? "Confirm Date" : "No Data Available"}
+          {/* USE: loading spinner inside button */}
+          {loading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : isValid ? (
+            "Confirm Date"
+          ) : (
+            "No Data"
+          )}
         </Button>
       </Box>
     </Paper>
