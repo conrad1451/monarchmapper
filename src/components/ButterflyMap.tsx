@@ -537,8 +537,9 @@ export const ButterflyMap = function (props: {
         <Paper
           sx={{
             position: "absolute",
+            bottom: 10,
             left: "50%",
-            transform: "translateX(-50%)",
+            transform: "translateY(-640%)",
             // transform: "translateX(-50%)",
 
             p: 2,
