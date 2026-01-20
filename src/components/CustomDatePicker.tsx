@@ -77,8 +77,8 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   onConfirm,
   initialYear = 2024,
 }) => {
-  const [day, setDay] = useState(29);
-  const [month, setMonth] = useState(2); // February
+  const [day, setDay] = useState(30);
+  const [month, setMonth] = useState(6); // June
   const [year, setYear] = useState(initialYear);
   const { inventory, loading, error } = useMonarchInventory();
 
@@ -86,6 +86,16 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     // return tableTitle.tableName;
     return tableTitle.table_name;
   });
+
+  // CHQ: Gemini AI added useEffect to set default date to earliest valid date
+  useEffect(() => {
+    if (inventory.length > 0) {
+      const defaultDate = new Date(inventory[0].available_date);
+      setMonth(defaultDate.getMonth() + 1);
+      setDay(defaultDate.getDate());
+      setYear(defaultDate.getFullYear());
+    }
+  }, [inventory]);
 
   const isValid = useMemo(
     () => hasDataLoaded(day, month, year, listOfValidDates),
@@ -155,6 +165,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         <FormControl size="small" sx={{ minWidth: 140 }}>
           <Select
             value={month}
+            disabled={loading} // CHQ: Gemini AI added: Add this to Month, Day, and Year selects
             onChange={(e) => setMonth(Number(e.target.value))}
           >
             {MONTHS.map((name, idx) => (
