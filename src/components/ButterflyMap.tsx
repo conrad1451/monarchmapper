@@ -456,7 +456,14 @@ export const ButterflyMap = function (props: {
   const { coords, chosenDate, setChosenDate, setButterflyCoords } = props;
 
   // 2. Fetch inventory at this top level
-  const { inventory, loading, error } = useMonarchInventory();
+
+  const { loading, error } = useMonarchInventory();
+
+  // 'inventory' is assigned a value but never used.eslint@typescript-eslint/no-unused-vars
+  // const { inventory, loading, error } = useMonarchInventory();
+
+  // '_' is assigned a value but never used.eslint@typescript-eslint/no-unused-vars
+  // const { inventory: _, loading, error } = useMonarchInventory();
 
   // 3. Splash Screen Logic
   if (loading) {
