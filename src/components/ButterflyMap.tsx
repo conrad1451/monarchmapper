@@ -2,7 +2,17 @@
 // ButterflyMap.tsx
 import { useState, useEffect, useMemo } from "react";
 import "../pagestyle.css";
-import { Box, Button, Typography } from "@mui/material"; // Import necessary MUI components
+// import { Box, Button, Typography } from "@mui/material"; // Import necessary MUI components
+
+import {
+  Box,
+  CircularProgress,
+  Button,
+  Typography,
+  Paper,
+} from "@mui/material";
+import { useMonarchInventory } from "../hooks/useMonarchInventory";
+// import CustomDatePicker from "./CustomDatePicker";
 
 // CHQ: Gemini AI refactored to import hook into parent component
 import {
@@ -275,7 +285,7 @@ const MyButterflyContent = function (props: {
   );
 };
 
-export const ButterflyMap = function (props: {
+export const ButterflyMapV1 = function (props: {
   coords: CoordListProps[];
   chosenDate: string;
   setChosenDate: (date: string) => void;
@@ -433,6 +443,95 @@ export const ButterflyMap = function (props: {
         </div>
       </div>
     </>
+  );
+};
+
+export const ButterflyMap = function (props: {
+  coords: CoordListProps[];
+  chosenDate: string;
+  setChosenDate: (date: string) => void;
+  setButterflyCoords: React.Dispatch<React.SetStateAction<CoordListProps[]>>;
+}) {
+  // 1. Pull everything from props
+  const { coords, chosenDate, setChosenDate, setButterflyCoords } = props;
+
+  // 2. Fetch inventory at this top level
+  const { inventory, loading, error } = useMonarchInventory();
+
+  // 3. Splash Screen Logic
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#f5f5f5",
+        }}
+      >
+        <CircularProgress size={60} sx={{ mb: 2 }} />
+        <Typography variant="h6" color="textSecondary">
+          Connecting to Monarch Database...
+        </Typography>
+      </Box>
+    );
+  }
+
+  // 4. Error State
+  if (error) {
+    return (
+      <Box sx={{ p: 4, textAlign: "center" }}>
+        <Typography color="error" variant="h6">
+          Error loading database
+        </Typography>
+        <Typography variant="body2">{error}</Typography>
+      </Box>
+    );
+  }
+
+  // 5. Main Render (Only occurs when inventory is ready)
+  return (
+    <Box sx={{ position: "relative", height: "100vh", width: "100%" }}>
+      {/* Date Picker Overlay - Now guaranteed to have inventory data */}
+      {/* <Box
+        sx={{
+          position: "absolute",
+          top: 20,
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 1000,
+        }}
+      >
+        <CustomDatePicker onConfirm={(date) => setChosenDate(date)} />
+      </Box> */}
+
+      {/* The main logic component */}
+      <ButterflyMapV1
+        coords={coords}
+        chosenDate={chosenDate}
+        setChosenDate={setChosenDate}
+        setButterflyCoords={setButterflyCoords}
+      />
+
+      {/* Instructional Placeholder */}
+      {!chosenDate && (
+        <Paper
+          sx={{
+            position: "absolute",
+            bottom: 40,
+            left: "50%",
+            transform: "translateX(-50%)",
+            p: 2,
+            zIndex: 1000,
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+          }}
+        >
+          <Typography>Please confirm a date to view sightings.</Typography>
+        </Paper>
+      )}
+    </Box>
   );
 };
 
