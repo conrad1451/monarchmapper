@@ -457,16 +457,22 @@ export const ButterflyMap = function (props: {
 
   // 2. Fetch inventory at this top level
 
-  const { loading, error } = useMonarchInventory();
+  // const { loading, error } = useMonarchInventory();
 
-  // 'inventory' is assigned a value but never used.eslint@typescript-eslint/no-unused-vars
-  // const { inventory, loading, error } = useMonarchInventory();
+  const { inventory, loading, error } = useMonarchInventory();
 
   // '_' is assigned a value but never used.eslint@typescript-eslint/no-unused-vars
   // const { inventory: _, loading, error } = useMonarchInventory();
 
   // 3. Splash Screen Logic
   if (loading) {
+    // CHQ: Gemini AI added check for latest date from inventory cache
+    //  Get the latest date string if inventory has cached data from a previous render
+    const latestDate =
+      inventory.length > 0
+        ? new Date(inventory[0].available_date).toLocaleDateString()
+        : "latest records";
+
     return (
       <Box
         sx={{
@@ -481,6 +487,10 @@ export const ButterflyMap = function (props: {
         <CircularProgress size={60} sx={{ mb: 2 }} />
         <Typography variant="h6" color="textSecondary">
           Connecting to Monarch Database...
+        </Typography>
+        {/* CHQ: Gemini AI added text box displaying sync for latest date */}
+        <Typography variant="caption" color="textSecondary" sx={{ mt: 1 }}>
+          Syncing {latestDate}...
         </Typography>
       </Box>
     );
@@ -527,9 +537,10 @@ export const ButterflyMap = function (props: {
         <Paper
           sx={{
             position: "absolute",
-            bottom: 40,
             left: "50%",
             transform: "translateX(-50%)",
+            // transform: "translateX(-50%)",
+
             p: 2,
             zIndex: 1000,
             backgroundColor: "rgba(255, 255, 255, 0.9)",
