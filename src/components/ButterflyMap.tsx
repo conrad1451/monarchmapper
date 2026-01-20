@@ -75,7 +75,7 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
           width: "90%",
         }}
       >
-        Show ButterflySightingsTable Map
+        Show Butterfly Sightings Table
       </button>
       <button
         onClick={() => setMapType("ButterflySightingsMap")}
@@ -87,7 +87,7 @@ const SidebarControls = ({ currentMap, setMapType }: SidebarControlsProps) => {
           width: "90%",
         }}
       >
-        Show ButterflySightingsMap
+        Show Butterfly Sightings Map
       </button>
 
       {/* <button
