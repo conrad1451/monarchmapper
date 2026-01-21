@@ -392,47 +392,14 @@ const MyExpandMoreIcon = () => {
   return <>🔽</>;
 };
 
-const DisplayModule = function (props: { inventory: TableNameItem[] }) {
-  const { inventory } = props;
-  {
-    /* CHQ: module below made by Gemini AI, and I encapsulated in a functional component */
-  }
-  return (
-    <div className="grid gap-4">
-      {inventory.map((item) => (
-        <div key={item.id} className="p-4 border rounded shadow-sm bg-white">
-          {/* <h3 className="font-bold text-lg">
-                    {formatDate(item.available_date)}
-                  </h3> */}
-          <p className="text-gray-600">
-            Total Monarchs Tracked:{" "}
-            <span className="text-orange-600 font-mono">
-              {/* {item.recordCount} */}
-              {item.record_count}
-            </span>
-          </p>
-          <small className="text-xs text-gray-400">
-            {/* Database Table: {item.tableName} */}
-            Database Table: {item.table_name}
-          </small>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 const AllowedDatetable = function (props: {
   // inventory: string;
   inventory: TableNameItem[];
   loading: boolean;
   error: string | null;
 }) {
-  const { inventory, loading, error } = props;
-
-  const listOfValidDates: string[] = inventory.map((tableTitle) => {
-    // return tableTitle.tableName;
-    return tableTitle.table_name;
-  });
+  // const { inventory, loading, error } = props;
+  const { loading, error } = props;
 
   return (
     <div style={{ display: "flex", width: "20vw" }}>
@@ -456,12 +423,7 @@ const AllowedDatetable = function (props: {
           </Box>
         ) : (
           <div>
-            <ul>
-              {listOfValidDates.map((elem) => {
-                return <li key={elem}>{elem}</li>;
-              })}
-            </ul>
-            <DisplayModule inventory={inventory} />
+            <p> </p>
           </div>
         )}
       </>
