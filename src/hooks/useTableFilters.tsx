@@ -48,21 +48,25 @@ import type { RowPage } from "../utils/dataTypes";
 //   return curData;
 // }
 
+// TODO: CHQ: also filter by gbifID, stateProvince, and cityOrTown
+
 /**
- * Filters RowPage data based on whether the Name property includes the filter text (case-insensitive).
+ * Filters RowPage data based on whether the county property includes the filter text (case-insensitive).
  * @param data - The array of RowPage objects to filter.
  * @param enabled - Boolean to enable/disable this filter.
- * @param filterText - The text to search for in the Name property.
+ * @param filterText - The text to search for in the county property.
  * @returns Filtered array of RowPage objects.
  */
 function filterByCounty(
   data: RowPage[],
   enabled: boolean,
-  filterText: string
+  filterText: string,
 ): RowPage[] {
   if (enabled && filterText.trim() !== "") {
     return data.filter((row) =>
-      row.county.toLowerCase().includes(filterText.toLowerCase())
+      row.county === null
+        ? ""
+        : row.county.toLowerCase().includes(filterText.toLowerCase()),
     );
   }
   return data;
@@ -120,7 +124,7 @@ export const useTableFilters = (initialData: RowPage[]) => {
     currentFilteredData = filterByCounty(
       currentFilteredData,
       pageFilterEnabled,
-      pageFilterText
+      pageFilterText,
     );
 
     // // Apply single-select status filter

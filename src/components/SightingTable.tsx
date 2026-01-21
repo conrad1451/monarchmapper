@@ -20,7 +20,7 @@ import {
   Select,
   MenuItem,
   // IconButton,
-  // TextField, // Added TextField for better input control in modals
+  TextField, // Added TextField for better input control in modals
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
 // import MoreVertIcon from "@mui/icons-material/MoreVert"; // Icon for the action button
@@ -440,6 +440,57 @@ const AllowedDatetable = function (props: {
 //   return maxId + 1;
 // };
 
+const FilterControlsSection = (props: {
+  filterProps: ReturnType<typeof useTableFilters>["filterProps"];
+  filterHandlers: ReturnType<typeof useTableFilters>["filterHandlers"];
+  // derivedLists: ReturnType<typeof useTableFilters>["derivedLists"];
+}) => {
+  return (
+    <Box
+      sx={{
+        mb: 4,
+        border: "1px solid #ccc",
+        borderRadius: 2,
+        p: 2,
+        bgcolor: "#f9f9f9",
+      }}
+    >
+      <Typography variant="h5" gutterBottom>
+        Table Filters
+      </Typography>
+
+      {/* Page Name Filter */}
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 2 }}>
+        <Typography>Filter by County:</Typography>
+        <Switch
+          checked={props.filterProps.isPageFilterEnabled}
+          onChange={props.filterHandlers.togglePageFilter}
+        />
+        {props.filterProps.isPageFilterEnabled && (
+          <TextField
+            label="Filter Text"
+            value={props.filterProps.pageFilterText}
+            onChange={(e) =>
+              props.filterHandlers.setPageFilterText(e.target.value)
+            }
+            size="small"
+            sx={{ flexGrow: 1 }}
+          />
+        )}
+        <Button
+          onClick={props.filterHandlers.resetPageFilters}
+          disabled={
+            !props.filterProps.isPageFilterEnabled &&
+            props.filterProps.pageFilterText === ""
+          }
+        >
+          Reset
+        </Button>
+      </Box>
+    </Box>
+  );
+};
+
 const SightingTable = (props: { thePages: RowPage[] }) => {
   // CHQ: Gemini AI turned this from a variable assigned from a prop into a state variable
   const [rawTableData, setRawTableData] = useState<RowPage[]>(props.thePages); // Manage table data locally for updates
@@ -465,7 +516,8 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   } = useColumnVisibilityMiniTable("default");
 
   // const { filteredData } = useTableFilters(initialTableDataForHooks);
-  const { filteredData } = useTableFilters(rawTableData);
+  const { filteredData, filterProps, filterHandlers } =
+    useTableFilters(rawTableData);
 
   const { sortedData, sortProps, sortHandlers } = useTableSorting(filteredData);
 
@@ -501,6 +553,14 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
             <Typography variant="h5" component="div">
               Sighting Data
             </Typography>
+
+            {/* Filter Controls */}
+            <FilterControlsSection
+              filterProps={filterProps}
+              filterHandlers={filterHandlers}
+              // derivedLists={derivedLists}
+            />
+
             <Box sx={{ display: "flex", gap: 1 }}>
               <Button
                 variant="outlined"
