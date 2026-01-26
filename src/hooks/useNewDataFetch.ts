@@ -1,4 +1,4 @@
-// useDefaultDataFetch.ts
+// src/hooks/useDefaultDataFetch.ts
 
 import { useCallback } from "react";
 import type {
@@ -8,7 +8,7 @@ import type {
 
 export const useDefaultDataFetch = (
   // Destructure the setter function from the component
-  setGeoJSON: (geoJson: GeoJsonFeatureCollection) => void
+  setGeoJSON: (geoJson: GeoJsonFeatureCollection) => void,
 ) => {
   // Use useCallback to memoize the function, making it stable
   const fetchData = useCallback(() => {
@@ -44,7 +44,7 @@ export const useCustomDataFetch = (
   // Data passed as a prop to the hook
   coordList: CoordListProps[],
   // Setter function passed from the parent component
-  setGeoJSON: (geoJson: GeoJsonFeatureCollection) => void
+  setGeoJSON: (geoJson: GeoJsonFeatureCollection) => void,
 ) => {
   // Use useCallback to memoize the function, making it stable
   // The data transformation must happen INSIDE this function.

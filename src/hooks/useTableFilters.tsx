@@ -1,3 +1,5 @@
+// src/hooks/useTableFilters.tsx
+
 // CHQ: Gemini AI generated
 
 import { useState, useMemo } from "react";

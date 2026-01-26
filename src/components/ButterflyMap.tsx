@@ -1,5 +1,5 @@
 "use client";
-// ButterflyMap.tsx
+// src/components/ButterflyMap.tsx
 import { useState, useEffect, useMemo } from "react";
 import "../pagestyle.css";
 // import { Box, Button, Typography } from "@mui/material"; // Import necessary MUI components

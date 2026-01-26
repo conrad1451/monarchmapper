@@ -1,4 +1,4 @@
-// src/hooks/useSightings.ts
+// src/hooks/useSightings.tsx
 // CHQ: Gemini AI generated this
 
 import { useState, useEffect } from "react";

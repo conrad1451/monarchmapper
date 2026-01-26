@@ -1,4 +1,5 @@
-// useTableSorting.tsx
+// src/hooks/useTableSorting.tsx
+
 import { useState, useMemo } from "react";
 
 import type { RowPage } from "../utils/dataTypes";
@@ -21,7 +22,7 @@ function sortByStringComparator(
   a: RowPage,
   b: RowPage,
   columnKey: SortableStringKeys,
-  direction: "asc" | "desc"
+  direction: "asc" | "desc",
 ): number {
   // Get values, convert to lowercase strings, handle null/undefined by treating as empty strings
   const valA = (a[columnKey] || "").toString().toLowerCase();
@@ -54,7 +55,7 @@ export const useTableSorting = (filteredData: RowPage[]) => {
   const [sortColumn, setSortColumn] = useState<SortableStringKeys | null>(null);
   // State for the sort direction of the current column
   const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(
-    null
+    null,
   );
 
   // CHQ: Gemini AI added the setSortColumn to null
@@ -93,7 +94,7 @@ export const useTableSorting = (filteredData: RowPage[]) => {
 
     if (sortColumn && sortDirection) {
       sortableData.sort((a, b) =>
-        sortByStringComparator(a, b, sortColumn, sortDirection)
+        sortByStringComparator(a, b, sortColumn, sortDirection),
       );
     }
 
