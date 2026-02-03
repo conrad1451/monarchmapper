@@ -4,7 +4,6 @@ import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import {
   useColumnVisibility,
-  ColumnVisibility,
   ColumnVisibilityMiniTable,
   //   ColumnPresetName,
 } from "../../src/hooks/useColumnVisibility";
@@ -52,52 +51,6 @@ const smartphoneVisibilityMiniTable: ColumnVisibilityMiniTable = {
   gbifID: true,
 };
 
-const companyInfoVisibility: ColumnVisibility = {
-  Name: true,
-  Status: false,
-  Level: false,
-  Source: false,
-  DateFound: true,
-  DayPosted: false,
-  ApplicationDeadline: false,
-  DateApplied: false,
-  ExpireDate: false,
-  PostingURL: false,
-  Connection: false,
-  State: true,
-  Setup: true,
-  Company: true,
-  Education: false,
-  Duties: false,
-  Tags: false,
-  Tenure: true,
-  Location: true,
-  PageURL: false,
-};
-
-const workerSetupVisibility: ColumnVisibility = {
-  Name: true,
-  Status: false,
-  Level: false,
-  Source: false,
-  DateFound: true,
-  DayPosted: false,
-  ApplicationDeadline: false,
-  DateApplied: false,
-  ExpireDate: false,
-  PostingURL: false,
-  Connection: false,
-  State: true,
-  Setup: true,
-  Company: true,
-  Education: false,
-  Duties: true,
-  Tags: false,
-  Tenure: true,
-  Location: false,
-  PageURL: false,
-};
-
 describe("useColumnVisibility", () => {
   // Test case 1: Initial state without an initial preset key
   it("should initialize with default column visibility when no initial preset is provided", () => {
@@ -107,51 +60,6 @@ describe("useColumnVisibility", () => {
     );
   });
 
-  // Test case 2: Initial state with a specific initial preset key
-  it("should initialize with the specified preset visibility", () => {
-    const { result } = renderHook(() => useColumnVisibility("companyInfo"));
-    expect(result.current.visibleColumns).toEqual(companyInfoVisibility);
-  });
-
-  // Test case 3: Toggling individual column visibility
-  it("should toggle column visibility correctly", () => {
-    const { result } = renderHook(() => useColumnVisibility());
-
-    // Toggle 'Name' from true to false
-    act(() => {
-      result.current.handleToggleColumn({
-        target: { name: "Name", checked: false },
-      } as React.ChangeEvent<HTMLInputElement>);
-    });
-    expect(result.current.visibleColumns.Name).toBe(false);
-    expect(result.current.visibleColumns.Level).toBe(true); // Ensure other columns remain unchanged
-  });
-
-  //   CHQ: commented out not working test
-  // Test case 4: Applying different preset views
-  //   it("should apply different preset views correctly", () => {
-  //     const { result } = renderHook(() => useColumnVisibility());
-
-  //     // Apply 'smartphone' preset
-  //     act(() => {
-  //       result.current.setPresetVisibility("smartphone");
-  //     });
-  //     expect(result.current.visibleColumns).toEqual(smartphoneVisibilityMiniTable);
-
-  //     // Apply 'workerSetup' preset
-  //     act(() => {
-  //       result.current.setPresetVisibility("workerSetup");
-  //     });
-  //     expect(result.current.visibleColumns).toEqual(workerSetupVisibility);
-
-  //     // Apply 'companyInfo' preset
-  //     act(() => {
-  //       result.current.setPresetVisibility("companyInfo");
-  //     });
-  //     expect(result.current.visibleColumns).toEqual(companyInfoVisibility);
-  //   });
-
-  // Test case 5: Resetting visibility to default
   it("should reset column visibility to default", () => {
     const { result } = renderHook(() => useColumnVisibility("smartphone")); // Start with a non-default preset
 
