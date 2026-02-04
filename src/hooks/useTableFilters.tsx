@@ -38,19 +38,17 @@ import type { RowPage } from "../utils/dataTypes";
  * @param selection - The key (property name) on which to apply the filter.
  * @returns Filtered array of RowPage objects.
  */
-// function filterBySingleSelect(
-//   filterEnabled: boolean,
-//   selectedValue: string,
-//   curData: RowPage[],
-//   selection: "Source"
-// ): RowPage[] {
-//   if (filterEnabled && selectedValue !== "") {
-//     return curData.filter((row) => row[selection] === selectedValue);
-//   }
-//   return curData;
-// }
-
-// TODO: CHQ: also filter by gbifID, stateProvince, and cityOrTown
+function filterByLocationProperty(
+  filterEnabled: boolean,
+  selectedValue: string,
+  curData: RowPage[],
+  selection: "stateProvince" | "county" | "cityOrTown",
+): RowPage[] {
+  if (filterEnabled && selectedValue !== "") {
+    return curData.filter((row) => row[selection] === selectedValue);
+  }
+  return curData;
+}
 
 /**
  * Filters RowPage data based on whether the county property includes the filter text (case-insensitive).
@@ -59,20 +57,20 @@ import type { RowPage } from "../utils/dataTypes";
  * @param filterText - The text to search for in the county property.
  * @returns Filtered array of RowPage objects.
  */
-function filterByCounty(
-  data: RowPage[],
-  enabled: boolean,
-  filterText: string,
-): RowPage[] {
-  if (enabled && filterText.trim() !== "") {
-    return data.filter((row) =>
-      row.county === null
-        ? ""
-        : row.county.toLowerCase().includes(filterText.toLowerCase()),
-    );
-  }
-  return data;
-}
+// function filterByCounty(
+//   data: RowPage[],
+//   enabled: boolean,
+//   filterText: string,
+// ): RowPage[] {
+//   if (enabled && filterText.trim() !== "") {
+//     return data.filter((row) =>
+//       row.county === null
+//         ? ""
+//         : row.county.toLowerCase().includes(filterText.toLowerCase()),
+//     );
+//   }
+//   return data;
+// }
 
 // --- useTableFilters Custom Hook ---
 
@@ -93,6 +91,15 @@ export const useTableFilters = (initialData: RowPage[]) => {
   const [pageFilterEnabled, setPageFilterEnabled] = useState(false);
   const [pageFilterText, setPageFilterText] = useState("");
 
+  const [stateFilterEnabled, setStateFilterEnabled] = useState(false);
+  const [stateFilterText, setStateFilterText] = useState("");
+
+  const [countyFilterEnabled, setCountyFilterEnabled] = useState(false);
+  const [countyFilterText, setCountyFilterText] = useState("");
+
+  const [citytownFilterEnabled, setCitytownFilterEnabled] = useState(false);
+  const [citytownFilterText, setCitytownFilterText] = useState("");
+
   //   const [sourceFilterEnabled, setSourceFilterEnabled] = useState(false);
   //   const [sourceSelected, setSourceSelected] = useState<string>("");
 
@@ -101,6 +108,21 @@ export const useTableFilters = (initialData: RowPage[]) => {
   const handlePageFilterToggle = () => {
     setPageFilterEnabled((prev) => !prev);
     setPageFilterText(""); // Clear filter text when toggling off
+  };
+
+  const handleStateFilterToggle = () => {
+    setStateFilterEnabled((prev) => !prev);
+    setStateFilterText(""); // Clear filter text when toggling off
+  };
+
+  const handleCountyFilterToggle = () => {
+    setCountyFilterEnabled((prev) => !prev);
+    setCountyFilterText(""); // Clear filter text when toggling off
+  };
+
+  const handleCityTownFilterToggle = () => {
+    setCitytownFilterEnabled((prev) => !prev);
+    setCitytownFilterText(""); // Clear filter text when toggling off
   };
 
   //   const handleSourceFilterToggle = () => {
@@ -116,26 +138,57 @@ export const useTableFilters = (initialData: RowPage[]) => {
     setPageFilterText("");
     setPageFilterEnabled(false);
   };
+
+  const resetStateFilters = () => {
+    setStateFilterText("");
+    setStateFilterEnabled(false);
+  };
+
+  const resetCountyFilters = () => {
+    setCountyFilterText("");
+    setCountyFilterEnabled(false);
+  };
+
+  const resetCityTownFilters = () => {
+    setCitytownFilterText("");
+    setCitytownFilterEnabled(false);
+  };
   //   const resetSourceFilters = () => setSourceSelected("");
 
   // --- Memoized Filtered Data ---
   const filteredData = useMemo(() => {
     let currentFilteredData = initialData;
 
-    // Apply page name filter
-    currentFilteredData = filterByCounty(
+    // // Apply page name filter
+    // currentFilteredData = filterByCounty(
+    //   currentFilteredData,
+    //   pageFilterEnabled,
+    //   pageFilterText,
+    // );
+
+    // Apply location filter for state
+    currentFilteredData = filterByLocationProperty(
+      stateFilterEnabled,
+      stateFilterText,
       currentFilteredData,
-      pageFilterEnabled,
-      pageFilterText,
+      "stateProvince",
     );
 
-    // // Apply single-select status filter
-    // currentFilteredData = filterBySingleSelect(
-    //   sourceFilterEnabled,
-    //   sourceSelected,
-    //   currentFilteredData,
-    //   "Source"
-    // );
+    // Apply location filter for county
+    currentFilteredData = filterByLocationProperty(
+      countyFilterEnabled,
+      countyFilterText,
+      currentFilteredData,
+      "county",
+    );
+
+    // Apply location filter for city/town
+    currentFilteredData = filterByLocationProperty(
+      citytownFilterEnabled,
+      citytownFilterText,
+      currentFilteredData,
+      "cityOrTown",
+    );
 
     return currentFilteredData;
   }, [initialData, pageFilterEnabled, pageFilterText]);
@@ -145,10 +198,28 @@ export const useTableFilters = (initialData: RowPage[]) => {
     filterProps: {
       isPageFilterEnabled: pageFilterEnabled,
       pageFilterText,
+      isStateFilterEnabled: stateFilterEnabled,
+      stateFilterText,
+      isCountyFilterEnabled: countyFilterEnabled,
+      countyFilterText,
+      isCityTownFilterEnabled: citytownFilterEnabled,
+      citytownFilterText,
       //   isSourceFilterEnabled: sourceFilterEnabled,
       //   sourceSelected,
     },
     filterHandlers: {
+      toggleStateFilter: handleStateFilterToggle,
+      setStateFilterText,
+      resetStateFilters,
+
+      toggleCountyFilter: handleCountyFilterToggle,
+      setCountyFilterEnabled,
+      resetCountyFilters,
+
+      toggleCityTownFilter: handleCityTownFilterToggle,
+      setCitytownFilterText,
+      resetCityTownFilters,
+
       togglePageFilter: handlePageFilterToggle,
       setPageFilterText,
       resetPageFilters,

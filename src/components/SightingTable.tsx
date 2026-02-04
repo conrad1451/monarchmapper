@@ -302,14 +302,14 @@ const TableHeaderCells = (props: {
           ) : null,
         )}
         {/* New TableCell for Actions header */}
-        <TableCell>
+        {/* <TableCell>
           <Box
             component="span"
             sx={{ fontWeight: "bold", fontSize: "0.875rem" }}
           >
             Actions
           </Box>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
     </TableHead>
   );
@@ -326,7 +326,7 @@ interface TableBodyRowsProps {
   // myFirstName: string;
   // setMyFirstName: (value: string) => void;
   myCity: string;
-  SetMyCity: (value: string) => void;
+  setMyCity: (value: string) => void;
   myCounty: string;
   setMyCounty: (value: string) => void;
   myStateProvince: string;
@@ -440,6 +440,43 @@ const AllowedDatetable = function (props: {
 //   return maxId + 1;
 // };
 
+const LocationPropertyFilter = (props: {
+  filterProps: ReturnType<typeof useTableFilters>["filterProps"];
+  filterHandlers: ReturnType<typeof useTableFilters>["filterHandlers"];
+  filterName: "State" | "County" | "CityTown";
+  filterText: string;
+  filterEnabled: boolean;
+  setFilterText: (value: React.SetStateAction<string>) => void;
+  toggleFilter: () => void;
+  resetFilter: () => void;
+
+  // derivedLists: ReturnType<typeof useTableFilters>["derivedLists"];
+}) => {
+  return (
+    <>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 2 }}>
+        <Typography>Filter by {props.filterName}:</Typography>
+        <Switch checked={props.filterEnabled} onChange={props.toggleFilter} />
+        {props.filterEnabled && (
+          <TextField
+            label="Filter Text"
+            value={props.filterText}
+            onChange={(e) => props.setFilterText(e.target.value)}
+            size="small"
+            sx={{ flexGrow: 1 }}
+          />
+        )}
+        <Button
+          onClick={props.resetFilter}
+          disabled={!props.filterEnabled && props.filterText === ""}
+        >
+          Reset
+        </Button>
+      </Box>
+    </>
+  );
+};
+
 const FilterControlsSection = (props: {
   filterProps: ReturnType<typeof useTableFilters>["filterProps"];
   filterHandlers: ReturnType<typeof useTableFilters>["filterHandlers"];
@@ -460,6 +497,16 @@ const FilterControlsSection = (props: {
       </Typography>
 
       {/* Page Name Filter */}
+      <LocationPropertyFilter
+        filterProps={props.filterProps}
+        filterHandlers={props.filterHandlers}
+        filterName={"State"}
+        filterText={props.filterProps.stateFilterText}
+        filterEnabled={props.filterProps.isStateFilterEnabled}
+        setFilterText={props.filterHandlers.setStateFilterText}
+        toggleFilter={props.filterHandlers.toggleStateFilter}
+        resetFilter={props.filterHandlers.resetStateFilters}
+      />
       <Box sx={{ display: "flex", alignItems: "center", mb: 2, gap: 2 }}>
         <Typography>Filter by County:</Typography>
         <Switch
@@ -525,7 +572,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
 
   // --- Moved state variables and submission logic from TableBodyRows to SightingTable ---
   // const [myFirstName, setMyFirstName] = useState("");
-  const [myCity, SetMyCity] = useState("");
+  const [myCity, setMyCity] = useState("");
   const [myCounty, setMyCounty] = useState("");
   const [myStateProvince, setMyStateProvince] = useState("");
 
@@ -610,7 +657,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
                   // myFirstName={myFirstName}
                   // setMyFirstName={setMyFirstName}
                   myCity={myCity}
-                  SetMyCity={SetMyCity}
+                  setMyCity={setMyCity}
                   myCounty={myCounty}
                   setMyCounty={setMyCounty}
                   myStateProvince={myStateProvince}
