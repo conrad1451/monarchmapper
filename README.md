@@ -1,69 +1,68 @@
-# React + TypeScript + Vite
+# 🦋 Monarch Migration ETL & Analytics
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack data engineering project that extracts, transforms, and visualizes Monarch butterfly (_Danaus plexippus_) occurrence data from the **GBIF (Global Biodiversity Information Facility)**.
 
-Currently, two official plugins are available:
+## 🚀 Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project automates the collection of biodiversity data to track migration patterns. It features a Python-based ETL pipeline hosted on GitHub Actions and a React dashboard for analyzing geographical trends.
 
-## Expanding the ESLint configuration
+### Key Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **ETL**: Data extraction from GBIF using Python and `pandas`.
+- **Schema Enforcement**: Strict PostgreSQL schema mapping using SQLAlchemy to handle inconsistent API responses.
+- **Interactive Dashboard**: A Material UI (MUI) data table with advanced filtering, sorting, and column customization.
+- **Data Integrity**: Frontend de-duplication and backend `replace` strategies to ensure 100% data accuracy.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## 🛠️ Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Layer           | Technologies                               |
+| --------------- | ------------------------------------------ |
+| **Frontend**    | React, TypeScript, Material UI (MUI), Vite |
+| **Backend/ETL** | Python, Pandas, SQLAlchemy                 |
+| **Database**    | PostgreSQL (GCP -> Digital Ocean -> Xata)  |
+| **CI/CD**       | GitHub Actions                             |
+
+---
+
+## 🏗️ Architecture & ETL Logic
+
+### 1. Extraction & Transformation
+
+The Python module (`monarch_butterfly_module.py`) performs:
+
+- **Timezone Normalization**: Converts various date formats into standardized UTC `DateTime` objects.
+- **Spatial Validation**: Ensures coordinates fall within valid global ranges (Lat: -90 to 90).
+- **Schema Consistency**: Maps 35+ specific GBIF fields to a consistent database structure, filling missing columns with nulls to prevent load failures.
+
+### 2. Loading Strategy
+
+To maintain a clean state, the loader uses an **Atomic Replace** strategy:
+
+```python
+df.to_sql(table_name, engine, if_exists='replace', dtype=dtype_mapping)
+
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This ensures that any schema updates or historical data corrections are reflected immediately without creating duplicate records.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 💻 Frontend Implementation
+
+The React application uses a custom-hook architecture to separate concerns:
+
+- `useTableFilters`: Manages complex location-based filtering (State, County, City).
+- `useTableSorting`: Handles multi-directional sorting for temporal and spatial data.
+- `useColumnVisibility`: Allows users to toggle between presets.
+
+## 📊 Data Inventory
+
+The system maintains a `data_inventory` table to track which days have been successfully processed, preventing redundant API calls and ensuring data lineage.
+
+---
+
+## 📝 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
