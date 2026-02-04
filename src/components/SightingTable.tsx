@@ -326,7 +326,7 @@ interface TableBodyRowsProps {
   // myFirstName: string;
   // setMyFirstName: (value: string) => void;
   myCity: string;
-  SetMyCity: (value: string) => void;
+  setMyCity: (value: string) => void;
   myCounty: string;
   setMyCounty: (value: string) => void;
   myStateProvince: string;
@@ -525,7 +525,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
 
   // --- Moved state variables and submission logic from TableBodyRows to SightingTable ---
   // const [myFirstName, setMyFirstName] = useState("");
-  const [myCity, SetMyCity] = useState("");
+  const [myCity, setMyCity] = useState("");
   const [myCounty, setMyCounty] = useState("");
   const [myStateProvince, setMyStateProvince] = useState("");
 
@@ -610,7 +610,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
                   // myFirstName={myFirstName}
                   // setMyFirstName={setMyFirstName}
                   myCity={myCity}
-                  SetMyCity={SetMyCity}
+                  setMyCity={setMyCity}
                   myCounty={myCounty}
                   setMyCounty={setMyCounty}
                   myStateProvince={myStateProvince}
