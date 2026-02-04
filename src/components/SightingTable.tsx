@@ -521,6 +521,11 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
 
   const { sortedData, sortProps, sortHandlers } = useTableSorting(filteredData);
 
+  // CHQ: Gemini AI added line to ensure uniqueness before rendering
+  const uniqueSortedData = Array.from(
+    new Map(sortedData.map((item) => [item.gbifID, item])).values(),
+  );
+
   const [isTableCollapsed, setIsTableCollapsed] = useState(false);
 
   // --- Moved state variables and submission logic from TableBodyRows to SightingTable ---
@@ -602,7 +607,7 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
                   theColumnKeys={allColumnKeys}
                 />
                 <TableBodyRows
-                  data={sortedData}
+                  data={uniqueSortedData}
                   visibleColumns={visibleColumns}
                   theColumnKeys={allColumnKeys}
                   // onOpenActionModal={handleOpenActionModal}
