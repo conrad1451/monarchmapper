@@ -1,7 +1,7 @@
 // src/components/SightingTable.tsx
 
-// import React, { useState, useEffect, useMemo } from "react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+// import React, { useState, useEffect } from "react";
 
 import {
   Table,
@@ -522,9 +522,11 @@ const SightingTable = (props: { thePages: RowPage[] }) => {
   const { sortedData, sortProps, sortHandlers } = useTableSorting(filteredData);
 
   // CHQ: Gemini AI added line to ensure uniqueness before rendering
-  const uniqueSortedData = Array.from(
-    new Map(sortedData.map((item) => [item.gbifID, item])).values(),
-  );
+  const uniqueSortedData = useMemo(() => {
+    return Array.from(
+      new Map(sortedData.map((item) => [item.gbifID, item])).values(),
+    );
+  }, [sortedData]);
 
   const [isTableCollapsed, setIsTableCollapsed] = useState(false);
 
