@@ -4,6 +4,15 @@ A full-stack data engineering project that extracts, transforms, and visualizes 
 
 ## 🚀 Overview
 
+![Dashboard Preview](./assets/dashboard-preview-1.png)
+![Dashboard Preview](./assets/dashboard-preview-2.png)
+![Butterfly Map Preview 1](./assets/dashboard-preview-3.png)
+![Butterfly Map Preview 2](./assets/dashboard-preview-4.png)
+![Butterfly Map Preview 3](./assets/dashboard-preview-5.png)
+![Butterfly Map Preview 4](./assets/dashboard-preview-6.png)
+![Butterfly Table Preview 1](./assets/dashboard-preview-7.png)
+![Butterfly Table Preview 2](./assets/dashboard-preview-8.png)
+
 This project automates the collection of biodiversity data to track migration patterns. It features a Python-based ETL pipeline hosted on GitHub Actions and a React dashboard for analyzing geographical trends.
 
 ### Key Features
