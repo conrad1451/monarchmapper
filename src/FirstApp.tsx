@@ -68,7 +68,7 @@ function App() {
   const [currentPath, setCurrentPath] = useState<string>("/");
 
   const [butterflyCoords, setButterflyCoords] = useState<Array<CoordListProps>>(
-    []
+    [],
   );
   // CHQ: ChatGPT added
   // const [draftDate, setDraftDate] = useState("");

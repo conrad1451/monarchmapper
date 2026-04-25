@@ -42,14 +42,7 @@ export const useMonarchInventory = () => {
         }
 
         const data: TableNameItem[] = await response.json();
-
-        // // Optional: Sort by date so the newest scans appear first
-        // const sortedData = data.sort(
-        //   (a, b) => new Date(b.available_date) - new Date(a.available_date),
-        // );
-
-        // setInventory(sortedData);
-        setInventory(data);
+        setInventory(data ?? []); // guard against null response
       } catch (err) {
         // FIX: Check if err is an instance of Error before accessing .message
         if (err instanceof Error) {

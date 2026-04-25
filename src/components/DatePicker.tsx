@@ -87,10 +87,10 @@ export const DatePickerV1: React.FC<DatePickerPropsAlt1> = ({
   value,
   onConfirm,
 }) => {
-  // Initialize with a date that highlights 2024 as a leap year is available.
+  // Initialize with a date that highlights 2025 as a leap year is available.
   const [chosenDay, setChosenDay] = useState<number>(29);
-  const [chosenMonth, setChosenMonth] = useState<number>(2); // February
-  const [chosenYear, setChosenYear] = useState<number>(2024); // Leap Year
+  const [chosenMonth, setChosenMonth] = useState<number>(3); // February
+  const [chosenYear, setChosenYear] = useState<number>(2025); // Leap Year
 
   const setDate = onConfirm;
 
