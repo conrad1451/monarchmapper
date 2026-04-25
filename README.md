@@ -26,12 +26,12 @@ This project automates the collection of biodiversity data to track migration pa
 
 ## 🛠️ Tech Stack
 
-| Layer           | Technologies                               |
-| --------------- | ------------------------------------------ |
-| **Frontend**    | React, TypeScript, Material UI (MUI), Vite |
-| **Backend/ETL** | Python, Pandas, SQLAlchemy                 |
-| **Database**    | PostgreSQL (GCP -> Digital Ocean -> Xata)  |
-| **CI/CD**       | GitHub Actions                             |
+| Layer           | Technologies                                         |
+| --------------- | ---------------------------------------------------- |
+| **Frontend**    | React, TypeScript, Material UI (MUI), Vite           |
+| **Backend/ETL** | Python, Pandas, SQLAlchemy                           |
+| **Database**    | PostgreSQL (GCP -> Digital Ocean -> Xata -> AivenDB) |
+| **CI/CD**       | GitHub Actions                                       |
 
 ---
 
@@ -71,6 +71,11 @@ The React application uses a custom-hook architecture to separate concerns:
 The system maintains a `data_inventory` table to track which days have been successfully processed, preventing redundant API calls and ensuring data lineage.
 
 ---
+
+## 🔒 Security
+
+This repository is scanned by [Socket.dev](https://socket.dev) to detect and prevent
+supply chain attacks in npm dependencies.
 
 ## 📝 License
 
