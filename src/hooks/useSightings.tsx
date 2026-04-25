@@ -24,10 +24,12 @@ export const useSightings = (props: {
   const [error, setError] = useState<string | null>(null);
   const [triggerRefetch, setTriggerRefetch] = useState(0); // State to trigger refetch
 
+  const { sightingDate } = props;
+
   const fetchSightings = async () => {
     // CHQ: Gemini AI added following guard
     // GUARD: Do not fetch if date is missing or incomplete
-    if (!props.sightingDate || props.sightingDate.length < 8) {
+    if (!sightingDate || sightingDate.length < 8) {
       setLoading(false);
       return;
     }
@@ -44,13 +46,17 @@ export const useSightings = (props: {
 
     try {
       // const response = await fetch(
-      //   apiURL + "/monarchbutterlies/dayscan/" + props.sightingDate,
-      //   // apiURL + "monarchbutterlies/dayscan/" + props.sightingDate,
+      //   apiURL + "/monarchbutterlies/dayscan/" + sightingDate,
+      //   // apiURL + "monarchbutterlies/dayscan/" + sightingDate,
       // );
 
       // CHQ: Gemini AI reformatted fetch response
+      // const month = sightingDate.slice(0, 2);
+      // const day = sightingDate.slice(2, 4);
+      // const year = sightingDate.slice(4, 8);
+      const [paddedMonth, year, paddedDay] = sightingDate.split("_");
       const response = await fetch(
-        `${apiURL}/monarchbutterlies/dayscan/${props.sightingDate}`,
+        `${apiURL}/monarchbutterlies/dayview/${paddedMonth}_${year}/${paddedDay}`,
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
