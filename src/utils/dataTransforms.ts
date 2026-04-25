@@ -80,11 +80,26 @@ export function transformMonarchButterflyRecordToRowPage(
   pages: MonarchButterflyRecord[]
 ): RowPage[] {
   // return pages.map((page, index) => {
+  // return pages.map((page, index) => {
+  //   // Generate the stable ID once here
+  //   // const stableIdString = generateStableId(page, index);
+  //   const stableIdString = generateStableId(page);
+  //   const stableIdNumber = page.id || 1000 + index; // Consistent offset for numeric ID needs
+
+  //   return {
   return pages.map((page, index) => {
-    // Generate the stable ID once here
-    // const stableIdString = generateStableId(page, index);
-    const stableIdString = generateStableId(page);
+    // const stableIdString = generateStableId(page);
     const stableIdNumber = page.id || 1000 + index; // Consistent offset for numeric ID needs
+
+    // FORCE UTC or a specific locale so Server and Client strings match exactly
+    const stableDateOnly = new Date(page.date_only).toLocaleDateString(
+      "en-US",
+      {
+        timeZone: "UTC", // Crucial for Vercel stability
+      }
+    );
+
+    const stableEventDate = new Date(page.eventDate).toISOString();
 
     return {
       myID: stableIdNumber,
@@ -92,20 +107,25 @@ export function transformMonarchButterflyRecordToRowPage(
       countryCode: page.countryCode,
       county: page.county,
       time_only: page.time_only,
-      date_only: page.date_only,
+      // date_only: page.date_only,
       day: page.day,
       day_of_week: page.day_of_week,
       decimalLatitude: page.decimalLatitude,
       decimalLongitude: page.decimalLongitude,
-      eventDate: page.eventDate,
+      // eventDate: page.eventDate,
       stateProvince: page.stateProvince,
       week_of_year: page.week_of_year,
       year: page.year,
       month: page.month,
-      gbifID: stableIdString, // Now guaranteed to be a stable string
+      // gbifID: stableIdString, // Now guaranteed to be a stable string
+      // };
+      date_only: stableDateOnly,
+      eventDate: stableEventDate,
+      gbifID: generateStableId(page), // Ensure this uses the new strings
     };
   });
 }
+
 /**
  * Generates a list of unique property values from an array of RowPage objects,
  * suitable for populating dropdown filters. It can handle both single-string properties
