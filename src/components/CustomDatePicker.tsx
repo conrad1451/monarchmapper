@@ -48,44 +48,34 @@ interface CustomDatePickerProps {
   initialYear?: number;
 }
 
-// const hasDataLoaded = function (inputDate: string) {
-// const hasDataLoaded = function (inputDate: string, listOfValidDates: string[]) {
 const hasDataLoaded = function (
-  day: number,
   month: number,
   year: number,
   listOfValidDates: string[],
 ) {
+  if (!Array.isArray(listOfValidDates)) return false; // guard
   const theMonth = String(MONTHS[month - 1]).toLowerCase();
 
-  const paddedDay = String(day).padStart(2, "0");
-
-  const potentialDate = `${theMonth}${paddedDay}${year}`;
-
-  // onConfirm();
-
-  // const { inventory, loading, error } = useMonarchInventory();
-
-  // const listOfValidDates: string[] = inventory.map((tableTitle) => {
-  //   // return tableTitle.tableName;
-  //   return tableTitle.table_name;
-  // });
+  const potentialDate = `${theMonth}${year}`; // e.g. "september2025"
   return listOfValidDates.includes(potentialDate);
 };
 
 const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   onConfirm,
-  initialYear = 2024,
+  initialYear = 2025,
 }) => {
   const [day, setDay] = useState(30);
-  const [month, setMonth] = useState(6); // June
+  const [month, setMonth] = useState(3); // March
   const [year, setYear] = useState(initialYear);
   const { inventory, loading, error } = useMonarchInventory();
 
-  const listOfValidDates: string[] = inventory.map((tableTitle) => {
-    // return tableTitle.tableName;
-    return tableTitle.table_name;
-  });
+  const listOfValidDates: string[] = useMemo(
+    () =>
+      inventory
+        ? inventory.map((tableTitle) => tableTitle.table_name ?? "")
+        : [],
+    [inventory],
+  );
 
   // CHQ: Gemini AI added useEffect to set default date to earliest valid date
   useEffect(() => {
@@ -98,8 +88,8 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   }, [inventory]);
 
   const isValid = useMemo(
-    () => hasDataLoaded(day, month, year, listOfValidDates),
-    [day, month, year, listOfValidDates],
+    () => hasDataLoaded(month, year, listOfValidDates),
+    [month, year, listOfValidDates],
   );
 
   // Auto-adjust day if it exceeds the max days of a newly selected month/year
@@ -117,16 +107,20 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     const paddedMonth = String(month).padStart(2, "0");
     const paddedDay = String(day).padStart(2, "0");
 
+    // Month-level check: does september2025 exist in inventory?
+    const theMonth = MONTHS[month - 1].toLowerCase();
+    const monthKey = `${theMonth}${year}`; // "september2025"
+    const isValidDate = listOfValidDates.includes(monthKey);
+
     // if the potential date is not among the list of valid dates, then
     // it does not have data loaded and so we cannot load that date
     // into the date picker
-    const isValidDate = hasDataLoaded(day, month, year, listOfValidDates);
-
     if (isValidDate) {
-      onConfirm(`${paddedMonth}${paddedDay}${year}`);
+      // onConfirm(`${paddedMonth}${paddedDay}${year}`);
+      // Pass MM_YYYY and DD separately so the caller can build the URL
+      // onConfirm(`${paddedMonth}_${year}`, paddedDay);
+      onConfirm(`${paddedMonth}_${year}_${paddedDay}`); // one string
     } else {
-      // CHQ: Gemini AI added UX improvement
-      // UX Improvement: Show the user which format failed in the console
       const monthName = MONTHS[month - 1].toLowerCase();
       console.warn(
         `Validation failed: ${monthName}${paddedDay}${year} not found in inventory.`,
@@ -134,11 +128,20 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       alert(
         "No data found for this date. Please check the 'Available Scanned Dates' list.",
       );
-
-      // console.log(
-      //   "No Data loaded for date - pick a date with some data loaded!",
-      // );
     }
+
+    // } else {
+    //   // CHQ: Gemini AI added UX improvement
+    //   // UX Improvement: Show the user which format failed in the console
+    //   const monthName = MONTHS[month - 1].toLowerCase();
+    //   console.warn(
+    //     `Validation failed: ${monthName}${paddedDay}${year} not found in inventory.`,
+    //   );
+    //   alert(
+    //     "No data found for this date. Please check the 'Available Scanned Dates' list.",
+    //   );
+
+    // }
   };
 
   const displayDate = `${MONTHS[month - 1]} ${day}, ${year}`;
@@ -180,15 +183,9 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         <FormControl size="small" sx={{ minWidth: 80 }}>
           <Select value={day} onChange={(e) => setDay(Number(e.target.value))}>
             {daysToRender.map((d) => {
-              const dayIsValid = hasDataLoaded(
-                d,
-                month,
-                year,
-                listOfValidDates,
-              );
               return (
                 <MenuItem key={d} value={d}>
-                  {d} {dayIsValid ? "✅" : "❌"}
+                  {d} {isValid ? "✅" : "❌"}
                 </MenuItem>
               );
             })}
