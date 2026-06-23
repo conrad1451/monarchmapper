@@ -37,7 +37,7 @@ export function createCustomTableData(
   week_of_year: number,
   year: number,
   month: string,
-  gbifID: string
+  gbifID: string,
 ): RowPage {
   return {
     myID,
@@ -77,7 +77,7 @@ export function createCustomTableData(
 
 // Helper function to transform MonarchButterflyRecord to RowPage
 export function transformMonarchButterflyRecordToRowPage(
-  pages: MonarchButterflyRecord[]
+  pages: MonarchButterflyRecord[],
 ): RowPage[] {
   // return pages.map((page, index) => {
   // return pages.map((page, index) => {
@@ -96,7 +96,7 @@ export function transformMonarchButterflyRecordToRowPage(
       "en-US",
       {
         timeZone: "UTC", // Crucial for Vercel stability
-      }
+      },
     );
 
     const stableEventDate = new Date(page.eventDate).toISOString();
@@ -142,7 +142,7 @@ export function transformMonarchButterflyRecordToRowPage(
  */
 export function producePropList(
   myTableView: RowPage[],
-  selection: keyof RowPage
+  selection: keyof RowPage,
 ): Item[] {
   // Helper to determine if the property on RowPage is expected to be an array of strings.
   // This list should be updated if new array-type properties are added to RowPage
