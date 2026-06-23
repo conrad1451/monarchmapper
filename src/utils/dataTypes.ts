@@ -22,12 +22,12 @@ export interface RowPage {
   countryCode: string;
   county: string;
   time_only: string;
-  date_only: Date;
+  date_only: string; // CHQ: Claude AI (Sonnet): was Date
   day: number;
   day_of_week: number;
   decimalLatitude: number;
   decimalLongitude: number;
-  eventDate: Date;
+  eventDate: string; // CHQ: Claude AI (Sonnet): was Date
   stateProvince: string;
   week_of_year: number;
   year: number;
