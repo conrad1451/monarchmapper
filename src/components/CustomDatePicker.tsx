@@ -69,6 +69,12 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const [year, setYear] = useState(initialYear);
   const { inventory, loading, error } = useMonarchInventory();
 
+  // CHQ: Gemini AI made this
+  const rangeOfYears: number[] = Array.from(
+    { length: 2026 - 2000 + 1 },
+    (_, i) => 2000 + i,
+  );
+
   const listOfValidDates: string[] = useMemo(
     () =>
       inventory
@@ -198,7 +204,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
           >
-            {[2020, 2021, 2022, 2023, 2024, 2025].map((y) => (
+            {rangeOfYears.map((y) => (
               <MenuItem key={y} value={y}>
                 {y}
               </MenuItem>
