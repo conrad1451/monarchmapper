@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+gitDiffs/
+buildLogs/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -24,3 +27,6 @@ dist-ssr
 *.sw?
 
 .env
+
+project-tree.txt
+tree-generator.ps1
