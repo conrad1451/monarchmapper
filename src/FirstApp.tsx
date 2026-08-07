@@ -1,16 +1,6 @@
 // CHQ: Gemini AI included imports
-// import React, { useState, useMemo, useCallback } from "react";
-import React, { useState, useCallback } from "react";
-import {
-  Button,
-  Box,
-  Typography,
-  // FormControl,
-  // Select,
-  // MenuItem,
-  // useTheme,
-  // Paper,
-} from "@mui/material";
+import React, { useState, useEffect, useCallback } from "react";
+import { Button, Box, Typography, CircularProgress } from "@mui/material";
 
 import type {
   // DatePickerProps,
@@ -43,8 +33,52 @@ const SamplePage: React.FC = () => (
   </Box>
 );
 
-// --- END: Placeholder Components ---
+const ServerPinger = () => {
+  const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
+  const baseUrl = import.meta.env.VITE_API_URL;
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const wakeServer = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/health/db`);
+
+        if (!response.ok) {
+          throw new Error(`Failed to reach server: ${response.status}`);
+        }
+        if (!cancelled) setStatus("ok");
+      } catch (error) {
+        console.error("❌ Error connecting to server:", error);
+        if (!cancelled) setStatus("error");
+      }
+    };
+
+    wakeServer();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [baseUrl]);
+
+  return (
+    <>
+      {status === "loading" ? (
+        <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+          <CircularProgress />
+        </Box>
+      ) : status === "error" ? (
+        <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+          <p>⚠️ Can't reach the server right now. Try again shortly.</p>
+        </Box>
+      ) : (
+        <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+          <p>Server is awake! On to the butterfllies!</p>
+        </Box>
+      )}
+    </>
+  );
+};
 // --- START: Navigation & Main App ---
 
 const NavigationButtons: React.FC<NavigationButtonsProps> = ({ navigate }) => {
@@ -173,6 +207,7 @@ function App() {
             ← Back to Home
           </Button>
         )}
+        {<ServerPinger />}
         {content}
       </Box>
     </Box>
